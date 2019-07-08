@@ -6,7 +6,7 @@ TODO: Add me
 
 Installation
 ------------
-1. ``diffupy`` can be installed with the following commmands:
+1. ``diffupath`` can be installed with the following commmands:
 
 .. code-block:: sh
 
@@ -20,7 +20,7 @@ Installation
 
 .. code-block:: sh
 
-    cd diffupy
+    cd diffupath
 
 .. code-block:: sh
 

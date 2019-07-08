@@ -1,4 +1,4 @@
-"""Constants of diffupy."""
+"""Constants of diffupath."""
 
 import os
 
