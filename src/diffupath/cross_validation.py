@@ -13,7 +13,7 @@ from sklearn import metrics
 
 import itertools
 
-# Random cross validation
+# Random cross validation_datasets
 
 def get_random_cv_split_input_and_validation(input, background_mat):
     randomized_input_labels, validation_labels = split_random_two_subsets(input)
@@ -22,7 +22,7 @@ def get_random_cv_split_input_and_validation(input, background_mat):
                                                 'randomized input',
                                                 background_mat), \
            generate_categoric_input_from_labels(validation_labels,
-                                                'validation labels',
+                                                'validation_datasets labels',
                                                 background_mat)
 
 
@@ -58,7 +58,7 @@ def get_random_cv_inputs_from_subsets_same_diff_input(input_subsets, background_
 
     return input_mat, validation_mats_by_entity_type
 
-# Partial cross validation
+# Partial cross validation_datasets
 
 def get_one_x_in_cv_inputs_from_subsets(input_subsets, background_mat, one_in ='Reactome'):
 
@@ -125,7 +125,7 @@ def cross_validation_one_x_in(mapping_by_subsets, kernel, k=3, disjoint = False,
 
     return auroc_metrics, auprc_metrics
 
-# Method cross validation
+# Method cross validation_datasets
 
 def generate_pagerank_baseline(graph, background_mat):
     graph = get_simplegraph_from_multigraph(graph)
