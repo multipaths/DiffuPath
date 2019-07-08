@@ -6,7 +6,7 @@ DiffuPath offers a bioinformatic tool foor pathway enrichment, wrapping the gene
 
 Installation
 ------------
-1. ``diffupy`` can be installed with the following commands:
+1. ``diffupath`` can be installed with the following commands:
 
 .. code-block:: sh
 
