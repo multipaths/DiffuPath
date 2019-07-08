@@ -1,4 +1,4 @@
 Kernel
 ======
-.. automodule:: diffupy.kernel
+.. automodule:: diffupath.kernel
    :members:

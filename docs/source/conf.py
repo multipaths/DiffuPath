@@ -40,7 +40,7 @@ pygments_style = 'sphinx'
 todo_include_todos = True
 html_theme = 'sphinx_rtd_theme'
 html_static_path = []
-htmlhelp_basename = 'diffupydoc'
+htmlhelp_basename = 'diffupathdoc'
 latex_elements = {}
 latex_documents = [
     (master_doc, 'diffupath.tex', 'DiffuPy Documentation',

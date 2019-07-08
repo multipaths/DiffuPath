@@ -1,6 +1,6 @@
-DiffuPy
+DiffuPath
 =======
-.. automodule:: diffupy
+.. automodule:: diffupath
 
 .. toctree::
    :maxdepth: 2
