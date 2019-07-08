@@ -1,7 +1,7 @@
 DiffuPath |build| |coverage|
 ==========================
 
-DiffuPath offers a bioinformatic tool foor pathway enrichment, wrapping the generalizable Python implementation diffuPy of the null diffusion algorithm for metabolomics data described by [1]_ and applying it simultaneously over the three databases (KEGG, Reactome and WikiPathways) integrated network retrieved from `PathMe <http://networkx.github.io/>`_ [2]_ pathway compilation.
+DiffuPath offers a bioinformatic tool foor pathway enrichment, wrapping the generalizable Python implementation  `DiffuPy <https://github.com/multipaths/DiffuPy/>`_ of the null diffusion algorithm for metabolomics data described by [1]_ and applying it simultaneously over the three databases (KEGG, Reactome and WikiPathways) integrated network retrieved from `PathMe <https://github.com/PathwayMerger/PathMe/>`_ [2]_ pathway compilation.
 
 
 Installation
