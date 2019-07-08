@@ -1,8 +1,7 @@
 DiffuPath |build| |coverage|
 ==========================
 
-DiffuPath offers a bioinformatic tool foor pathway enrichment, wrapping the generalizable Python implementation diffuPy of the null diffusion algorithm for metabolomics data described by [1]_ and applying it simultaneously over PathMe [2]_
-`NetworkX <http://networkx.github.io/>`_ classes.
+DiffuPath offers a bioinformatic tool foor pathway enrichment, wrapping the generalizable Python implementation diffuPy of the null diffusion algorithm for metabolomics data described by [1]_ and applying it simultaneously over `PathMe <http://networkx.github.io/>`_ [2]_ pathway compilation background network.
 
 
 Installation
