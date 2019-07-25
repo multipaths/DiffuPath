@@ -3,12 +3,24 @@
 """Miscellaneous utils of the package."""
 
 import random
+import numpy as np
 
 import itertools
 import logging
-
+import pickle
 
 log = logging.getLogger(__name__)
+
+def from_pickle(input_path):
+    with open(input_path, 'rb') as f:
+        unpickler = pickle.Unpickler(f)
+        background_mat = unpickler.load()
+
+    return background_mat
+
+def to_pickle(to_pickle, output):
+    with open(output, 'wb') as file:
+        pickle.dump(to_pickle, file)
 
 
 def print_dict_dimensions(entities_db, title):
@@ -149,3 +161,31 @@ def random_disjoint_intersection_three_subsets(sets_dict):
             set_labels[1] : set2|set(set2_core),
             set_labels[2] : set3|set(set3_core)
             }
+
+def get_count_and_labels_from_two_dim_dict(mapping_by_database_and_entity):
+    db_labels = []
+    types_labels = []
+
+    all_count = []
+    all_percentage = []
+
+    #entity_type_map = {'metabolite_nodes': 'metabolite', 'mirna_nodes': 'micrornas', 'gene_nodes': 'genes', 'bp_nodes': 'bps'}
+
+    for db_name, entities_by_type in mapping_by_database_and_entity.items():
+        db_count = []
+        db_percentage = []
+
+        db_labels.append(db_name)
+
+        if not types_labels:
+            types_labels = entities_by_type[0].keys()
+
+        for entity_type, entities_tupple in entities_by_type[0].items():
+            db_count.append(len(entities_tupple[0]))
+            db_percentage.append(entities_tupple[1])
+
+
+        all_count.append(db_count)
+        all_percentage.append(db_percentage)
+
+    return np.array(all_count), np.array(all_percentage), db_labels, types_labels

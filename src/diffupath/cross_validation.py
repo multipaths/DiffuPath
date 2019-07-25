@@ -6,8 +6,10 @@ from tqdm import tqdm
 
 from diffupy.diffuse_raw import diffuse_raw
 from diffupy.matrix import Matrix
-from diffupy.utils import get_simplegraph_from_multigraph, split_random_two_subsets, random_disjoint_intersection_three_subsets
-from diffupy.input_mapping import generate_categoric_input_from_labels
+from diffupy.utils import get_simplegraph_from_multigraph
+from diffupy.process_input import generate_categoric_input_from_labels
+
+from .utils import split_random_two_subsets, random_disjoint_intersection_three_subsets
 
 from sklearn import metrics
 

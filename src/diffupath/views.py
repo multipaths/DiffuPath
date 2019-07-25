@@ -64,7 +64,8 @@ def heatmap(
 
     ax.set_xticks(np.arange(data.shape[1] + 1) - .5, minor=True)
     ax.set_yticks(np.arange(data.shape[0] + 1) - .5, minor=True)
-    ax.grid(which="minor", color="w", linestyle='-', linewidth=3)
+    ax.grid(which="m"
+                  "inor", color="w", linestyle='-', linewidth=3)
     ax.tick_params(which="minor", bottom=False, left=False)
 
     ax.set_title(title)
@@ -127,12 +128,12 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
     return texts
 
 
-def show_heatmap(entity_number, entity_count, databases, entity_types):
+def show_heatmap(count, percentage, databases, entity_types):
     fig, ax = plt.subplots(figsize=(15, 7))
 
-    im, cbar = heatmap(entity_number, databases, entity_types, ax=ax,
+    im, cbar = heatmap(percentage, databases, entity_types, ax=ax,
                        cmap="YlGn", cbarlabel="percentage [0-1]")
-    texts = annotate_heatmap(im, entity_count=entity_count, valfmt="{x:1} ")
+    texts = annotate_heatmap(im, entity_count=count, valfmt="{x:1} ")
 
     fig.tight_layout()
     ax.set_title("Dataset 1 DiffuPath Mapping")
