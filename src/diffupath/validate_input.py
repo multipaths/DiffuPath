@@ -1,8 +1,15 @@
-
+import itertools
 import logging
 
 log = logging.getLogger(__name__)
 
+def validation_input_from_dict(mapping_by_subsets, diffuse_input_type, validation_type, input_diffuse):
+
+    input_labels = mapping_by_subsets[diffuse_input_type]
+    validation_labels = mapping_by_subsets[validation_type]
+    out_labels = set(input_diffuse.rows_labels) - input_labels - validation_labels
+
+    return [input_labels, validation_labels, out_labels]
 
 def validate_cross_validation_input_1(input_diffuse, input_validate, sets):
 

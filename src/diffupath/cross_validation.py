@@ -10,7 +10,7 @@ from diffupy.utils import get_simplegraph_from_multigraph
 from diffupy.process_input import generate_categoric_input_from_labels
 
 from .utils import split_random_two_subsets, random_disjoint_intersection_three_subsets
-from .validate_input import validate_cross_validation_input_1
+from .validate_input import validate_cross_validation_input_1, validation_input_from_dict
 
 from sklearn import metrics
 
@@ -52,19 +52,21 @@ def get_random_cv_inputs_from_subsets_same_diff_input(input_subsets, background_
 
 def get_one_x_in_cv_inputs_from_subsets(input_subsets, background_mat, one_in ='Reactome'):
 
+    input_dict = {}
     input_labels= input_subsets.pop(one_in)
 
+    for labels_type, validation_labels in input_subsets.items():
 
-    validation_labels = set(itertools.chain.from_iterable(input_subsets.values()))
-
-    return generate_categoric_input_from_labels(input_labels,
+        input_dict[labels_type] = (generate_categoric_input_from_labels(input_labels,
                                                  'two out input',
                                                  background_mat,
-                                                 rows_unlabeled = validation_labels), \
-           generate_categoric_input_from_labels(validation_labels,
-                                                 'two out input',
-                                                 background_mat
-                                                )
+                                                 rows_unlabeled = validation_labels),
+                                   generate_categoric_input_from_labels(validation_labels,
+                                                                         'two out input',
+                                                                         background_mat
+                                                                        )
+                                   )
+    return input_dict
 
 
 def get_metrics(validation_labels, scores):
@@ -92,32 +94,31 @@ def cross_validation_by_subset_same_diff_input(mapping_by_subsets, kernel, k=3, 
 
 
 def cross_validation_one_x_in(mapping_by_subsets, kernel, k=3, disjoint = False, z=True):
-    auroc_metrics = defaultdict(list)
-    auprc_metrics = defaultdict(list)
+    auroc_metrics = defaultdict(lambda: defaultdict(list))
+    auprc_metrics = defaultdict(lambda: defaultdict(list))
 
     if disjoint:
         mapping_by_subsets = random_disjoint_intersection_three_subsets(mapping_by_subsets)
 
     for i in tqdm(range(k)):
 
-        for subset_type in tqdm(mapping_by_subsets):
-            input_diffuse, input_validation = get_one_x_in_cv_inputs_from_subsets(dict(mapping_by_subsets),
-                                                                               kernel,
-                                                                               one_in = subset_type)
-            # Match testing
-            all_labels = set(itertools.chain.from_iterable(mapping_by_subsets.values()))
-            input_labels = mapping_by_subsets[subset_type]
-            validation_labels = all_labels - input_labels
-            out_labels = set(input_diffuse.rows_labels) - all_labels
+        for diffuse_input_type in tqdm(mapping_by_subsets):
+            inputs = get_one_x_in_cv_inputs_from_subsets(dict(mapping_by_subsets),
+                                                            kernel,
+                                                            one_in = diffuse_input_type)
+            for validation_type, validation_labels in inputs.items():
+                input_diffuse, input_validation = validation_labels[0], validation_labels[1]
 
-            validate_cross_validation_input_1(input_diffuse, input_validation, [input_labels, validation_labels, out_labels])
+                # Input test
+                validate_cross_validation_input_1(input_diffuse, input_validation, validation_input_from_dict(mapping_by_subsets, diffuse_input_type, validation_type, input_diffuse))
 
-            scores = diffuse_raw(graph = None, scores = input_diffuse, K=kernel, z=z)
+                # Run diffusion
+                scores = diffuse_raw(graph = None, scores = input_diffuse, K=kernel, z=z)
 
-            auroc, auprc = get_metrics(input_validation, scores)
+                auroc, auprc = get_metrics(input_validation, scores)
 
-            auroc_metrics[subset_type].append(auroc)
-            auprc_metrics[subset_type].append(auprc)
+                auroc_metrics[diffuse_input_type][validation_type].append(auroc)
+                auprc_metrics[diffuse_input_type][validation_type].append(auprc)
 
     return auroc_metrics, auprc_metrics
 
