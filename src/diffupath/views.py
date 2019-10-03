@@ -142,6 +142,18 @@ def show_heatmap(count, percentage, databases, entity_types):
 
 
 def box_plot_from_dict(d, title = 'Box plot', x_title = 'x', y_title = 'y'):
+    """
+    A function to plot a boxplot.
+
+    Arguments:
+        d         : Dictionary.
+
+    Optional arguments:
+        data       :
+
+    Further arguments are passed on to the created text labels.
+    """
+
     data = [go.Box(
                 y = v,
                 name = k
@@ -169,6 +181,32 @@ def box_plot_from_dict(d, title = 'Box plot', x_title = 'x', y_title = 'y'):
 
     return py.iplot(fig)
 
+
+def box_plot_from_two_dimension_dict(d, title = 'Box plot', y_label = 'y'):
+
+    x = [k2 for k1, v1 in d.items() for k2, v2 in v1.items() for i in range(len(v2))]
+
+
+    data = [go.Box(
+                y= [i for k2, v2 in v1.items() for i in v2],
+                x= x,
+                name=k1,
+                marker=dict(
+                    color='#FF4136'
+                )
+            ) for k1, v1 in d.items()]
+
+    layout = go.Layout(
+        yaxis=dict(
+            title=y_label,
+            zeroline=False
+        ),
+        boxmode='group'
+    )
+    fig = go.Figure(data=data, layout=layout)
+
+
+    return py.iplot(fig)
 
 
 def show_venn_diagram(intersections, set_labels = ('Keeg', 'Reactome', 'Wikipathways')):
