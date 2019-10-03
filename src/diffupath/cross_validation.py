@@ -50,28 +50,41 @@ def get_random_cv_inputs_from_subsets_same_diff_input(input_subsets, background_
 
 # Partial cross validation_datasets
 
-def get_one_x_in_cv_inputs_from_subsets(input_subsets, background_mat, one_in ='Reactome'):
+def get_one_x_in_cv_inputs_from_subsets(input_subsets, background_mat, one_in ='Reactome', rows_unlabeled = False, missing_value = -1):
 
     input_dict = {}
     input_labels= input_subsets.pop(one_in)
+    rows_unlabel = None
 
     for labels_type, validation_labels in input_subsets.items():
+        if rows_unlabeled:
+            rows_unlabel = validation_labels
+            missing_value = -1
 
         input_dict[labels_type] = (generate_categoric_input_from_labels(input_labels,
-                                                 'two out input',
-                                                 background_mat,
-                                                 rows_unlabeled = validation_labels),
+                                                                         'two out input',
+                                                                         background_mat,
+                                                                         missing_value,
+                                                                         rows_unlabeled = rows_unlabel
+                                                                        ),
                                    generate_categoric_input_from_labels(validation_labels,
                                                                          'two out input',
-                                                                         background_mat
+                                                                         background_mat,
+                                                                         missing_value,
                                                                         )
                                    )
     return input_dict
 
 
 def get_metrics(validation_labels, scores):
-    return metrics.roc_auc_score(validation_labels.mat, scores.mat), metrics.average_precision_score(
-        validation_labels.mat, scores.mat)
+    validation_labels_vec = validation_labels.__copy__()
+
+    for score, i, j in validation_labels_vec.__iter__(get_labels=False, get_indices=True):
+        if score not in [0, 1]:
+            validation_labels_vec.mat[i, j] = 0
+
+    return metrics.roc_auc_score(validation_labels_vec.mat, scores.mat), metrics.average_precision_score(
+        validation_labels_vec.mat, scores.mat)
 
 
 
@@ -93,9 +106,13 @@ def cross_validation_by_subset_same_diff_input(mapping_by_subsets, kernel, k=3, 
     return auroc_metrics, auprc_metrics
 
 
-def cross_validation_one_x_in(mapping_by_subsets, kernel, k=3, disjoint = False, z=True):
+def cross_validation_one_x_in(mapping_by_subsets, kernel, k=1, missing_value = -1, disjoint = False, rows_unlabeled = False, z=False):
     auroc_metrics = defaultdict(lambda: defaultdict(list))
     auprc_metrics = defaultdict(lambda: defaultdict(list))
+
+    scores_dict = defaultdict(lambda: defaultdict(list))
+    validation_dict = defaultdict(lambda: defaultdict(list))
+    input_dict = defaultdict(lambda: defaultdict(list))
 
     if disjoint:
         mapping_by_subsets = random_disjoint_intersection_three_subsets(mapping_by_subsets)
@@ -110,17 +127,26 @@ def cross_validation_one_x_in(mapping_by_subsets, kernel, k=3, disjoint = False,
                 input_diffuse, input_validation = validation_labels[0], validation_labels[1]
 
                 # Input test
-                validate_cross_validation_input_1(input_diffuse, input_validation, validation_input_from_dict(mapping_by_subsets, diffuse_input_type, validation_type, input_diffuse))
+                #validate_cross_validation_input_1(input_diffuse, input_validation, validation_input_from_dict(mapping_by_subsets, diffuse_input_type, validation_type, input_diffuse))
 
                 # Run diffusion
                 scores = diffuse_raw(graph = None, scores = input_diffuse, K=kernel, z=z)
+
+                scores.cols_labels = ['scores']
+                input_validation.cols_labels = ['input_validation']
+                input_diffuse.cols_labels = ['input_diffuse']
 
                 auroc, auprc = get_metrics(input_validation, scores)
 
                 auroc_metrics[diffuse_input_type][validation_type].append(auroc)
                 auprc_metrics[diffuse_input_type][validation_type].append(auprc)
 
-    return auroc_metrics, auprc_metrics
+                scores.col_bind(matrix = input_validation)
+                scores.col_bind(matrix = input_diffuse)
+
+                scores_dict[diffuse_input_type][validation_type].append(scores)
+
+    return dict(auroc_metrics), dict(auprc_metrics), dict(scores_dict)
 
 # Method cross validation_datasets
 
