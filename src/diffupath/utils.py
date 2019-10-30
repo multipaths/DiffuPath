@@ -4,6 +4,7 @@
 
 import random
 import numpy as np
+from statistics import mean
 
 import itertools
 import logging
@@ -189,3 +190,13 @@ def get_count_and_labels_from_two_dim_dict(mapping_by_database_and_entity):
         all_percentage.append(db_percentage)
 
     return np.array(all_count), np.array(all_percentage), db_labels, types_labels
+
+
+def get_mean_from_two_dim_dict(d):
+
+    for k1, v1 in d.items():
+        for k2, v2 in v1.items():
+            if v2:
+                d[k1][k2] = [mean(v2)]
+
+    return d

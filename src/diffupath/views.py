@@ -186,13 +186,20 @@ def box_plot_from_two_dimension_dict(d, title = 'Box plot', y_label = 'y'):
 
     x = [k2 for k1, v1 in d.items() for k2, v2 in v1.items() for i in range(len(v2))]
 
+    color_palete = ['#FF4136', '#3d9970', '#344f9e' , '#bfc464']
+    color_dict = {}
+    i = 0
+
+    for k, v in d.items():
+        color_dict[k] = color_palete[i]
+        i += 1
 
     data = [go.Box(
                 y= [i for k2, v2 in v1.items() for i in v2],
                 x= x,
                 name=k1,
                 marker=dict(
-                    color='#FF4136'
+                    color=color_dict[k1]
                 )
             ) for k1, v1 in d.items()]
 

@@ -2,6 +2,7 @@ from collections import defaultdict
 
 import networkx as nx
 import numpy as np
+from diffupath.topological_analyses import generate_pagerank_baseline
 from tqdm import tqdm
 
 from diffupy.diffuse_raw import diffuse_raw
@@ -149,19 +150,6 @@ def cross_validation_one_x_in(mapping_by_subsets, kernel, k=1, missing_value = -
     return dict(auroc_metrics), dict(auprc_metrics), dict(scores_dict)
 
 # Method cross validation_datasets
-
-def generate_pagerank_baseline(graph, background_mat):
-    graph = get_simplegraph_from_multigraph(graph)
-
-    pagerank_scores = nx.pagerank(graph)
-
-    return Matrix(mat=np.array(
-        list(pagerank_scores.values())).reshape(
-        (len(list(pagerank_scores.values())), 1)
-    ),
-        rows_labels=list(pagerank_scores.keys()),
-        cols_labels=['PageRank']
-    ).match_missing_rows(background_mat.rows_labels, 0).match_rows(background_mat)
 
 
 def generate_random_score_ranking(background_mat):
