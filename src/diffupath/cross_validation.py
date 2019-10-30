@@ -122,8 +122,12 @@ def cross_validation_one_x_in(mapping_by_subsets, kernel, k=1, missing_value = -
 
         for diffuse_input_type in tqdm(mapping_by_subsets):
             inputs = get_one_x_in_cv_inputs_from_subsets(dict(mapping_by_subsets),
-                                                            kernel,
-                                                            one_in = diffuse_input_type)
+                                                         kernel,
+                                                         one_in = diffuse_input_type,
+                                                         rows_unlabeled = rows_unlabeled,
+                                                         missing_value = missing_value
+                                                         )
+
             for validation_type, validation_labels in inputs.items():
                 input_diffuse, input_validation = validation_labels[0], validation_labels[1]
 

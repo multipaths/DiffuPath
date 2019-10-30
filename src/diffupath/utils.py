@@ -3,6 +3,7 @@
 """Miscellaneous utils of the package."""
 
 import random
+
 import numpy as np
 from statistics import mean
 
