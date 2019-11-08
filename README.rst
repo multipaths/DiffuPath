@@ -1,5 +1,5 @@
-DiffuPath |build| |coverage|
-==========================
+DiffuPath |build| |docs| |coverage|
+===================================
 
 DiffuPath offers a bioinformatic tool foor pathway enrichment, wrapping the generalizable Python implementation  `DiffuPy <https://github.com/multipaths/DiffuPy/>`_ of the null diffusion algorithm for metabolomics data described by [1]_ and applying it simultaneously over the three databases (KEGG, Reactome and WikiPathways) integrated network retrieved from `PathMe <https://github.com/PathwayMerger/PathMe/>`_ [2]_ pathway compilation.
 
@@ -40,10 +40,14 @@ If you use DiffuPath in your work, please cite the R implementation of the null 
     
 .. [2] Domingo-Fernandez, D., Mubeen, S., Marin-Llao, J., Hoyt, C., & Hofmann-Apitius, M. (2019). `PathMe: Merging and exploring mechanistic pathway knowledge. <https://www.biorxiv.org/content/10.1101/451625v1>`_. *BMC Bioinformatics*, 20:243.
 
-.. |build| image:: https://travis-ci.com/jmarinllao/diffupy.svg?branch=master
-    :target: https://travis-ci.com/jmarinllao/diffupy
+.. |build| image:: https://travis-ci.com/multipaths/diffupy.svg?branch=master
+    :target: https://travis-ci.com/multipaths/diffupy
     :alt: Build Status
+    
+.. |docs| image:: http://readthedocs.org/projects/diffupath/badge/?version=latest
+    :target: https://diffupath.readthedocs.io/en/latest/
+    :alt: Documentation Status
 
-.. |coverage| image:: https://codecov.io/gh/jmarinllao/diffupy/coverage.svg?branch=master
-    :target: https://codecov.io/gh/jmarinllao/diffupy?branch=master
+.. |coverage| image:: https://codecov.io/gh/multipaths/diffupy/coverage.svg?branch=master
+    :target: https://codecov.io/gh/multipaths/diffupy?branch=master
     :alt: Coverage Status
