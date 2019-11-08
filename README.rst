@@ -40,8 +40,8 @@ If you use DiffuPath in your work, please cite the R implementation of the null 
     
 .. [2] Domingo-Fernandez, D., Mubeen, S., Marin-Llao, J., Hoyt, C., & Hofmann-Apitius, M. (2019). `PathMe: Merging and exploring mechanistic pathway knowledge. <https://www.biorxiv.org/content/10.1101/451625v1>`_. *BMC Bioinformatics*, 20:243.
 
-.. |build| image:: https://travis-ci.com/multipaths/diffupy.svg?branch=master
-    :target: https://travis-ci.com/multipaths/diffupy
+.. |build| image:: https://travis-ci.com/multipaths/diffupath.svg?branch=master
+    :target: https://travis-ci.com/multipaths/diffupath
     :alt: Build Status
     
 .. |docs| image:: http://readthedocs.org/projects/diffupath/badge/?version=latest
