@@ -48,6 +48,6 @@ If you use DiffuPath in your work, please cite the R implementation of the null 
     :target: https://diffupath.readthedocs.io/en/latest/
     :alt: Documentation Status
 
-.. |coverage| image:: https://codecov.io/gh/multipaths/diffupy/coverage.svg?branch=master
-    :target: https://codecov.io/gh/multipaths/diffupy?branch=master
+.. |coverage| image:: https://codecov.io/gh/multipaths/diffupath/coverage.svg?branch=master
+    :target: https://codecov.io/gh/multipaths/diffupath?branch=master
     :alt: Coverage Status
