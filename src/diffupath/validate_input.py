@@ -1,21 +1,20 @@
-import itertools
 import logging
 
 log = logging.getLogger(__name__)
 
-def validation_input_from_dict(mapping_by_subsets, diffuse_input_type, validation_type, input_diffuse):
 
+def validation_input_from_dict(mapping_by_subsets, diffuse_input_type, validation_type, input_diffuse):
     input_labels = mapping_by_subsets[diffuse_input_type]
     validation_labels = mapping_by_subsets[validation_type]
     out_labels = set(input_diffuse.rows_labels) - input_labels - validation_labels
 
     return [input_labels, validation_labels, out_labels]
 
-def validate_cross_validation_input_1(input_diffuse, input_validate, sets):
 
+def validate_cross_validation_input_1(input_diffuse, input_validate, sets):
     labeled, unlabeled, no_labeled = set(), set(), set()
 
-    for score, i, j, row_label, col_label in input_diffuse.__iter__(get_indices = True, get_labels = True):
+    for score, i, j, row_label, col_label in input_diffuse.__iter__(get_indices=True, get_labels=True):
         if score == 1:
             labeled.add(row_label)
 
@@ -29,10 +28,9 @@ def validate_cross_validation_input_1(input_diffuse, input_validate, sets):
     assert unlabeled == sets[1]
     assert no_labeled == sets[2]
 
-
     labeled, unlabeled, no_labeled = set(), set(), set()
 
-    for score, i, j, row_label, col_label in input_validate.__iter__(get_indices = True, get_labels = True):
+    for score, i, j, row_label, col_label in input_validate.__iter__(get_indices=True, get_labels=True):
         if score == 1:
             labeled.add(row_label)
 

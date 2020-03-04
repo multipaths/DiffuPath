@@ -28,7 +28,7 @@ def to_pickle(to_pickle, output):
 def print_dict_dimensions(entities_db, title):
     """Print dimension of the dictionary"""
     total = 0
-    print(title)
+
     for k1, v1 in entities_db.items():
         m = ''
         if isinstance(v1, dict):

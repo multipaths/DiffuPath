@@ -5,11 +5,10 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-
-import plotly.plotly as py
 import plotly.graph_objs as go
-
+import plotly.plotly as py
 from matplotlib_venn import venn3
+
 
 def heatmap(
         data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel="", title="", **kwargs
@@ -141,7 +140,7 @@ def show_heatmap(count, percentage, databases, entity_types):
     plt.show()
 
 
-def box_plot_from_dict(d, title = 'Box plot', x_title = 'x', y_title = 'y'):
+def box_plot_from_dict(d, title='Box plot', x_title='x', y_title='y'):
     """
     A function to plot a boxplot.
 
@@ -155,24 +154,24 @@ def box_plot_from_dict(d, title = 'Box plot', x_title = 'x', y_title = 'y'):
     """
 
     data = [go.Box(
-                y = v,
-                name = k
-            ) for k, v in d.items()
-           ]
+        y=v,
+        name=k
+    ) for k, v in d.items()
+    ]
 
     layout = go.Layout(
         title=go.layout.Title(
-            text = title,
-            xref = 'paper'
+            text=title,
+            xref='paper'
         ),
         xaxis=go.layout.XAxis(
             title=go.layout.xaxis.Title(
-                text= x_title
+                text=x_title
             )
         ),
         yaxis=go.layout.YAxis(
             title=go.layout.yaxis.Title(
-                text= y_title
+                text=y_title
             )
         )
     )
@@ -182,11 +181,10 @@ def box_plot_from_dict(d, title = 'Box plot', x_title = 'x', y_title = 'y'):
     return py.iplot(fig)
 
 
-def box_plot_from_two_dimension_dict(d, title = 'Box plot', y_label = 'y'):
-
+def box_plot_from_two_dimension_dict(d, title='Box plot', y_label='y'):
     x = [k2 for k1, v1 in d.items() for k2, v2 in v1.items() for i in range(len(v2))]
 
-    color_palete = ['#FF4136', '#3d9970', '#344f9e' , '#bfc464']
+    color_palete = ['#FF4136', '#3d9970', '#344f9e', '#bfc464']
     color_dict = {}
     i = 0
 
@@ -195,13 +193,13 @@ def box_plot_from_two_dimension_dict(d, title = 'Box plot', y_label = 'y'):
         i += 1
 
     data = [go.Box(
-                y= [i for k2, v2 in v1.items() for i in v2],
-                x= x,
-                name=k1,
-                marker=dict(
-                    color=color_dict[k1]
-                )
-            ) for k1, v1 in d.items()]
+        y=[i for k2, v2 in v1.items() for i in v2],
+        x=x,
+        name=k1,
+        marker=dict(
+            color=color_dict[k1]
+        )
+    ) for k1, v1 in d.items()]
 
     layout = go.Layout(
         yaxis=dict(
@@ -212,15 +210,13 @@ def box_plot_from_two_dimension_dict(d, title = 'Box plot', y_label = 'y'):
     )
     fig = go.Figure(data=data, layout=layout)
 
-
     return py.iplot(fig)
 
 
-def show_venn_diagram(intersections, set_labels = ('Keeg', 'Reactome', 'Wikipathways')):
-
+def show_venn_diagram(intersections, set_labels=('Keeg', 'Reactome', 'Wikipathways')):
     intersections_len = [len(intersection) for name, intersection in intersections.items()]
 
-    plt.figure(figsize=(17,8))
-    v = venn3(subsets = intersections_len, set_labels = set_labels)
+    plt.figure(figsize=(17, 8))
+    v = venn3(subsets=intersections_len, set_labels=set_labels)
 
     plt.show()

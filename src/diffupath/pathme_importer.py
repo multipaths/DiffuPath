@@ -13,7 +13,9 @@ from pybel.dsl import Abundance, BiologicalProcess, CentralDogma, ListAbundance,
 
 def calculate_database_sets_as_dict(nodes, database):
     gene_nodes, mirna_nodes, metabolite_nodes, bp_nodes = calculate_database_sets(nodes, database)
-    return {'gene_nodes' : gene_nodes, 'mirna_nodes' : mirna_nodes, 'metabolite_nodes' : metabolite_nodes, 'bp_nodes': bp_nodes}
+    return {'gene_nodes': gene_nodes, 'mirna_nodes': mirna_nodes, 'metabolite_nodes': metabolite_nodes,
+            'bp_nodes': bp_nodes}
+
 
 def get_nodes_in_database(folder):
     """Merge all python pickles in a given folder and returns the corresponding BELGraph."""
@@ -72,17 +74,62 @@ def munge_reactome_gene(gene):
 
     return gene
 
+
 def calculate_database_sets(nodes, database):
     """Calculate node sets for each modality in the database"""
 
     # Entities in WikiPathways that required manual curation
-    WIKIPATHWAYS_BIOL_PROCESS = {'lipid biosynthesis', 'hsc survival', 'glycolysis & gluconeogenesis', 'triacylglyceride  synthesis', 'wnt canonical signaling', 'regulation of actin skeleton', 'fatty acid metabolism', 'mrna processing major splicing pathway', 'senescence', 'monocyte differentiation', 'pentose phosphate pathway', 'ethanolamine  phosphate', 'hsc differentiation', 'actin, stress fibers and adhesion', 'regulation of actin cytoskeleton', 's-phase progression', 'g1-s transition', 'toll-like receptor signaling pathway', 'regulation of  actin cytoskeleton', 'proteasome degradation', 'apoptosis', 'bmp pathway', 'ampk activation', 'g1/s checkpoint arrest', 'mapk signaling pathway', 'chromatin remodeling and  epigenetic modifications', 'wnt signaling pathway', 'ros production', 'erbb signaling pathway', 'shh pathway', 'inflammation', 'dna replication', 'mrna translation', 'oxidative stress', 'cell cycle checkpoint activation', 'gi/go pathway', 'wnt pathway', 'g1/s transition of mitotic cell cycle', 'modulation of estrogen receptor signalling', 'dna repair', 'bmp canonical signaling', 'igf and insuline signaling', 'unfolded protein response', 'cell death', 'p38/mapk  pathway', 'glycogen metabolism', 'gnrh signal pathway', 'the intra-s-phase checkpoint mediated arrest of cell cycle progression', 'tca cycle', 'mtor protein kinase signaling pathway', 'proteasome  degradation pathway', 'morphine metabolism', 'hsc aging', 'gastric pepsin release', 'parietal cell production', 'prostaglandin pathway', 'cell cycle (g1/s)  progression', 'notch pathway', 'g2/m progression', 'wnt signaling', 'cell adhesion', 'cell cycle progression', 'egfr pathway', 'cell cycle', 'angiogenesis', 'g2/m-phase checkpoint', 'hsc self renewal', '26s proteasome  degradation', 'mapk signaling', 'immune system up or down regulation', 'm-phase progression', 'insulin signaling', 'nf kappa b pathway', 'cell cycle  progression', 'gi pathway', 'cd45+ hematopoietic-    derived cell    proliferation', "kreb's cycle", 'glycogen synthesis', 'apoptosis pathway', 'g1/s progression', 'inflammasome activation', 'melanin biosynthesis', 'proteasomal degradation', 'g2/m checkpoint arrest', 'g1/s cell cycle transition', 'dna damage response', 'gastric histamine release'}
-    WIKIPATHWAYS_METAB = {'2,8-dihydroxyadenine', '8,11-dihydroxy-delta-9-thc', 'adp-ribosyl', 'cocaethylene', 'dhcer1p', 'ecgonidine', 'f2-isoprostane', 'fumonisins b1', 'iodine', 'l-glutamate', 'lactosylceramide', 'methylecgonidine', 'n-acetyl-l-aspartate', 'nad+', 'nadph oxidase', 'neuromelanin', 'nicotinic acid (na)', 'nmn', 'pip2', 'sphingomyelin', 'thf'}
-    WIKIPATHWAYS_NAME_NORMALIZATION = {"Ca 2+": "ca 2+", "acetyl coa": "acetyl-coa", "acetyl-coa(mit)": "acetyl-coa", "h20": "h2o"}
+    WIKIPATHWAYS_BIOL_PROCESS = {'lipid biosynthesis', 'hsc survival', 'glycolysis & gluconeogenesis',
+                                 'triacylglyceride  synthesis', 'wnt canonical signaling',
+                                 'regulation of actin skeleton', 'fatty acid metabolism',
+                                 'mrna processing major splicing pathway', 'senescence', 'monocyte differentiation',
+                                 'pentose phosphate pathway', 'ethanolamine  phosphate', 'hsc differentiation',
+                                 'actin, stress fibers and adhesion', 'regulation of actin cytoskeleton',
+                                 's-phase progression', 'g1-s transition', 'toll-like receptor signaling pathway',
+                                 'regulation of  actin cytoskeleton', 'proteasome degradation', 'apoptosis',
+                                 'bmp pathway', 'ampk activation', 'g1/s checkpoint arrest', 'mapk signaling pathway',
+                                 'chromatin remodeling and  epigenetic modifications', 'wnt signaling pathway',
+                                 'ros production', 'erbb signaling pathway', 'shh pathway', 'inflammation',
+                                 'dna replication', 'mrna translation', 'oxidative stress',
+                                 'cell cycle checkpoint activation', 'gi/go pathway', 'wnt pathway',
+                                 'g1/s transition of mitotic cell cycle', 'modulation of estrogen receptor signalling',
+                                 'dna repair', 'bmp canonical signaling', 'igf and insuline signaling',
+                                 'unfolded protein response', 'cell death', 'p38/mapk  pathway', 'glycogen metabolism',
+                                 'gnrh signal pathway',
+                                 'the intra-s-phase checkpoint mediated arrest of cell cycle progression', 'tca cycle',
+                                 'mtor protein kinase signaling pathway', 'proteasome  degradation pathway',
+                                 'morphine metabolism', 'hsc aging', 'gastric pepsin release',
+                                 'parietal cell production', 'prostaglandin pathway', 'cell cycle (g1/s)  progression',
+                                 'notch pathway', 'g2/m progression', 'wnt signaling', 'cell adhesion',
+                                 'cell cycle progression', 'egfr pathway', 'cell cycle', 'angiogenesis',
+                                 'g2/m-phase checkpoint', 'hsc self renewal', '26s proteasome  degradation',
+                                 'mapk signaling', 'immune system up or down regulation', 'm-phase progression',
+                                 'insulin signaling', 'nf kappa b pathway', 'cell cycle  progression', 'gi pathway',
+                                 'cd45+ hematopoietic-    derived cell    proliferation', "kreb's cycle",
+                                 'glycogen synthesis', 'apoptosis pathway', 'g1/s progression',
+                                 'inflammasome activation', 'melanin biosynthesis', 'proteasomal degradation',
+                                 'g2/m checkpoint arrest', 'g1/s cell cycle transition', 'dna damage response',
+                                 'gastric histamine release'}
+    WIKIPATHWAYS_METAB = {'2,8-dihydroxyadenine', '8,11-dihydroxy-delta-9-thc', 'adp-ribosyl', 'cocaethylene',
+                          'dhcer1p', 'ecgonidine', 'f2-isoprostane', 'fumonisins b1', 'iodine', 'l-glutamate',
+                          'lactosylceramide', 'methylecgonidine', 'n-acetyl-l-aspartate', 'nad+', 'nadph oxidase',
+                          'neuromelanin', 'nicotinic acid (na)', 'nmn', 'pip2', 'sphingomyelin', 'thf'}
+    WIKIPATHWAYS_NAME_NORMALIZATION = {"Ca 2+": "ca 2+", "acetyl coa": "acetyl-coa", "acetyl-coa(mit)": "acetyl-coa",
+                                       "h20": "h2o"}
 
     # Entities in Reactome that required manual curation
     BLACK_LIST_REACTOME = {"5'"}
-    REACTOME_PROT = {'phospho-g2/m transition proteins', 'integrin alpha5beta1, integrin alphavbeta3, cd47', 'food proteins', 'activated fgfr2', 'adherens junction-associated proteins', 'pi3k mutants,activator:pi3k', 'prolyl 3-hydroxylases', 'gpi-anchored proteins', 'c3d, c3dg, ic3b', 'c4s/c6s chains', 'activated fgfr1 mutants and fusions', 'activated fgfr3 mutants', 'protein', 'cyclin a2:cdk2 phosphorylated g2/m transition protein', 'c4c, c3f', 'activated raf/ksr1', 'activated fgfr1 mutants', 'g2/m transition proteins', 'lman family receptors', 'cyclin', 'usp12:wdr48:wdr20,usp26', 'proteins with cleaved gpi-anchors', 'activated fgfr2 mutants', 'c4d, ic3b', 'c5b:c6:c7, c8, c9', 'cyclin a1:cdk2 phosphorylated g2/m transition protein', 'genetically or chemically inactive braf', 'il13-downregulated proteins', 'activated fgfr4 mutants', 'rna-binding protein in rnp (ribonucleoprotein) complexes', 'effector proteins', 'usp3, saga complex', 'dephosphorylated "receiver" raf/ksr1'}
+    REACTOME_PROT = {'phospho-g2/m transition proteins', 'integrin alpha5beta1, integrin alphavbeta3, cd47',
+                     'food proteins', 'activated fgfr2', 'adherens junction-associated proteins',
+                     'pi3k mutants,activator:pi3k', 'prolyl 3-hydroxylases', 'gpi-anchored proteins', 'c3d, c3dg, ic3b',
+                     'c4s/c6s chains', 'activated fgfr1 mutants and fusions', 'activated fgfr3 mutants', 'protein',
+                     'cyclin a2:cdk2 phosphorylated g2/m transition protein', 'c4c, c3f', 'activated raf/ksr1',
+                     'activated fgfr1 mutants', 'g2/m transition proteins', 'lman family receptors', 'cyclin',
+                     'usp12:wdr48:wdr20,usp26', 'proteins with cleaved gpi-anchors', 'activated fgfr2 mutants',
+                     'c4d, ic3b', 'c5b:c6:c7, c8, c9', 'cyclin a1:cdk2 phosphorylated g2/m transition protein',
+                     'genetically or chemically inactive braf', 'il13-downregulated proteins',
+                     'activated fgfr4 mutants', 'rna-binding protein in rnp (ribonucleoprotein) complexes',
+                     'effector proteins', 'usp3, saga complex', 'dephosphorylated "receiver" raf/ksr1'}
 
     gene_nodes = set()
     mirna_nodes = set()
@@ -129,9 +176,9 @@ def calculate_database_sets(nodes, database):
                     reactome_cell = munge_reactome_gene(name)
                     if isinstance(reactome_cell, list):
                         for name in reactome_cell:
-                            if name in BLACK_LIST_REACTOME: # Filter entities in black list
+                            if name in BLACK_LIST_REACTOME:  # Filter entities in black list
                                 continue
-                            elif name.startswith("("): # remove redundant parentheses
+                            elif name.startswith("("):  # remove redundant parentheses
                                 name = name.strip("(").strip(")")
 
                             gene_nodes.add(name)
@@ -174,8 +221,8 @@ def calculate_database_sets(nodes, database):
                 # Flat multiple identifiers (this is not trivial because most of ChEBI names contain commas,
                 # so a clever way to fix some of the entities is to check that all identifiers contain letters)
                 elif "," in name and all(
-                    string.isalpha()
-                    for string in name.split(",")
+                        string.isalpha()
+                        for string in name.split(",")
                 ):
                     for string in name.split(","):
                         metabolite_nodes.add(string)
@@ -189,12 +236,11 @@ def calculate_database_sets(nodes, database):
 
         elif isinstance(node, BiologicalProcess):
             if name.startswith('title:'):
-                name = name[6:] # KEGG normalize
+                name = name[6:]  # KEGG normalize
 
             bp_nodes.add(name)
 
     return gene_nodes, mirna_nodes, metabolite_nodes, bp_nodes
-
 
 
 def get_set_database(database):
@@ -227,12 +273,11 @@ def get_labels_by_db_and_omic_from_pathme(databases):
 
 
 def get_labels_by_db_and_omic_from_graph(graph):
-
     db_subsets = defaultdict(set)
     db_entites = defaultdict(dict)
     entites_db = defaultdict(dict)
 
-    #entity_type_map = {'Gene':'genes', 'mirna_nodes':'mirna', 'Abundance':'metabolites', 'BiologicalProcess':'bps'}
+    # entity_type_map = {'Gene':'genes', 'mirna_nodes':'mirna', 'Abundance':'metabolites', 'BiologicalProcess':'bps'}
 
     for u, v, k in graph.edges(keys=True):
         if ANNOTATIONS not in graph[u][v][k]:

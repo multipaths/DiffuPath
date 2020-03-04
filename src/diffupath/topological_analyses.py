@@ -20,30 +20,27 @@ def generate_pagerank_baseline(graph, background_mat):
     ).match_missing_rows(background_mat.rows_labels, 0).match_rows(background_mat)
 
 
-
-
-def resistance_distance(G = None, M = None, normalized = False):
-
+def resistance_distance(G=None, M=None, normalized=False):
     if G:
         ER = LaplacianMatrix(G, normalized)
-        add_edges_inv = 1/G.number_of_edges()
+        add_edges_inv = 1 / G.number_of_edges()
 
     elif M:
         ER = M
-        add_edges_inv = 1/len(ER.rows_labels)
+        add_edges_inv = 1 / len(ER.rows_labels)
 
     else:
         raise Warning('A graph or a matrix must be given.')
 
     LT = np.linalg.inv([x + add_edges_inv
-                            for x in ER.mat
-                       ]
-                      )
+                        for x in ER.mat
+                        ]
+                       )
     dLT = np.diag(LT)
 
     sER = [x * -2
-            for x in LT
-          ] + dLT[:, np.newaxis]
+           for x in LT
+           ] + dLT[:, np.newaxis]
     ssER = sER + dLT[np.newaxis, :]
 
     ER.mat = ssER
@@ -52,7 +49,6 @@ def resistance_distance(G = None, M = None, normalized = False):
 
 
 def filter_quadratic_mat_by_mapping(M, mapping):
-
     d = defaultdict(lambda: defaultdict(lambda: list()))
 
     for k1, v1 in mapping.items():

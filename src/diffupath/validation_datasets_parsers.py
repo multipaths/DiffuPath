@@ -112,7 +112,7 @@ def parse_set2(path):
                     col_label = 'metabolite'
 
                 omics_labels[col_label.lower()].update(
-                munge_labels(cell.value) for cell in col[1:] if munge_labels(cell.value) != '')
+                    munge_labels(cell.value) for cell in col[1:] if munge_labels(cell.value) != '')
 
     return omics_labels
 
@@ -158,7 +158,6 @@ def parse_set3(path):
 
             if col_label in ['Name', 'Abbreviation', 'miRNA']:
                 omics_labels[sheet_title].update(
-                munge_labels(cell.value) for cell in col[1:] if munge_labels(cell.value) != '')
-
+                    munge_labels(cell.value) for cell in col[1:] if munge_labels(cell.value) != '')
 
     return omics_labels
