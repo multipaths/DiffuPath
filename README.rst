@@ -1,7 +1,7 @@
 DiffuPath |build| |docs| |coverage|
 ===================================
 
-DiffuPath is an analytic tool for biological networks that connects the generic label propagation algorithms from  `DiffuPy <https://github.com/multipaths/DiffuPy/>`_ to biological networks encoded in Biological Expression Language (BEL). For example, in the application scenario presented in the paper, we use three pathway databases (i.e., KEGG, Reactome and WikiPathways) and their integrated network retrieved from `PathMe <https://github.com/PathwayMerger/PathMe/>`_ [1]_ to analyze three multi-omics datasets. However, other biological networks can be imported from the Bio2BEL ecosystem [2]_.
+DiffuPath is an analytic tool for biological networks that connects the generic label propagation algorithms from  `DiffuPy <https://github.com/multipaths/DiffuPy/>`_ to biological networks encoded in several formats such as Simple Interaction Format (SIF) or Biological Expression Language (BEL). For example, in the application scenario presented in the paper, we use three pathway databases (i.e., KEGG, Reactome and WikiPathways) and their integrated network retrieved from `PathMe <https://github.com/PathwayMerger/PathMe/>`_ [1]_ to analyze three multi-omics datasets. However, other biological networks can be imported from the Bio2BEL ecosystem [2]_.
 
 Installation
 ------------
