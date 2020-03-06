@@ -42,6 +42,13 @@ Network Dumps
 -------------
 Because it is high computational cost of generating the kernel, we provide links to precalculated kernels for some of the networks representing biological databases such as KEGG [3]_ , Reactome [4]_ , and WikiPathways [5]_ .
 
+- KEGG [3]_:
+- Reactome [4]_: 
+- WikiPathways [5]_: 
+       
+Disclaimer
+----------
+DiffuPath is a scientific software that has been developed in an academic capacity, and thus comes with no warranty or guarantee of maintenance, support, or back-up of data.
 
 References
 ----------
@@ -54,11 +61,6 @@ References
        D481–D487.
 .. [5] Slenter, D.N.,  *et al.* (2017). WikiPathways: a multifaceted pathway database bridging metabolomics to other omics
        research. *Nucleic Acids Research*, doi.org/10.1093/nar/gkx1064
-
-       
-Disclaimer
-----------
-DiffuPath is a scientific software that has been developed in an academic capacity, and thus comes with no warranty or guarantee of maintenance, support, or back-up of data.
 
 .. |build| image:: https://travis-ci.com/multipaths/diffupath.svg?branch=master
     :target: https://travis-ci.com/multipaths/diffupath
