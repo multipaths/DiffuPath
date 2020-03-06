@@ -40,7 +40,7 @@ Generates the regularised Laplian kernel of a given graph.
 
 Network Dumps
 -------------
-Because it is high computational cost of generating the kernel, we provide links to precalculated kernels for some of the networks representing biological databases such as KEGG [3]_ , Reactome [4]_ , and WikiPathways [5]_ .
+Because it is high computational cost of generating the kernel, we provide links to precalculated kernels for some of the networks representing biological databases:
 
 - KEGG [3]_:
 - Reactome [4]_: 
