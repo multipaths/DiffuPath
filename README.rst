@@ -57,14 +57,14 @@ References
 .. [2] Hoyt, C. T., *et al.* (2019). `Integration of Structured Biological Data Sources using Biological Expression Language
        <https://doi.org/10.1101/631812>`_. *bioRxiv*, 631812.
 
-.. [3] Kanehisa, *et al.* (2017) KEGG: new perspectives on genomes, pathways, diseases and drugs. Nucleic Acids Res. 45,
+.. [3] Kanehisa, *et al.* (2017). `KEGG: new perspectives on genomes, pathways, diseases and drugs. <https://doi.org/10.1093/nar/gkw1092>`_. Nucleic Acids Res. 45,
        D353-D361.
 
-.. [4] Fabregat, A *et al.* (2016). The Reactome Pathway Knowledgebase. Nucleic Acids Research 44. Database issue:
+.. [4] Fabregat, A *et al.* (2016). `The Reactome Pathway Knowledgebase <https://doi.org/10.1093/nar/gkv1351>`_. Nucleic Acids Research 44. Database issue:
        D481–D487.
 
-.. [5] Slenter, D.N.,  *et al.* (2017). WikiPathways: a multifaceted pathway database bridging metabolomics to other omics
-       research. *Nucleic Acids Research*, doi.org/10.1093/nar/gkx1064
+.. [5] Slenter, D.N., *et al.* (2017). `WikiPathways: a multifaceted pathway database bridging metabolomics to other omics
+       research <https://doi.org/10.1093/nar/gkx1064>`_. *Nucleic Acids Research*, 46(D1):D661-D667.
 
 .. |build| image:: https://travis-ci.com/multipaths/diffupath.svg?branch=master
     :target: https://travis-ci.com/multipaths/diffupath
