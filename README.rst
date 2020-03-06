@@ -33,11 +33,14 @@ Generates the kernel of a given BEL graph.
 
 References
 ----------
-    
 .. [1] Domingo-Fernandez, D., Mubeen, S., Marin-Llao, J., Hoyt, C., & Hofmann-Apitius, M. (2019). `PathMe: Merging and exploring mechanistic pathway knowledge. <https://www.biorxiv.org/content/10.1101/451625v1>`_. *BMC Bioinformatics*, 20:243.
 
 .. [2] Hoyt, C. T., *et al.* (2019). `Integration of Structured Biological Data Sources using Biological Expression Language
        <https://doi.org/10.1101/631812>`_. *bioRxiv*, 631812.
+       
+Disclaimer
+----------
+DiffuPath is a scientific software that has been developed in an academic capacity, and thus comes with no warranty or guarantee of maintenance, support, or back-up of data.
 
 .. |build| image:: https://travis-ci.com/multipaths/diffupath.svg?branch=master
     :target: https://travis-ci.com/multipaths/diffupath
