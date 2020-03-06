@@ -19,24 +19,42 @@ Installation
     $ cd diffupath
     $ python3 -m pip install -e .
 
-How to Use
-----------
+Command Line Interface
+----------------------
+The following commands can be used directly use from your terminal:
 
-1. **Generate Kernel**
-
-Generates the kernel of a given BEL graph.
+1. **Run a diffusion analysis**
+The following command will run a diffusion method on a given network with the given data
 
 .. code-block:: sh
 
-    $ python3 -m diffupath kernel
+    $ python3 -m diffupy diffuse --network="<path-to-network-file>" --input="<path-to-data-file>" --method="<method>"
+
+
+2. **Generate a kernel with one of the seven methods implemented**
+Generates the regularised Laplian kernel of a given graph.
+
+.. code-block:: sh
+
+    $ python3 -m diffupy kernel --network="<path-to-network-file>"
+
+Network Dumps
+-------------
+Because it is high computational cost of generating the kernel, we provide links to precalculated kernels for some of the networks representing biological databases such as KEGG [3]_ , Reactome [4]_ , and WikiPathways [5]_ .
 
 
 References
 ----------
 .. [1] Domingo-Fernandez, D., Mubeen, S., Marin-Llao, J., Hoyt, C., & Hofmann-Apitius, M. (2019). `PathMe: Merging and exploring mechanistic pathway knowledge. <https://www.biorxiv.org/content/10.1101/451625v1>`_. *BMC Bioinformatics*, 20:243.
-
 .. [2] Hoyt, C. T., *et al.* (2019). `Integration of Structured Biological Data Sources using Biological Expression Language
        <https://doi.org/10.1101/631812>`_. *bioRxiv*, 631812.
+.. [3] Kanehisa, *et al.* (2017) KEGG: new perspectives on genomes, pathways, diseases and drugs. Nucleic Acids Res. 45,
+       D353-D361.
+.. [4] Fabregat, A *et al.* (2016). The Reactome Pathway Knowledgebase. Nucleic Acids Research 44. Database issue:
+       D481–D487.
+.. [5] Slenter, D.N.,  *et al.* (2017). WikiPathways: a multifaceted pathway database bridging metabolomics to other omics
+       research. *Nucleic Acids Research*, doi.org/10.1093/nar/gkx1064
+
        
 Disclaimer
 ----------
