@@ -23,14 +23,16 @@ Command Line Interface
 ----------------------
 The following commands can be used directly use from your terminal:
 
-1. **Download a database for network analysis**
-Generates the BEL file representing the network of the given database. The following databases can be downloaded.
+1. **Download a database for network analysis**.
+
+The following command generates a BEL file representing the network of the given database. The following databases can be downloaded **<LIST HERE TODO>**.
 
 .. code-block:: sh
 
     $ python3 -m diffupath download_database --database="<database-name>"
 
 2. **Run a diffusion analysis**
+
 The following command will run a diffusion method on a given network with the given data
 
 .. code-block:: sh
