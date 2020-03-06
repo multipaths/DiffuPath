@@ -1,8 +1,7 @@
 DiffuPath |build| |docs| |coverage|
 ===================================
 
-DiffuPath offers a bioinformatic tool foor pathway enrichment, wrapping the generalizable Python implementation  `DiffuPy <https://github.com/multipaths/DiffuPy/>`_ of the null diffusion algorithm for metabolomics data described by [1]_ and applying it simultaneously over the three databases (KEGG, Reactome and WikiPathways) integrated network retrieved from `PathMe <https://github.com/PathwayMerger/PathMe/>`_ [2]_ pathway compilation.
-
+DiffuPath is an analytic tool for biological networks that connects the generic label propagation algorithms from  `DiffuPy <https://github.com/multipaths/DiffuPy/>`_ to biological networks encoded in Biological Expression Language (BEL). For example, in the application scenario presented in the paper, we use three pathway databases (i.e., KEGG, Reactome and WikiPathways) and their integrated network retrieved from `PathMe <https://github.com/PathwayMerger/PathMe/>`_ [1]_ to analyze three multi-omics datasets. However, other biological networks can be imported from the Bio2BEL ecosystem [2]_.
 
 Installation
 ------------
@@ -32,13 +31,13 @@ Generates the kernel of a given BEL graph.
     $ python3 -m diffupath kernel
 
 
-Citation
---------
-If you use DiffuPath in your work, please cite the R implementation of the null diffusion algorithm [1]_ (more info in `diffuStats <https://github.com/b2slab/diffuStats>`_):
-
-.. [1] Picart-Armada, S., *et al.* (2017). `Null diffusion-based enrichment for metabolomics data <https://doi.org/10.1371/journal.pone.0189012>`_. *PloS one* 12.12.
+References
+----------
     
-.. [2] Domingo-Fernandez, D., Mubeen, S., Marin-Llao, J., Hoyt, C., & Hofmann-Apitius, M. (2019). `PathMe: Merging and exploring mechanistic pathway knowledge. <https://www.biorxiv.org/content/10.1101/451625v1>`_. *BMC Bioinformatics*, 20:243.
+.. [1] Domingo-Fernandez, D., Mubeen, S., Marin-Llao, J., Hoyt, C., & Hofmann-Apitius, M. (2019). `PathMe: Merging and exploring mechanistic pathway knowledge. <https://www.biorxiv.org/content/10.1101/451625v1>`_. *BMC Bioinformatics*, 20:243.
+
+.. [2] Hoyt, C. T., *et al.* (2019). `Integration of Structured Biological Data Sources using Biological Expression Language
+       <https://doi.org/10.1101/631812>`_. *bioRxiv*, 631812.
 
 .. |build| image:: https://travis-ci.com/multipaths/diffupath.svg?branch=master
     :target: https://travis-ci.com/multipaths/diffupath
