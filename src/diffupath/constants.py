@@ -69,3 +69,14 @@ FORMATS = [
     NODE_LINK_JSON,
     BEL_PICKLE,
 ]
+
+FORMAT_SEPARATOR_MAPPING = {
+    CSV: ',',
+    TSV: '\t'
+}
+
+"""Acceptable column names of user submitted network"""
+
+SOURCE = 'source'
+TARGET = 'target'
+RELATION = 'relation '

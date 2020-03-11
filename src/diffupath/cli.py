@@ -8,9 +8,9 @@ import pybel
 
 import click
 from bio2bel.constants import get_global_connection
-from networkx import read_graphml, read_gml
+from networkx import read_graphml, read_gml, node_link_graph
 from .constants import *
-
+from .utils import process_network, load_json_file
 logger = logging.getLogger(__name__)
 
 
@@ -79,10 +79,14 @@ def run(
         graph = pybel.from_pickle(network)
 
     elif network.endswith(NODE_LINK_JSON):
-        graph = ...
+        data = load_json_file(network)
+        graph = node_link_graph(data)
 
     else:
-        raise IOError(f'Format given for {} is not availabel please check that is one of the {FORMATS}')
+        raise IOError(
+            f'The selected format {format} is not valid. Please ensure you use one of the following formats: '
+            f'{FORMATS}'
+        )
 
     # TODO: Process arguments and call diffuse
     # TODO: @Josep
