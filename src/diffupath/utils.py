@@ -2,16 +2,16 @@
 
 """Miscellaneous utils of the package."""
 
-import random
-
-import numpy as np
-from statistics import mean
-
 import itertools
 import logging
 import pickle
+import random
+from statistics import mean
+
+import numpy as np
 
 log = logging.getLogger(__name__)
+
 
 def from_pickle(input_path):
     with open(input_path, 'rb') as f:
@@ -19,6 +19,7 @@ def from_pickle(input_path):
         background_mat = unpickler.load()
 
     return background_mat
+
 
 def to_pickle(to_pickle, output):
     with open(output, 'wb') as file:
@@ -130,11 +131,10 @@ def get_three_venn_intersections(set1, set2, set3):
 def random_disjoint_intersection_two_subsets(unique_set1, unique_set2, intersection):
     set1, set2 = split_random_two_subsets(intersection)
 
-    return unique_set1|set(set1), unique_set2|set(set2)
+    return unique_set1 | set(set1), unique_set2 | set(set2)
 
 
 def random_disjoint_intersection_three_subsets(sets_dict):
-
     set_labels = list(sets_dict.keys())
     set_values = list(sets_dict.values())
 
@@ -159,10 +159,11 @@ def random_disjoint_intersection_three_subsets(sets_dict):
 
     set1_core, set2_core, set3_core = split_random_three_subsets(intersections['core'])
 
-    return {set_labels[0]: set1|set(set1_core),
-            set_labels[1] : set2|set(set2_core),
-            set_labels[2] : set3|set(set3_core)
+    return {set_labels[0]: set1 | set(set1_core),
+            set_labels[1]: set2 | set(set2_core),
+            set_labels[2]: set3 | set(set3_core)
             }
+
 
 def get_count_and_labels_from_two_dim_dict(mapping_by_database_and_entity):
     db_labels = []
@@ -171,7 +172,7 @@ def get_count_and_labels_from_two_dim_dict(mapping_by_database_and_entity):
     all_count = []
     all_percentage = []
 
-    #entity_type_map = {'metabolite_nodes': 'metabolite', 'mirna_nodes': 'micrornas', 'gene_nodes': 'genes', 'bp_nodes': 'bps'}
+    # entity_type_map = {'metabolite_nodes': 'metabolite', 'mirna_nodes': 'micrornas', 'gene_nodes': 'genes', 'bp_nodes': 'bps'}
 
     for db_name, entities_by_type in mapping_by_database_and_entity.items():
         db_count = []
@@ -186,7 +187,6 @@ def get_count_and_labels_from_two_dim_dict(mapping_by_database_and_entity):
             db_count.append(len(entities_tupple[0]))
             db_percentage.append(entities_tupple[1])
 
-
         all_count.append(db_count)
         all_percentage.append(db_percentage)
 
@@ -194,7 +194,6 @@ def get_count_and_labels_from_two_dim_dict(mapping_by_database_and_entity):
 
 
 def get_mean_from_two_dim_dict(d):
-
     for k1, v1 in d.items():
         for k2, v2 in v1.items():
             if v2:

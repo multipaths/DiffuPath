@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+"""Topological analyses."""
+
 from collections import defaultdict
 
 import networkx as nx

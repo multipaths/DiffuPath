@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+"""Validate input utilities."""
+
 import logging
 
 log = logging.getLogger(__name__)

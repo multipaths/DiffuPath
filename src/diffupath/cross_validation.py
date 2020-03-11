@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+"""Cross-validation utilities."""
+
 from collections import defaultdict
 
 import numpy as np
