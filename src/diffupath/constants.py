@@ -49,3 +49,23 @@ DATABASES = [
     DRUGBANK_NAME,
     GENE_ONTOLOGY_NAME,
 ]
+
+"""Available formats"""
+
+CSV = 'csv'
+TSV = 'tsv'
+GRAPHML = 'graphml'
+BEL = 'bel'
+NODE_LINK_JSON = 'json'
+BEL_PICKLE = 'pickle'
+GRAPHML = 'graphml'
+GML = 'gml'
+
+FORMATS = [
+    CSV,
+    TSV,
+    GRAPHML,
+    BEL,
+    NODE_LINK_JSON,
+    BEL_PICKLE,
+]

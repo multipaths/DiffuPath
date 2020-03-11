@@ -4,11 +4,12 @@
 
 import logging
 from typing import List
+import pybel
 
 import click
 from bio2bel.constants import get_global_connection
-
-from .constants import OUTPUT_DIR, DIFFUPY_METHODS, EMOJI, DATABASES
+from networkx import read_graphml, read_gml
+from .constants import *
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +60,30 @@ def run(
     """Run a diffusion method over a network or pregenerated kernel."""
     click.secho(f'{EMOJI} Running diffusion {EMOJI}')
 
-    raise NotImplementedError
+    if network.endswith(CSV):
+        graph = process_network(network, CSV)
+
+    elif network.endswith(TSV):
+        graph = process_network(network, TSV)
+
+    elif network.endswith(GRAPHML):
+        graph = read_graphml(network)
+
+    elif network.endswith(GML):
+        graph = read_gml(network)
+
+    elif network.endswith(BEL):
+        graph = pybel.from_path(network)
+
+    elif network.endswith(BEL_PICKLE):
+        graph = pybel.from_pickle(network)
+
+    elif network.endswith(NODE_LINK_JSON):
+        graph = ...
+
+    else:
+        raise IOError(f'Format given for {} is not availabel please check that is one of the {FORMATS}')
+
     # TODO: Process arguments and call diffuse
     # TODO: @Josep
 
