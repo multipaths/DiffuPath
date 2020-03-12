@@ -21,15 +21,16 @@ def get_random_cv_split_input_and_validation(input, background_mat):
     """Get random CV split."""
     randomized_input_labels, validation_labels = split_random_two_subsets(input)
 
-    return generate_categoric_input_from_labels(
+    return (generate_categoric_input_from_labels(
         randomized_input_labels,
         'randomized input',
-        background_mat), \
+        background_mat),
            generate_categoric_input_from_labels(
                validation_labels,
                'validation_datasets labels',
                background_mat
            )
+    )
 
 
 def get_random_cv_inputs_from_subsets_same_diff_input(input_subsets, background_mat):
