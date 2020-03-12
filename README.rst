@@ -77,7 +77,7 @@ References
 
 .. [2] Hoyt, C. T., *et al.* (2019). `Integration of Structured Biological Data Sources using Biological Expression
    Language <https://doi.org/10.1101/631812>`_. *bioRxiv*, 631812.
-       
+
 .. [3] Wishart, D. S., *et al.* (2018). `DrugBank 5.0: a major update to the DrugBank database for 2018
    <https://doi.org/10.1093/nar/gkx1037>`_. Nucleic Acids Research, 46(D1), D1074–D1082.
 
