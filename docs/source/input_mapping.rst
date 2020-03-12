@@ -1,4 +1,4 @@
 Mapping Input
 =============
-.. automodule:: diffupath.mapping_input
+.. automodule:: diffupath.input_mapping
    :members:
