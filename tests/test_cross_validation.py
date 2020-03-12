@@ -5,6 +5,7 @@
 import unittest
 
 from diffupath.validate_input import validate_cross_validation_input_1
+
 from diffupy.matrix import Matrix
 from diffupy.process_input import generate_categoric_input_from_labels
 
@@ -14,7 +15,6 @@ class ValidateCVInputTest(unittest.TestCase):
 
     def test_validate_cross_validation_input_1(self):
         """Test input of CV."""
-
         set_1 = {'adenine', 'adp', 'tyramine', 'nadph', 'glycine', 'glutathione', 'choline', 'inosine'}
         set_2 = {'g6pc3', 'oscar', 'lin37', 'pip4k2c', 'asap3', 'smg7', 'fosl1', 'atg3', 'plod3', 'apoe', 'calcoco2',
                  'hbegf', 'ccne1', 'magi3', 'gpc1', 'dusp5', 'idi1', 'ids', 'il12a', 'fancd2', 'zmpste24', 'znf383',
