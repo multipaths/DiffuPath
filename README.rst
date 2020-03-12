@@ -25,11 +25,17 @@ The following commands can be used directly use from your terminal:
 
 1. **Download a database for network analysis**.
 
-The following command generates a BEL file representing the network of the given database. The following databases can be downloaded **<LIST HERE TODO>**.
+The following command generates a BEL file representing the network of the given database.
 
 .. code-block:: sh
 
-    $ python3 -m diffupath download_database --database="<database-name>"
+    $ python3 -m diffupath database network --database=<database-name>
+
+To check the available databases, run the following command:
+
+.. code-block:: sh
+
+    $ python3 -m diffupath database ls
 
 2. **Run a diffusion analysis**
 
@@ -37,20 +43,22 @@ The following command will run a diffusion method on a given network with the gi
 
 .. code-block:: sh
 
-    $ python3 -m diffupath diffuse --network="<path-to-network-file>" --input="<path-to-data-file>" --method="<method>"
+    $ python3 -m diffupath diffusion run --network=<path-to-network-file> --input=<path-to-data-file> --method=<method>
 
 
 Network Dumps
 -------------
-Because it is high computational cost of generating the kernel, we provide links to precalculated kernels for some of the networks representing biological databases:
+Because it is high computational cost of generating the kernel, we provide links to precalculated kernels for some of
+the networks representing biological databases:
 
 - KEGG [3]_:
-- Reactome [4]_: 
-- WikiPathways [5]_: 
+- Reactome [4]_:
+- WikiPathways [5]_:
        
 Disclaimer
 ----------
-DiffuPath is a scientific software that has been developed in an academic capacity, and thus comes with no warranty or guarantee of maintenance, support, or back-up of data.
+DiffuPath is a scientific software that has been developed in an academic capacity, and thus comes with no warranty or
+guarantee of maintenance, support, or back-up of data.
 
 References
 ----------
