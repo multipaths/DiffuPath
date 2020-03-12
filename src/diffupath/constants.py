@@ -7,7 +7,9 @@ from diffupy.constants import METHODS
 dir_path = os.path.dirname(os.path.realpath(__file__))
 SOURCE_DIR = os.path.join(os.path.abspath(os.path.join(dir_path, os.pardir)))
 
+#: Default DiffuPath directory
 DEFAULT_DIFFUPY_DIR = os.path.join(os.path.expanduser('~'), '.diffupath')
+#: Default DiffuPath output directory
 OUTPUT_DIR = os.path.join(DEFAULT_DIFFUPY_DIR, 'output')
 
 
@@ -24,19 +26,30 @@ DIFFUPY_METHODS = METHODS
 EMOJI = "🌐"
 
 # Available databases from PathMe
+#: KEGG
 KEGG_NAME = 'kegg'
+#: Reactome
 REACTOME_NAME = 'reactome'
+#: WikiPathways
 WIKIPATHWAYS_NAME = 'wikipathways'
 
 # Complementary databases from Bio2BEL
+#: MirTarBase
 MIRTARBASE_NAME = 'mirtarbase'
+#: SIDER
 SIDER_NAME = 'sider'
+#: PhewasCatalog
 PHEWAS_NAME = 'phewascatalog'
+#: HSDN
 HSDN_NAME = 'hsdn'
+#: DDR
 DDR_NAME = 'ddr'
+#: DrugBank
 DRUGBANK_NAME = 'drugbank'
+#: Gene Ontology
 GENE_ONTOLOGY_NAME = 'go'
 
+#: Databases available for download in DiffuPath
 DATABASES = [
     KEGG_NAME,
     REACTOME_NAME,
@@ -61,6 +74,7 @@ BEL_PICKLE = 'pickle'
 GRAPHML = 'graphml'
 GML = 'gml'
 
+#: DiffuPath available network formats
 FORMATS = [
     CSV,
     TSV,
@@ -70,6 +84,7 @@ FORMATS = [
     BEL_PICKLE,
 ]
 
+#: Separators
 FORMAT_SEPARATOR_MAPPING = {
     CSV: ',',
     TSV: '\t'
@@ -77,6 +92,9 @@ FORMAT_SEPARATOR_MAPPING = {
 
 """Acceptable column names of user submitted network"""
 
+#: Column name for source node
 SOURCE = 'source'
+#: Column name for target node
 TARGET = 'target'
+#: Column name for relation
 RELATION = 'relation '
