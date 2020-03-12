@@ -112,7 +112,7 @@ def cross_validation_by_subset_same_diff_input(mapping_by_subsets, kernel, k=3, 
         input_mat, validation_inputs_by_subsets = get_random_cv_inputs_from_subsets_same_diff_input(mapping_by_subsets,
                                                                                                     kernel)
 
-        scores = diffuse_raw(graph=None, scores=input_mat, K=kernel, z=z)
+        scores = diffuse_raw(graph=None, scores=input_mat, k=kernel, z=z)
 
         for entity, validation_labels in validation_inputs_by_subsets.items():
             auroc, auprc = get_metrics(validation_labels, scores)
@@ -152,7 +152,7 @@ def cross_validation_one_x_in(mapping_by_subsets, kernel, k=1, missing_value=-1,
                 # validate_cross_validation_input_1(input_diffuse, input_validation, validation_input_from_dict(mapping_by_subsets, diffuse_input_type, validation_type, input_diffuse))
 
                 # Run diffusion
-                scores = diffuse_raw(graph=None, scores=input_diffuse, K=kernel, z=z)
+                scores = diffuse_raw(graph=None, scores=input_diffuse, k=kernel, z=z)
 
                 scores.cols_labels = ['scores']
                 input_validation.cols_labels = ['input_validation']
@@ -194,8 +194,8 @@ def cross_validation_by_method(all_labels_mapping, graph, kernel, k=100):
             all_labels_mapping, kernel
         )
 
-        scores_z = diffuse_raw(graph=None, scores=input_diff, K=kernel, z=True)
-        scores_raw = diffuse_raw(graph=None, scores=input_diff, K=kernel, z=False)
+        scores_z = diffuse_raw(graph=None, scores=input_diff, k=kernel, z=True)
+        scores_raw = diffuse_raw(graph=None, scores=input_diff, k=kernel, z=False)
 
         method_validation_inputs = {
             'raw': (validation_diff,
