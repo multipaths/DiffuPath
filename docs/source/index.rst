@@ -8,7 +8,13 @@ DiffuPath
    :caption: Contents:
 
    cli
-   kernel
+   constants
+   database
+   cross_validation
+   views
+   pathme_processing
+   topological_analyses
+   input_mapping
 
 Index
 =====
