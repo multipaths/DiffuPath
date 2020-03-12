@@ -6,7 +6,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objs as go
-import plotly.plotly as py
+import chart_studio.plotly as py
 from matplotlib_venn import venn3
 
 
