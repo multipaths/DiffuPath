@@ -41,7 +41,7 @@ Requirements
     matplotlib (3.1.2)
     matplotlib_venn (0.11.5)
     bio2bel (0.2.1)
-    pathme 
+    pathme
     diffupy
 
 Command Line Interface
@@ -75,9 +75,9 @@ Networks
 You can choose networks to run diffusion methods in the following ways:
 
 - Select a network representing an individual biological database
-- Select multiple databases to generate a harmonized network 
+- Select multiple databases to generate a harmonized network
 - Select from one of four predefined collections of biological databases representing a harmonized network
-- Submit your own network from one of the accepted formats 
+- Submit your own network from one of the accepted formats
 
 Network Dumps
 ~~~~~~~~~~~~~
@@ -92,7 +92,28 @@ networks representing biological databases:
 - Reactome [8]_: `reactome.json <https://drive.google.com/open?id=11y_CzI6PZ92NGqvhia-kvSfdexa4rT2Z>`_
 - SIDER [9]_: `sider.json <https://drive.google.com/open?id=1fDjpkK6-OuNLAVVfV0OucR466KcMvhST>`_
 - WikiPathways [10]_: `wikipathways.json <https://drive.google.com/open?id=1_qVtGfZfV8aB_-R28gkCjjxjYNJmezKP>`_
+- Collection #1 (KEGG, Reactome, WikiPathways)
+- Collection #2 (KEGG, Reactome, WikiPathways and DrugBank)
+- Collection #3 (KEGG, Reactome, WikiPathways, and MirTarBase)
 
++--------------+--------------------------------------------------------------------------+----------------------------+
+| Database     | Description                                                              | Reference                  |
++==============+==========================================================================+============================+
+| DrugBank         |                                                                      |                            |
++-----------------------------------------------------------------------------------------+----------------------------+
+| Gene Ontology    |                                                                      |                            |
++-----------------------------------------------------------------------------------------+----------------------------+
+| HSDN
++-----------------------------------------------------------------------------------------+----------------------------+
+| KEGG
++-----------------------------------------------------------------------------------------+----------------------------+
+| miRTarBase
++------------------+----------------------------------------------------------------------+----------------------------+
+| Reactome
++------------------+----------------------------------------------------------------------+----------------------------+
+| SIDER
++------------------+----------------------------------------------------------------------+----------------------------+
++------------------+----------------------------------------------------------------------+----------------------------+
 Disclaimer
 ----------
 DiffuPath is a scientific software that has been developed in an academic capacity, and thus comes with no warranty or
