@@ -79,7 +79,7 @@ References
 .. |build| image:: https://travis-ci.com/multipaths/diffupath.svg?branch=master
     :target: https://travis-ci.com/multipaths/diffupath
     :alt: Build Status
-    
+
 .. |docs| image:: http://readthedocs.org/projects/diffupath/badge/?version=latest
     :target: https://diffupath.readthedocs.io/en/latest/
     :alt: Documentation Status
