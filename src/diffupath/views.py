@@ -63,8 +63,7 @@ def heatmap(
 
     ax.set_xticks(np.arange(data.shape[1] + 1) - .5, minor=True)
     ax.set_yticks(np.arange(data.shape[0] + 1) - .5, minor=True)
-    ax.grid(which="m"
-                  "inor", color="w", linestyle='-', linewidth=3)
+    ax.grid(which="minor", color="w", linestyle='-', linewidth=3)
     ax.tick_params(which="minor", bottom=False, left=False)
 
     ax.set_title(title)
@@ -213,7 +212,7 @@ def box_plot_from_two_dimension_dict(d, title='Box plot', y_label='y'):
     return py.iplot(fig)
 
 
-def show_venn_diagram(intersections, set_labels=('Keeg', 'Reactome', 'Wikipathways')):
+def show_venn_diagram(intersections, set_labels=('KEGG', 'Reactome', 'WikiPathways')):
     intersections_len = [len(intersection) for name, intersection in intersections.items()]
 
     plt.figure(figsize=(17, 8))
