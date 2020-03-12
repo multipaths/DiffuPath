@@ -7,11 +7,11 @@ from collections import defaultdict
 import networkx as nx
 import numpy as np
 from diffupy.matrix import LaplacianMatrix, Matrix
-from diffupy.utils import get_simplegraph_from_multigraph
+from diffupy.utils import get_simple_graph_from_multigraph
 
 
 def generate_pagerank_baseline(graph, background_mat):
-    graph = get_simplegraph_from_multigraph(graph)
+    graph = get_simple_graph_from_multigraph(graph)
 
     pagerank_scores = nx.pagerank(graph)
 
