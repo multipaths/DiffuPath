@@ -3,14 +3,15 @@
 """Command line interface."""
 
 import logging
-from typing import List
-import pybel
 
 import click
+import pybel
 from bio2bel.constants import get_global_connection
 from networkx import read_graphml, read_gml, node_link_graph
+
 from .constants import *
 from .utils import process_network, load_json_file
+
 logger = logging.getLogger(__name__)
 
 
@@ -95,6 +96,12 @@ def run(
 @main.group()
 def database():
     """Commands for generating networks from biological databases."""
+
+
+@database.command()
+def ls():
+    """Get network for database."""
+    click.secho(f'{EMOJI} Available databases {DATABASES}')
 
 
 @database.command()
