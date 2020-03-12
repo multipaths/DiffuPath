@@ -54,7 +54,7 @@ the networks representing biological databases:
 - KEGG [3]_:
 - Reactome [4]_:
 - WikiPathways [5]_:
-       
+
 Disclaimer
 ----------
 DiffuPath is a scientific software that has been developed in an academic capacity, and thus comes with no warranty or
