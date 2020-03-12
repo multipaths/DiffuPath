@@ -5,12 +5,12 @@
 from collections import defaultdict
 
 import numpy as np
-from diffupy.diffuse_raw import diffuse_raw
-from diffupy.matrix import Matrix
-from diffupy.process_input import generate_categoric_input_from_labels
 from sklearn import metrics
 from tqdm import tqdm
 
+from diffupy.diffuse_raw import diffuse_raw
+from diffupy.matrix import Matrix
+from diffupy.process_input import generate_categoric_input_from_labels
 from .topological_analyses import generate_pagerank_baseline
 from .utils import split_random_two_subsets, random_disjoint_intersection_three_subsets
 
@@ -18,17 +18,22 @@ from .utils import split_random_two_subsets, random_disjoint_intersection_three_
 # Random cross validation_datasets
 
 def get_random_cv_split_input_and_validation(input, background_mat):
+    """Get random CV split."""
     randomized_input_labels, validation_labels = split_random_two_subsets(input)
 
-    return generate_categoric_input_from_labels(randomized_input_labels,
-                                                'randomized input',
-                                                background_mat), \
-           generate_categoric_input_from_labels(validation_labels,
-                                                'validation_datasets labels',
-                                                background_mat)
+    return generate_categoric_input_from_labels(
+        randomized_input_labels,
+        'randomized input',
+        background_mat), \
+           generate_categoric_input_from_labels(
+               validation_labels,
+               'validation_datasets labels',
+               background_mat
+           )
 
 
 def get_random_cv_inputs_from_subsets_same_diff_input(input_subsets, background_mat):
+    """Get random CV input from subsets with different input."""
     input_labels = set()
     input_unlabeled = set()
 
@@ -51,8 +56,14 @@ def get_random_cv_inputs_from_subsets_same_diff_input(input_subsets, background_
 
 # Partial cross validation_datasets
 
-def get_one_x_in_cv_inputs_from_subsets(input_subsets, background_mat, one_in='Reactome', rows_unlabeled=False,
-                                        missing_value=-1):
+def get_one_x_in_cv_inputs_from_subsets(
+        input_subsets,
+        background_mat,
+        one_in='Reactome',
+        rows_unlabeled=False,
+        missing_value=-1
+):
+    """Get one cross input from subsets."""
     input_dict = {}
     input_labels = input_subsets.pop(one_in)
     rows_unlabel = None
@@ -62,22 +73,26 @@ def get_one_x_in_cv_inputs_from_subsets(input_subsets, background_mat, one_in='R
             rows_unlabel = validation_labels
             missing_value = -1
 
-        input_dict[labels_type] = (generate_categoric_input_from_labels(input_labels,
-                                                                        'two out input',
-                                                                        background_mat,
-                                                                        missing_value,
-                                                                        rows_unlabeled=rows_unlabel
-                                                                        ),
-                                   generate_categoric_input_from_labels(validation_labels,
-                                                                        'two out input',
-                                                                        background_mat,
-                                                                        missing_value,
-                                                                        )
-                                   )
+        input_dict[labels_type] = (
+            generate_categoric_input_from_labels(
+                input_labels,
+                'two out input',
+                background_mat,
+                missing_value,
+                rows_unlabeled=rows_unlabel
+            ),
+            generate_categoric_input_from_labels(
+                validation_labels,
+                'two out input',
+                background_mat,
+                missing_value,
+            )
+        )
     return input_dict
 
 
 def get_metrics(validation_labels, scores):
+    """Return metrics."""
     validation_labels_vec = validation_labels.__copy__()
 
     for score, i, j in validation_labels_vec.__iter__(get_labels=False, get_indices=True):
@@ -89,6 +104,7 @@ def get_metrics(validation_labels, scores):
 
 
 def cross_validation_by_subset_same_diff_input(mapping_by_subsets, kernel, k=3, z=True):
+    """Cross validation helper."""
     auroc_metrics = defaultdict(list)
     auprc_metrics = defaultdict(list)
 
@@ -108,6 +124,7 @@ def cross_validation_by_subset_same_diff_input(mapping_by_subsets, kernel, k=3, 
 
 def cross_validation_one_x_in(mapping_by_subsets, kernel, k=1, missing_value=-1, disjoint=False, rows_unlabeled=False,
                               z=False):
+    """Cross validation one."""
     auroc_metrics = defaultdict(lambda: defaultdict(list))
     auprc_metrics = defaultdict(lambda: defaultdict(list))
 
@@ -158,19 +175,21 @@ def cross_validation_one_x_in(mapping_by_subsets, kernel, k=1, missing_value=-1,
 
 
 def generate_random_score_ranking(background_mat):
+    """Generate random scores."""
     return Matrix(mat=np.random.rand(len(background_mat.rows_labels)),
                   rows_labels=background_mat.rows_labels,
                   cols_labels=['Radom_Baseline']
                   )
 
 
-def cross_validation_by_method(all_labels_mapping, graph, kernel, k=3):
+def cross_validation_by_method(all_labels_mapping, graph, kernel, k=100):
+    """Cross validation by method."""
     auroc_metrics = defaultdict(list)
     auprc_metrics = defaultdict(list)
 
     scores_page_rank = generate_pagerank_baseline(graph, kernel)
 
-    for i in tqdm(range(k)):
+    for _ in tqdm(range(k)):
         input_diff, validation_diff = get_random_cv_split_input_and_validation(
             all_labels_mapping, kernel
         )
