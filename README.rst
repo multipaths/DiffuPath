@@ -55,9 +55,9 @@ Network Dumps
 Because it is high computational cost of generating the kernel, we provide links to precalculated kernels for some of
 the networks representing biological databases:
 
-- KEGG [3]_:
-- Reactome [4]_:
-- WikiPathways [5]_:
+- KEGG [3]_: [KEGG JSON](https://drive.google.com/open?id=13rA2zaoMMf4MVCjZ26fqcUH1PBFgpTDw)
+- Reactome [4]_: [Reactome JSON](https://drive.google.com/open?id=11y_CzI6PZ92NGqvhia-kvSfdexa4rT2Z)
+- WikiPathways [5]_:[WikiPathways JSON](https://drive.google.com/open?id=1_qVtGfZfV8aB_-R28gkCjjxjYNJmezKP) 
 
 Disclaimer
 ----------
