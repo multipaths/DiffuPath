@@ -41,7 +41,7 @@ Requirements
     matplotlib (3.1.2)
     matplotlib_venn (0.11.5)
     bio2bel (0.2.1)
-    pathme
+    pathme 
     diffupy
 
 Command Line Interface
@@ -70,9 +70,17 @@ The following command will run a diffusion method on a given network with the gi
 
     $ python3 -m diffupath diffusion run --network=<path-to-network-file> --input=<path-to-data-file> --method=<method>
 
+Networks
+--------
+You can choose networks to run diffusion methods in the following ways:
+
+- Select a network representing an individual biological database
+- Select multiple databases to generate a harmonized network 
+- Select from one of four predefined collections of biological databases representing a harmonized network
+- Submit your own network from one of the accepted formats 
 
 Network Dumps
--------------
+~~~~~~~~~~~~~
 Because of the high computational cost of generating the kernel, we provide links to precalculated kernels for a set of
 networks representing biological databases:
 
