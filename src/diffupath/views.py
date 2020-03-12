@@ -2,11 +2,11 @@
 
 """Visualization methods."""
 
+import chart_studio.plotly as py
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objs as go
-import chart_studio.plotly as py
 from matplotlib_venn import venn3
 
 
@@ -67,28 +67,22 @@ def heatmap(
     return im, cbar
 
 
-def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
-                     textcolors=["black", "white"],
-                     entity_count=None,
-                     threshold=None, **textkw):
-    """
-    A function to annotate a heatmap.
+def annotate_heatmap(
+        im,
+        data=None,
+        valfmt="{x:.2f}",
+        textcolors=["black", "white"],
+        entity_count=None,
+        threshold=None,
+        **textkw
+):
+    """Annotate a heatmap. Further parameters can be passed as textkw.
 
-    Arguments:
-        im         : The AxesImage to be labeled.
-    Optional arguments:
-        data       : Data used to annotate. If None, the image's data is used.
-        valfmt     : The format of the annotations inside the heatmap.
-                     This should either use the string format method, e.g.
-                     "$ {x:.2f}", or be a :class:`matplotlib.ticker.Formatter`.
-        textcolors : A list or array of two color specifications. The first is
-                     used for values below a threshold, the second for those
-                     above.
-        threshold  : Value in data units according to which the colors from
-                     textcolors are applied. If None (the default) uses the
-                     middle of the colormap as separation.
-
-    Further arguments are passed on to the created text labels.
+    :param im: The AxesImage to be labeled.
+    :param data: Data used to annotate. If None, the image's data is used.
+    :param valfmt: The format of the annotations inside the heatmap. This should either use the string format method.
+    :param textcolors: A list or array of two color specifications.
+    :param threshold: Value in data units according to which the colors from textcolors are applied.
     """
 
     if not isinstance(data, (list, np.ndarray)):
@@ -123,6 +117,7 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
 
 
 def show_heatmap(count, percentage, databases, entity_types):
+    """Show heatmap"""
     fig, ax = plt.subplots(figsize=(15, 7))
 
     im, cbar = heatmap(percentage, databases, entity_types, ax=ax,
@@ -136,18 +131,7 @@ def show_heatmap(count, percentage, databases, entity_types):
 
 
 def box_plot_from_dict(d, title='Box plot', x_title='x', y_title='y'):
-    """
-    A function to plot a boxplot.
-
-    Arguments:
-        d         : Dictionary.
-
-    Optional arguments:
-        data       :
-
-    Further arguments are passed on to the created text labels.
-    """
-
+    """Plot boxplot."""
     data = [go.Box(
         y=v,
         name=k
@@ -176,7 +160,8 @@ def box_plot_from_dict(d, title='Box plot', x_title='x', y_title='y'):
     return py.iplot(fig)
 
 
-def box_plot_from_two_dimension_dict(d, title='Box plot', y_label='y'):
+def box_plot_from_two_dimension_dict(d, y_label='y'):
+    """Boxplot two dimensions."""
     x = [k2 for k1, v1 in d.items() for k2, v2 in v1.items() for i in range(len(v2))]
 
     color_palete = ['#FF4136', '#3d9970', '#344f9e', '#bfc464']
@@ -209,6 +194,7 @@ def box_plot_from_two_dimension_dict(d, title='Box plot', y_label='y'):
 
 
 def show_venn_diagram(intersections, set_labels=('KEGG', 'Reactome', 'WikiPathways')):
+    """Show venn diagram."""
     intersections_len = [len(intersection) for name, intersection in intersections.items()]
 
     plt.figure(figsize=(17, 8))
