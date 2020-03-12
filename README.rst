@@ -25,24 +25,24 @@ Installation
 
 Requirements
 ------------
-``diffupath`` requires the following libraries:
+``diffupath`` requires the following libraries: ::
 
-networkx>=2.1
-pybel==0.13.2
-biokeen==0.0.14
-click==7.0
-tqdm==4.31.1
-numpy==1.16.3
-scipy==1.2.1
-scikit-learn==0.21.3
-pandas==0.24.2
-openpyxl==3.0.2
-plotly==4.5.3
-matplotlib==3.1.2
-matplotlib_venn==0.11.5
-bio2bel==0.2.1
-pathme
-diffupy
+    networkx (>=2.1)
+    pybel (0.13.2)
+    biokeen (0.0.14)
+    click (7.0)
+    tqdm (4.31.1)
+    numpy (1.16.3)
+    scipy (1.2.1)
+    scikit-learn (0.21.3)
+    pandas (0.24.2)
+    openpyxl (3.0.2)
+    plotly (4.5.3)
+    matplotlib (3.1.2)
+    matplotlib_venn (0.11.5)
+    bio2bel (0.2.1)
+    pathme 
+    diffupy
 
 Command Line Interface
 ----------------------
