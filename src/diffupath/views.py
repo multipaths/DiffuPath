@@ -11,25 +11,21 @@ from matplotlib_venn import venn3
 
 
 def heatmap(
-        data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel="", title="", **kwargs
+        data, row_labels, col_labels, ax=None, cbar_kw=None, cbarlabel="", title="", **kwargs
 ):
-    """
-    Create a heatmap from a numpy array and two lists of labels.
+    """Create a heatmap from a numpy array and two lists of labels.
 
-    Arguments:
-        data       : A 2D numpy array of shape (N,M)
-        row_labels : A list or array of length N with the labels
-                     for the rows
-        col_labels : A list or array of length M with the labels
-                     for the columns
-    Optional arguments:
-        ax         : A matplotlib.axes.Axes instance to which the heatmap
-                     is plotted. If not provided, use current axes or
-                     create a new one.
-        cbar_kw    : A dictionary with arguments to
-                     :meth:`matplotlib.Figure.colorbar`.
-        cbarlabel  : The label for the colorbar
-    All other arguments are directly passed on to the imshow call.
+    Optional parameters: ax: A matplotlib.axes.Axes instance to which the heatmap is plotted. If not provided, use
+    current axes or create a new one. cbar_kw: A dictionary with arguments to :meth:`matplotlib.Figure.colorbar`.
+    cbarlabel: The label for the colorbar.
+
+    :param data: A 2D numpy array of shape (N,M)
+    :param row_labels: A list or array of length N with the labels for the rows
+    :param col_labels: A list or array of length N with the labels for the columns
+    :param ax: axis
+    :param cbar_kw: kwars for cbar
+    :param cbarlabel: label
+    :param title: title
     """
 
     if not ax:
