@@ -41,7 +41,7 @@ Requirements
     matplotlib (3.1.2)
     matplotlib_venn (0.11.5)
     bio2bel (0.2.1)
-    pathme 
+    pathme
     diffupy
 
 Command Line Interface
