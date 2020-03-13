@@ -14,3 +14,7 @@ matplotlib_venn==0.11.5
 bio2bel==0.2.1
 pathme
 diffupy
+sphinx
+sphinx-rtd-theme
+sphinx-click
+sphinx-autodoc-typehints
