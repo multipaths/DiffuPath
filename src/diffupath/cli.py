@@ -2,17 +2,14 @@
 
 """Command line interface."""
 
+import json
 import logging
 
 import click
-import pybel
 from bio2bel.constants import get_global_connection
-from networkx import read_graphml, read_gml, node_link_graph
 
-from diffupy.constants import (
-    CSV, TSV, FORMATS, GRAPHML, GML, BEL, BEL_PICKLE, NODE_LINK_JSON,
-)
-from diffupy.utils import process_network, load_json_file
+from diffupy.diffuse import diffuse as run_diffusion
+from diffupy.utils import process_network_from_cli, _process_input
 from .constants import *
 
 logger = logging.getLogger(__name__)
@@ -62,38 +59,27 @@ def run(
         output: str,
 ):
     """Run a diffusion method over a network or pregenerated kernel."""
-    click.secho(f'{EMOJI} Running diffusion {EMOJI}')
+    click.secho(f'{EMOJI} Running diffusion... {EMOJI}')
 
-    if network.endswith(CSV):
-        graph = process_network(network, CSV)
+    click.secho(f'{EMOJI} Loading graph from {network} {EMOJI}')
+    graph = process_network_from_cli(network)
 
-    elif network.endswith(TSV):
-        graph = process_network(network, TSV)
+    click.secho(
+        f'{EMOJI} Graph loaded with: \n'
+        f'{graph.number_of_nodes()} nodes\n'
+        f'{graph.number_of_edges()} edges\n'
+        f'{EMOJI}'
+    )
 
-    elif network.endswith(GRAPHML):
-        graph = read_graphml(network)
+    input_scores = _process_input(input)
 
-    elif network.endswith(GML):
-        graph = read_gml(network)
+    results = run_diffusion(
+        input_scores,
+        method,
+        graph,
+    )
 
-    elif network.endswith(BEL):
-        graph = pybel.from_path(network)
-
-    elif network.endswith(BEL_PICKLE):
-        graph = pybel.from_pickle(network)
-
-    elif network.endswith(NODE_LINK_JSON):
-        data = load_json_file(network)
-        graph = node_link_graph(data)
-
-    else:
-        raise IOError(
-            f'The selected format {format} is not valid. Please ensure you use one of the following formats: '
-            f'{FORMATS}'
-        )
-
-    # TODO: Process arguments and call diffuse
-    # TODO: @Josep
+    json.dump(results, output, indent=2)
 
 
 @main.group()
