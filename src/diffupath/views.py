@@ -80,7 +80,7 @@ def annotate_heatmap(
 
     :param im: The AxesImage to be labeled.
     :param data: Data used to annotate. If None, the image's data is used.
-    :param valfmt: The format of the annotations inside the heatmap. This should either use the string format method.
+    :param valfmt: The sep of the annotations inside the heatmap. This should either use the string sep method.
     :param textcolors: A list or array of two color specifications.
     :param threshold: Value in data units according to which the colors from textcolors are applied.
     """

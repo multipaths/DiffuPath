@@ -3,17 +3,12 @@
 """Miscellaneous utils of the package."""
 
 import itertools
-import json
 import logging
 import pickle
 import random
 from statistics import mean
-from .constants import *
-
-from networkx import DiGraph
 
 import numpy as np
-import pandas as pd
 
 log = logging.getLogger(__name__)
 
@@ -205,72 +200,3 @@ def get_mean_from_two_dim_dict(d):
                 d[k1][k2] = [mean(v2)]
 
     return d
-
-
-"""Check formats of networks """
-
-
-def _format_checker(format: str) -> None:
-    """Check column format."""
-    if format not in FORMATS:
-        raise ValueError(
-            f'The selected format {format} is not valid. Please ensure you use one of the following formats: '
-            f'{FORMATS}'
-        )
-
-
-def _read_network_file(path: str, format: str) -> pd.DataFrame:
-    """Read network file."""
-    _format_checker(format)
-
-    df = pd.read_csv(
-        path,
-        header=0,
-        sep=FORMAT_SEPARATOR_MAPPING[CSV] if format == CSV else FORMAT_SEPARATOR_MAPPING[TSV]
-    )
-
-    if SOURCE and TARGET not in df.columns:
-
-        raise ValueError(
-            f'Ensure that your file contains columns for {SOURCE} and {TARGET}. The column for {RELATION} is optional'
-            f'and can be omitted.'
-        )
-
-    return df
-
-def process_network(path: str, format: str) -> DiGraph:
-    """Parse dataFrame and """
-    _format_checker(format)
-
-    df = _read_network_file(path, format)
-
-    graph = DiGraph()
-
-    for index, row in df.iterrows():
-
-        # Get node names from data frame
-        sub_name = row[SOURCE]
-        obj_name = row[TARGET]
-
-        if RELATION in df.columns:
-
-            relation = row[RELATION]
-
-            # Store edge in the graph
-            graph.add_edge(
-                sub_name, obj_name,
-                relation=relation
-            )
-
-        else:
-            graph.add_edge(
-                sub_name, obj_name,
-            )
-
-    return graph
-
-
-def load_json_file(path: str) -> DiGraph:
-    """Read json file."""
-    with open(path) as f:
-        return json.load(f)

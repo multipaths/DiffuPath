@@ -62,39 +62,3 @@ DATABASES = [
     DRUGBANK_NAME,
     GENE_ONTOLOGY_NAME,
 ]
-
-"""Available formats"""
-
-CSV = 'csv'
-TSV = 'tsv'
-GRAPHML = 'graphml'
-BEL = 'bel'
-NODE_LINK_JSON = 'json'
-BEL_PICKLE = 'pickle'
-GRAPHML = 'graphml'
-GML = 'gml'
-
-#: DiffuPath available network formats
-FORMATS = [
-    CSV,
-    TSV,
-    GRAPHML,
-    BEL,
-    NODE_LINK_JSON,
-    BEL_PICKLE,
-]
-
-#: Separators
-FORMAT_SEPARATOR_MAPPING = {
-    CSV: ',',
-    TSV: '\t'
-}
-
-"""Acceptable column names of user submitted network"""
-
-#: Column name for source node
-SOURCE = 'source'
-#: Column name for target node
-TARGET = 'target'
-#: Column name for relation
-RELATION = 'relation '
