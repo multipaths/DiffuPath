@@ -9,8 +9,11 @@ import pybel
 from bio2bel.constants import get_global_connection
 from networkx import read_graphml, read_gml, node_link_graph
 
+from diffupy.constants import (
+    CSV, TSV, FORMATS, GRAPHML, GML, BEL, BEL_PICKLE, NODE_LINK_JSON,
+)
+from diffupy.utils import process_network, load_json_file
 from .constants import *
-from .utils import process_network, load_json_file
 
 logger = logging.getLogger(__name__)
 

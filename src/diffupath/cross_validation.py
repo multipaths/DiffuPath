@@ -25,11 +25,11 @@ def get_random_cv_split_input_and_validation(input, background_mat):
         randomized_input_labels,
         'randomized input',
         background_mat),
-           generate_categoric_input_from_labels(
-               validation_labels,
-               'validation_datasets labels',
-               background_mat
-           )
+            generate_categoric_input_from_labels(
+                validation_labels,
+                'validation_datasets labels',
+                background_mat
+            )
     )
 
 
@@ -42,11 +42,12 @@ def get_random_cv_inputs_from_subsets_same_diff_input(input_subsets, background_
 
     for entity_type, input in input_subsets.items():
         randomized_input_labels, validation_labels = split_random_two_subsets(input[0])
-        validation_mats_by_entity_type[entity_type] = generate_categoric_input_from_labels(validation_labels,
-                                                                                           'Dataset 1 ' + str(
-                                                                                               entity_type),
-                                                                                           background_mat
-                                                                                           )
+        validation_mats_by_entity_type[entity_type] = generate_categoric_input_from_labels(
+            validation_labels,
+            'Dataset 1 ' + str(
+                entity_type),
+            background_mat
+        )
         input_unlabeled.update(set(validation_labels))
         input_labels.update(set(randomized_input_labels))
 
@@ -139,12 +140,13 @@ def cross_validation_one_x_in(mapping_by_subsets, kernel, k=1, missing_value=-1,
     for i in tqdm(range(k)):
 
         for diffuse_input_type in tqdm(mapping_by_subsets):
-            inputs = get_one_x_in_cv_inputs_from_subsets(dict(mapping_by_subsets),
-                                                         kernel,
-                                                         one_in=diffuse_input_type,
-                                                         rows_unlabeled=rows_unlabeled,
-                                                         missing_value=missing_value
-                                                         )
+            inputs = get_one_x_in_cv_inputs_from_subsets(
+                dict(mapping_by_subsets),
+                kernel,
+                one_in=diffuse_input_type,
+                rows_unlabeled=rows_unlabeled,
+                missing_value=missing_value,
+            )
 
             for validation_type, validation_labels in inputs.items():
                 input_diffuse, input_validation = validation_labels[0], validation_labels[1]

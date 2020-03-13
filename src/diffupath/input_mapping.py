@@ -32,15 +32,16 @@ def get_mapping(
     return intersection
 
 
-def get_mapping_subsets(subsets_dict,
-                        map_labels,
-                        title,
-                        percentage_reference_labels=False,
-                        submapping=None,
-                        mirnas=None,
-                        mirnas_mapping=None,
-                        relative_statistics=None
-                        ):
+def get_mapping_subsets(
+        subsets_dict,
+        map_labels,
+        title,
+        percentage_reference_labels=False,
+        submapping=None,
+        mirnas=None,
+        mirnas_mapping=None,
+        relative_statistics=None,
+):
     entity_type_map = {'metabolite_nodes': 'metabolite', 'mirna_nodes': 'micrornas', 'gene_nodes': 'genes',
                        'bp_nodes': 'bps'}
     mapping_dict = {}
@@ -93,13 +94,15 @@ def get_mapping_subsets(subsets_dict,
     return mapping_dict, percentage, total_entites
 
 
-def get_mapping_two_dim_subsets(two_dimentional_dict,
-                                map_labels,
-                                background_labels=None,
-                                percentage_reference_background_labels=False,
-                                mirnas=None,
-                                relative_statistics=None,
-                                mirnas_mapping=None):
+def get_mapping_two_dim_subsets(
+        two_dimentional_dict,
+        map_labels,
+        background_labels=None,
+        percentage_reference_background_labels=False,
+        mirnas=None,
+        relative_statistics=None,
+        mirnas_mapping=None,
+):
     mapping_dict = {}
     total_entites = set()
 
