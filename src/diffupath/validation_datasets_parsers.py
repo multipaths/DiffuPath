@@ -8,7 +8,7 @@ from openpyxl import load_workbook
 
 
 def munge_labels(label):
-    """Process ene. """
+    """Munge labels."""
     remove_set = ['*', ' ', '|', '-', '"', "'", "\n", "↑", "↓"]
     split_set = ['/', ',']
 
@@ -32,12 +32,9 @@ def munge_labels(label):
 
 
 def parse_set1(path):
-    """Process ene. """
-
+    """Process dataset 1."""
     wb = load_workbook(filename=path)
-
     sheet_titles = []
-    omics_data = defaultdict(lambda: defaultdict(lambda: set()))
     omics_labels = defaultdict(lambda: set())
 
     for sheet in wb:
@@ -80,11 +77,8 @@ def parse_set1(path):
 
 
 def parse_set2(path):
-    """Process ene. """
-
+    """Process dataset 2."""
     wb = load_workbook(filename=path)
-
-    omics_data = defaultdict(lambda: defaultdict(lambda: set()))
     omics_labels = defaultdict(lambda: set())
 
     for sheet in wb:
@@ -118,11 +112,8 @@ def parse_set2(path):
 
 
 def parse_set3(path):
-    """Process ene. """
-
+    """Process dataset 3."""
     wb = load_workbook(filename=path)
-
-    omics_data = defaultdict(lambda: defaultdict(lambda: set()))
     omics_labels = defaultdict(lambda: set())
 
     for sheet in wb:

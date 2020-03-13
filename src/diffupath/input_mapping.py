@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-"""Main Matrix Class."""
+"""Input mapping."""
 
 from .utils import get_labels_set_from_dict, check_substrings
-
+from typing import Set
 
 def get_mapping(
-        to_map,
-        background_map,
+        to_map: Set,
+        background_map: Set,
         mirnas=None,
         mirnas_mapping=None,
         submapping=None,

@@ -11,6 +11,7 @@ from diffupy.utils import get_simple_graph_from_multigraph
 
 
 def generate_pagerank_baseline(graph, background_mat):
+    """Generate baseline results using page rank algorithm."""
     graph = get_simple_graph_from_multigraph(graph)
 
     pagerank_scores = nx.pagerank(graph)
@@ -25,6 +26,7 @@ def generate_pagerank_baseline(graph, background_mat):
 
 
 def resistance_distance(G=None, M=None, normalized=False):
+    """Calculate the resistance."""
     if G:
         ER = LaplacianMatrix(G, normalized)
         add_edges_inv = 1 / G.number_of_edges()

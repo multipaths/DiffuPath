@@ -179,10 +179,11 @@ def cross_validation_one_x_in(mapping_by_subsets, kernel, k=1, missing_value=-1,
 
 def generate_random_score_ranking(background_mat):
     """Generate random scores."""
-    return Matrix(mat=np.random.rand(len(background_mat.rows_labels)),
-                  rows_labels=background_mat.rows_labels,
-                  cols_labels=['Radom_Baseline']
-                  )
+    return Matrix(
+        mat=np.random.rand(len(background_mat.rows_labels)),
+        rows_labels=background_mat.rows_labels,
+        cols_labels=['Radom_Baseline'],
+    )
 
 
 def cross_validation_by_method(all_labels_mapping, graph, kernel, k=100):
