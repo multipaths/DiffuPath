@@ -9,23 +9,26 @@ However, other biological networks can be imported from the Bio2BEL ecosystem [2
 
 Installation
 ------------
-1. ``diffupath`` can be installed with pip:
-
- $ python3 -m pip install diffupath
- 
-2. `The latest version of `diffupath`` can be installed with the following commands:
+The latest stable code can be installed from `PyPI <https://pypi.python.org/pypi/diffupath>`_ with:
 
 .. code-block:: sh
 
-    $ python3 -m pip install git+https://github.com/multipaths/DiffuPath.git@master
+   $ python3 -m pip install diffupath
 
-2. or in editable mode with:
+The most recent code can be installed from the source on `GitHub <https://github.com/multipaths/diffupath>`_ with:
 
 .. code-block:: sh
 
-    $ git clone https://github.com/multipaths/DiffuPath.git
-    $ cd diffupath
-    $ python3 -m pip install -e .
+   $ python3 -m pip install git+https://github.com/multipaths/diffupath.git
+
+For developers, the repository can be cloned from `GitHub <https://github.com/multipaths/diffupath>`_ and installed in
+editable mode with:
+
+.. code-block:: sh
+
+   $ git clone https://github.com/multipaths/diffupath.git
+   $ cd diffupath
+   $ python3 -m pip install -e .
 
 Requirements
 ------------
