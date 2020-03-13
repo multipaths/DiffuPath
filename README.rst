@@ -9,7 +9,11 @@ However, other biological networks can be imported from the Bio2BEL ecosystem [2
 
 Installation
 ------------
-1. ``diffupath`` can be installed with the following commands:
+1. ``diffupath`` can be installed with pip:
+
+ $ python3 -m pip install diffupath
+ 
+2. `The latest version of `diffupath`` can be installed with the following commands:
 
 .. code-block:: sh
 
