@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 
 """This module has methods to acquire the networks for each database available in DiffuPath."""
+import importlib
+import logging
+import os
+import sys
+from contextlib import redirect_stdout
+from typing import Optional
 
 import click
-from biokeen.content import *
-from biokeen.convert.io import *
+from bio2bel import AbstractManager
+from biokeen.convert import to_pykeen_df, to_pykeen_path, to_pykeen_summary_path
+from pybel import from_json_path, to_json_path
 
 from .constants import EMOJI, OUTPUT_DIR
 
