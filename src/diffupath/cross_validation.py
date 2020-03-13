@@ -111,8 +111,10 @@ def cross_validation_by_subset_same_diff_input(mapping_by_subsets, kernel, k=3, 
     auprc_metrics = defaultdict(list)
 
     for i in tqdm(range(k)):
-        input_mat, validation_inputs_by_subsets = get_random_cv_inputs_from_subsets_same_diff_input(mapping_by_subsets,
-                                                                                                    kernel)
+        input_mat, validation_inputs_by_subsets = get_random_cv_inputs_from_subsets_same_diff_input(
+            mapping_by_subsets,
+            kernel,
+        )
 
         scores = diffuse_raw(graph=None, scores=input_mat, k=kernel, z=z)
 

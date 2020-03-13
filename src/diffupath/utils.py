@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 
 
 def from_pickle(input_path):
+    """Read network from pickle."""
     with open(input_path, 'rb') as f:
         unpickler = pickle.Unpickler(f)
         background_mat = unpickler.load()
@@ -22,6 +23,7 @@ def from_pickle(input_path):
 
 
 def to_pickle(to_pickle, output):
+    """Write pickle."""
     with open(output, 'wb') as file:
         pickle.dump(to_pickle, file)
 
