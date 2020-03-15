@@ -124,7 +124,7 @@ of networks representing integrated biological databases.
 | Collection | Database                        | Description                         |         Download          |
 +============+=================================+=====================================+===========================+
 | #1         | KEGG, Reactome and WikiPathways | -omics and biological               | |pathme.json|_            |
-| #1         |                                 | processes/pathways                  |                           |
+|            |                                 | processes/pathways                  |                           |
 +------------+---------------------------------+-------------------------------------+---------------------------+
 | #2         | KEGG, Reactome, WikiPathways    | -omics and biological               | |pathme_drugbank.json|_   |
 |            | and DrugBank                    | processes/pathways with a strong    |                           |
