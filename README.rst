@@ -121,16 +121,19 @@ If you would like to use one of our predefined collections, you can similarly do
 of networks representing integrated biological databases.
 
 +------------+---------------------------------+-----------------------------------------------+-----------------+
-| Collection | Database                        | Description                                   |    Download     |
-+==============================================+===============================================+=================+
-| #1         | KEGG, Reactome and WikiPathways | -omics and biological processes/pathways      | |Collection1|_  |
-+------------+---------------------------------+-----------------------------------------------+-----------------+
-| #2         | KEGG, Reactome, WikiPathways    | -omics and biological processes/pathways with | |Collection2|_  |
-|            | and DrugBank                    | a strong focus on drug/chemical interactions  |                 |
-+------------+---------------------------------+-----------------------------------------------+-----------------+
-| #3         | KEGG, Reactome, WikiPathways    | -omics and biological processes/pathways      | |Collection3|_  |
-|            | and MirTarBase                  | enriched with miRNAs                          |                 |
-+------------+---------------------------------+-----------------------------------------------+-----------------+
+| Collection | Database                        | Description                         |         Download          |
++============+=================================+=====================================+===========================+
+| #1         | KEGG, Reactome and WikiPathways | -omics and biological               | |pathme.json|_            |
+| #1         |                                 | processes/pathways                  |                           |
++------------+---------------------------------+-------------------------------------+---------------------------+
+| #2         | KEGG, Reactome, WikiPathways    | -omics and biological               | |pathme_drugbank.json|_   |
+|            | and DrugBank                    | processes/pathways with a strong    |                           |
+|            |                                 | focus on drug/chemical interactions |                           |
++------------+---------------------------------+-------------------------------------+---------------------------+
+| #3         | KEGG, Reactome, WikiPathways    | -omics and biological               | |pathme_mirtarbase.json|_ |
+|            | and MirTarBase                  |  processes/pathways                 |                           |
+|            |                                 |  enriched with miRNAs               |                           |
++------------+---------------------------------+-------------------------------------+---------------------------+
 
 .. |ddr.json| replace:: ddr.json
 .. |drugbank.json| replace:: drugbank.json
@@ -141,6 +144,9 @@ of networks representing integrated biological databases.
 .. |reactome.json| replace:: reactome.json
 .. |sider.json| replace:: sider.json
 .. |wikipathways.json| replace:: wikipathways.json
+.. |pathme.json| replace:: pathme.json
+.. |pathme_drugbank.json| replace:: pathme_drugbank.json
+.. |pathme_mirtarbase.json| replace:: pathme_mirtarbase.json
 
 .. _ddr.json: https://drive.google.com/open?id=1inyRVDGNM4XLD0ZxoAT0ekX4WfcBF29H
 .. _drugbank.json: https://drive.google.com/open?id=13E1mr0c-aKFaAqAW_8aQglSium0Ji0fp
@@ -151,6 +157,9 @@ of networks representing integrated biological databases.
 .. _reactome.json: https://drive.google.com/open?id=19u1rlhGkN2UACNcMMf6sXyVOzjcVww2t
 .. _sider.json: https://drive.google.com/open?id=1izVj2MneOh5y8DHTEaUPGUNgyFdS7MQM
 .. _wikipathways.json: https://drive.google.com/open?id=1WUOWsA3dCgDgSsA-N3gXNF7Lb9U1LWdD
+.. _pathme.json: https://drive.google.com/open?id=1GnS0BJ7FozPdmPFBJbhBiW-UmfyIgrTW
+.. _pathme_drugbank.json: https://drive.google.com/open?id=1jxTBRF3pzhssYpL_3D3Gw46szPnjdSiU
+.. _pathme_mirtarbase.json: https://drive.google.com/open?id=1qt_a0R_DpCEBGVXZMywKpr7sKEOShXB3
 
 Custom-network formats
 ~~~~~~~~~~~~~~~~~~~~~~
