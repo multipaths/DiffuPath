@@ -79,49 +79,88 @@ The following command will run a diffusion method on a given network with the gi
 
 Networks
 --------
-You can choose networks to run diffusion methods in the following ways:
+In this section, we describe the types of networks you can select to run diffusion methods over. These include the
+following and are described in detail in this section [*]_:
 
 - Select a network representing an individual biological database
 - Select multiple databases to generate a harmonized network
 - Select from one of four predefined collections of biological databases representing a harmonized network
-- Submit your own network from one of the accepted formats
+- Submit your own network [*]_ from one of the accepted formats
+
+.. [*] Please note that all networks available through DiffuPath have been generated using PyBEL v.0.13.2.
+.. [*] If there are duplicated nodes in your network, please take a look at this `Jupyter Notebook <https://nbviewer.jupyter.org/github/multipaths/Results/blob/master/notebooks/filter_networks/solve_duplicate_labels_issue.ipynb>`_ to address the issue.
 
 Network Dumps
 ~~~~~~~~~~~~~
-Because of the high computational cost of generating the kernel, we provide links to precalculated kernels for a set of
-networks representing biological databases:
+Because of the high computational cost of generating the kernel, we provide links to pre-calculated kernels for a set of
+networks representing biological databases.
 
-- DrugBank [3]_: `drugbank.json <https://drive.google.com/open?id=17azOcU0sstr8DjhvsXQ1XrIY8bqq54lG>`_
-- Gene Ontology [4]_: `go.json <https://drive.google.com/open?id=1QeJUQu4nPSGIkKWNErYjf7Eg7eWEBT4J>`_
-- HSDN [5]_: `hsdn.json <https://drive.google.com/open?id=18mHVlpoqVmRS13d9UcY9ktWS5e9hU4Ul>`_
-- KEGG [6]_: `kegg.json <https://drive.google.com/open?id=13rA2zaoMMf4MVCjZ26fqcUH1PBFgpTDw>`_
-- miRTarBase [7]_: `mirtarbase.json <https://drive.google.com/open?id=1Di3myrTX0nQsUtGt9w27yUm7XsDdXnxP>`_
-- Reactome [8]_: `reactome.json <https://drive.google.com/open?id=11y_CzI6PZ92NGqvhia-kvSfdexa4rT2Z>`_
-- SIDER [9]_: `sider.json <https://drive.google.com/open?id=1fDjpkK6-OuNLAVVfV0OucR466KcMvhST>`_
-- WikiPathways [10]_: `wikipathways.json <https://drive.google.com/open?id=1_qVtGfZfV8aB_-R28gkCjjxjYNJmezKP>`_
-- Collection #1 (KEGG, Reactome, WikiPathways)
-- Collection #2 (KEGG, Reactome, WikiPathways and DrugBank)
-- Collection #3 (KEGG, Reactome, WikiPathways, and MirTarBase)
++----------------+--------------------------------------------------------+------------+----------------------------+
+|    Database    |                   Description                          | Reference  |        Download            |
++================+========================================================+============+============================+
+| DDR            | Disease-disease associations                           | [3]_       | |ddr.json|_                |
++----------------+--------------------------------------------------------+------------+----------------------------+
+| DrugBank       | Drug and drug target interactions                      | [4]_       | |drugbank.json|_           |
++----------------+--------------------------------------------------------+------------+----------------------------+
+| Gene Ontology  | Hierarchy of tens of thousands of biological processes | [5]_       | |go.json|_                 |
++----------------+--------------------------------------------------------+------------+----------------------------+
+| HSDN           | Associations between diseases and symptoms             | [6]_       | |hsdn.json|_               |
++----------------+--------------------------------------------------------+------------+----------------------------+
+| KEGG           | Multi-omics interactions in biological pathways        | [7]_       | |kegg.json|_               |
++----------------+--------------------------------------------------------+------------+----------------------------+
+| miRTarBase     | Interactions between miRNA and their targets           | [8]_       | |mirtarbase.json|_         |
++----------------+--------------------------------------------------------+------------+----------------------------+
+| Reactome       | Multi-omics interactions in biological pathways        | [9]_       | |reactome.json|_           |
++----------------+--------------------------------------------------------+------------+----------------------------+
+| SIDER          | Associations between drugs and side effects            | [10]_      | |sider.json|_              |
++----------------+--------------------------------------------------------+------------+----------------------------+
+| WikiPathways   | Multi-omics interactions in biological pathways        | [11]_      | |wikipathways.json|_       |
++----------------+--------------------------------------------------------+------------+----------------------------+
 
-+----------------+------------------------------------------------------------------------+------------+
-| Database       | Description                                                            | Reference  |
-+================+========================================================================+============+
-| DrugBank       | Interactions between drugs and drug targets with over 10,000 drugs     | [3]        |
-+----------------+------------------------------------------------------------------------+------------+
-| Gene Ontology  | Flexible hierarchy of tens of thousands of biological processes        | [4]        |
-+----------------+------------------------------------------------------------------------+------------+
-| HSDN           | Associations between thousands of diseases with hundreds of symptoms   | [5]        |
-+----------------+------------------------------------------------------------------------+------------+
-| KEGG           | Multi-omics interactions present in hundreds of biological pathways    | [6]        |
-+----------------+------------------------------------------------------------------------+------------+
-| miRTarBase     | Experimentally validated interactions between miRNA and their targets  | [7]        |
-+----------------+------------------------------------------------------------------------+------------+
-| Reactome       | Multi-omics interactions present in thousands of biological pathways   | [8]        |
-+----------------+------------------------------------------------------------------------+------------+
-| SIDER          | Associations between over a thousand drugs and side effects            | [9]        |
-+----------------+------------------------------------------------------------------------+------------+
-| WikiPathways   | Multi-omics interactions present in hundreds of biological pathways    | [10]       |
-+----------------+------------------------------------------------------------------------+------------+
+If you would like to use one of our predefined collections, you can similarly download pre-calculated kernels for sets
+of networks representing integrated biological databases.
+
++------------+---------------------------------+-----------------------------------------------+-----------------+
+| Collection | Database                        | Description                                   |    Download     |
++==============================================+===============================================+=================+
+| #1         | KEGG, Reactome and WikiPathways | -omics and biological processes/pathways      | |Collection1|_  |
++------------+---------------------------------+-----------------------------------------------+-----------------+
+| #2         | KEGG, Reactome, WikiPathways    | -omics and biological processes/pathways with | |Collection2|_  |
+|            | and DrugBank                    | a strong focus on drug/chemical interactions  |                 |
++------------+---------------------------------+-----------------------------------------------+-----------------+
+| #3         | KEGG, Reactome, WikiPathways    | -omics and biological processes/pathways      | |Collection3|_  |
+|            | and MirTarBase                  | enriched with miRNAs                          |                 |
++------------+---------------------------------+-----------------------------------------------+-----------------+
+
+.. |ddr.json| replace:: ddr.json
+.. |drugbank.json| replace:: drugbank.json
+.. |go.json| replace:: go.json
+.. |hsdn.json| replace:: hsdn.json
+.. |kegg.json| replace:: kegg.json
+.. |mirtarbase.json| replace:: mirtarbase.json
+.. |reactome.json| replace:: reactome.json
+.. |sider.json| replace:: sider.json
+.. |wikipathways.json| replace:: wikipathways.json
+
+.. _ddr.json: https://drive.google.com/open?id=1inyRVDGNM4XLD0ZxoAT0ekX4WfcBF29H
+.. _drugbank.json: https://drive.google.com/open?id=13E1mr0c-aKFaAqAW_8aQglSium0Ji0fp
+.. _go.json: https://drive.google.com/open?id=1BzKSShbPMqZQpElVDd-WJGnei_fy94Qg
+.. _hsdn.json: https://drive.google.com/open?id=1KSP6lu76jk2B45ShGJEKId8ZkAQCtjHP
+.. _kegg.json: https://drive.google.com/open?id=1zNwH8rTdoBSRegMFxCzlPJBOTRs2WFaf
+.. _mirtarbase.json: https://drive.google.com/open?id=1LNtung6mWp1azqBSx8KKKCzki7M4l--8
+.. _reactome.json: https://drive.google.com/open?id=19u1rlhGkN2UACNcMMf6sXyVOzjcVww2t
+.. _sider.json: https://drive.google.com/open?id=1izVj2MneOh5y8DHTEaUPGUNgyFdS7MQM
+.. _wikipathways.json: https://drive.google.com/open?id=1WUOWsA3dCgDgSsA-N3gXNF7Lb9U1LWdD
+
+Custom-network formats
+~~~~~~~~~~~~~~~~~~~~~~
+You can submit your own networks in any one of the following formats: ::
+
+    CSV
+    TSV
+    TXT
+    GML
+    GraphML
 
 Disclaimer
 ----------
@@ -137,28 +176,31 @@ References
 .. [2] Hoyt, C. T., *et al.* (2019). `Integration of Structured Biological Data Sources using Biological Expression
    Language <https://doi.org/10.1101/631812>`_. *bioRxiv*, 631812.
 
-.. [3] Wishart, D. S., *et al.* (2018). `DrugBank 5.0: a major update to the DrugBank database for 2018
+.. [3] Menche, J., et al. (2015). Disease networks. `Uncovering disease-disease relationships through the incomplete
+   interactome <https:doi.org/10.1126/science.1257601>`_. Science, 347(6224), 1257601.
+
+.. [4] Wishart, D. S., *et al.* (2018). `DrugBank 5.0: a major update to the DrugBank database for 2018
    <https://doi.org/10.1093/nar/gkx1037>`_. Nucleic Acids Research, 46(D1), D1074–D1082.
 
-.. [4] Ashburner, M., *et al.* (2000). `Gene ontology: tool for the unification of biology
+.. [5] Ashburner, M., *et al.* (2000). `Gene ontology: tool for the unification of biology
    <https://doi.org/10.1038/75556>`_. The Gene Ontology Consortium. Nature Genetics, 25(1), 25–9.
 
-.. [5] Zhou, X., Menche, J., Barabási, A. L., & Sharma, A. (2014). `Human symptoms–disease network
+.. [6] Zhou, X., Menche, J., Barabási, A. L., & Sharma, A. (2014). `Human symptoms–disease network
    <https://doi.org/10.1038/ncomms5212>`_. Nature communications, 5(1), 1-10.
 
-.. [6] Kanehisa, *et al.* (2017). `KEGG: new perspectives on genomes, pathways, diseases and drugs.
+.. [7] Kanehisa, *et al.* (2017). `KEGG: new perspectives on genomes, pathways, diseases and drugs.
    <https://doi.org/10.1093/nar/gkw1092>`_. Nucleic Acids Res. 45,D353-D361.
 
-.. [7] Huang, H. Y., *et al.* (2020). `miRTarBase 2020: updates to the experimentally validated microRNA–target
+.. [8] Huang, H. Y., *et al.* (2020). `miRTarBase 2020: updates to the experimentally validated microRNA–target
    interaction database <https://doi.org/10.1093/nar/gkz896>`_. Nucleic acids research, 48(D1), D148-D154.
 
-.. [8] Fabregat, A *et al.* (2016). `The Reactome Pathway Knowledgebase <https://doi.org/10.1093/nar/gkv1351>`_. Nucleic
+.. [9] Fabregat, A *et al.* (2016). `The Reactome Pathway Knowledgebase <https://doi.org/10.1093/nar/gkv1351>`_. Nucleic
    Acids Research 44. Database issue: D481–D487.
 
-.. [9] Kuhn, M., *et al.* (2016). `The SIDER database of drugs and side effects <https://doi.org/10.1093/nar/gkv1075>`_.
+.. [10] Kuhn, M., *et al.* (2016). `The SIDER database of drugs and side effects <https://doi.org/10.1093/nar/gkv1075>`_.
    Nucleic Acids Research, 44(D1), D1075–D1079.
 
-.. [10] Slenter, D.N., *et al.* (2017). `WikiPathways: a multifaceted pathway database bridging metabolomics to other
+.. [11] Slenter, D.N., *et al.* (2017). `WikiPathways: a multifaceted pathway database bridging metabolomics to other
    omics research <https://doi.org/10.1093/nar/gkx1064>`_. *Nucleic Acids Research*, 46(D1):D661-D667.
 
 .. |build| image:: https://travis-ci.com/multipaths/diffupath.svg?branch=master
