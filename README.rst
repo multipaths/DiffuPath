@@ -130,9 +130,8 @@ of networks representing integrated biological databases.
 |            | and DrugBank                    | processes/pathways with a strong    |                           |
 |            |                                 | focus on drug/chemical interactions |                           |
 +------------+---------------------------------+-------------------------------------+---------------------------+
-| #3         | KEGG, Reactome, WikiPathways    | -omics and biological               | |pathme_mirtarbase.json|_ |
-|            | and MirTarBase                  |  processes/pathways                 |                           |
-|            |                                 |  enriched with miRNAs               |                           |
+| #3         | KEGG, Reactome, WikiPathways    | -omics and biological processes/    | |pathme_mirtarbase.json|_ |
+|            | and MirTarBase                  | pathways enriched with miRNAs       |                           |
 +------------+---------------------------------+-------------------------------------+---------------------------+
 
 .. |ddr.json| replace:: ddr.json
