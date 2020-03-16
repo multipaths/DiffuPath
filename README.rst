@@ -7,6 +7,9 @@ presented in the paper, we use three pathway databases (i.e., KEGG, Reactome and
 network retrieved from `PathMe <https://github.com/PathwayMerger/PathMe/>`_ [1]_ to analyze three multi-omics datasets.
 However, other biological networks can be imported from the Bio2BEL ecosystem [2]_.
 
+.. image:: https://github.com/multipaths/diffupath/blob/master/docs/source/meta/diffupath_logo.png
+    :width: 500px
+
 Installation
 ------------
 The latest stable code can be installed from `PyPI <https://pypi.python.org/pypi/diffupath>`_ with:
