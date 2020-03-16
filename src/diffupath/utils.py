@@ -112,7 +112,7 @@ def split_random_two_subsets(to_split, k=0.5):
     for index in random.choices(indices, k=int(k * len(indices))):
         new_labels[index] = 0
 
-    return new_labels, to_split
+    return new_labels
 
 
 def split_random_three_subsets(to_split):

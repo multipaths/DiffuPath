@@ -19,15 +19,15 @@ from .utils import split_random_two_subsets, random_disjoint_intersection_three_
 
 def get_random_cv_split_input_and_validation(input, background_mat):
     """Get random CV split."""
-    randomized_input_labels, validation_labels = split_random_two_subsets(input)
+    prepare_input_labels = split_random_two_subsets(input)
 
     return (generate_categoric_input_from_labels(
-        randomized_input_labels,
-        'randomized input',
+        prepare_input_labels,
+        'input with hidden true positives',
         background_mat),
             generate_categoric_input_from_labels(
-                validation_labels,
-                'validation_datasets labels',
+                input,
+                'original input labels',
                 background_mat
             )
     )
