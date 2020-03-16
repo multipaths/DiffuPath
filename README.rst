@@ -120,8 +120,8 @@ networks representing biological databases.
 If you would like to use one of our predefined collections, you can similarly download pre-calculated kernels for sets
 of networks representing integrated biological databases.
 
-+------------+---------------------------------+-----------------------------------------------+-----------------+
-| Collection | Database                        | Description                         |         Download          |
++------------+---------------------------------+-------------------------------------+---------------------------+
+| Collection | Database                        | Description                         | Download                  |
 +============+=================================+=====================================+===========================+
 | #1         | KEGG, Reactome and WikiPathways | -omics and biological               | |pathme.json|_            |
 |            |                                 | processes/pathways                  |                           |
