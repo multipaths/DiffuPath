@@ -1,7 +1,7 @@
 Databases
 =========
-In this section, we describe the types of networks (databases) you can select to run diffusion methods over. These include
-the following and are described in detail in this section [*]_:
+In this section, we describe the types of networks (databases) you can select to run diffusion methods over. These
+include the following and are described in detail in this section [*]_:
 
 - Select a network representing an individual biological database
 - Select multiple databases to generate a harmonized network
@@ -33,9 +33,9 @@ networks representing biological databases.
 +----------------+--------------------------------------------------------+------------+----------------------------+
 | Reactome       | Multi-omics interactions in biological pathways        | [7]_       | |reactome.json|_           |
 +----------------+--------------------------------------------------------+------------+----------------------------+
-| SIDER          | Associations between drugs and side effects            | [8]_      | |sider.json|_              |
+| SIDER          | Associations between drugs and side effects            | [8]_       | |sider.json|_              |
 +----------------+--------------------------------------------------------+------------+----------------------------+
-| WikiPathways   | Multi-omics interactions in biological pathways        | [9]_      | |wikipathways.json|_       |
+| WikiPathways   | Multi-omics interactions in biological pathways        | [9]_       | |wikipathways.json|_       |
 +----------------+--------------------------------------------------------+------------+----------------------------+
 
 If you would like to use one of our predefined collections, you can similarly download pre-calculated kernels for sets
@@ -81,15 +81,56 @@ of networks representing integrated biological databases.
 .. _pathme_drugbank.json: https://drive.google.com/open?id=1jxTBRF3pzhssYpL_3D3Gw46szPnjdSiU
 .. _pathme_mirtarbase.json: https://drive.google.com/open?id=1qt_a0R_DpCEBGVXZMywKpr7sKEOShXB3
 
+
 Custom-network formats
 ~~~~~~~~~~~~~~~~~~~~~~
-You can submit your own networks in any one of the following formats: ::
+You can also submit your own networks in any of the following formats:
 
-    CSV
-    TSV
-    TXT
-    GML
-    GraphML
+- BEL_ (.bel)
+
+- CSV (.csv)
+
+- Edge_ `list`__ (.lst or .list)
+
+- GML_ (.gml or .xml)
+
+- GraphML_ (.graphml or .xml)
+
+- Pickle (.pickle)
+
+- TSV (.tsv)
+
+- TXT (.txt)
+
+.. _Edge: https://networkx.github.io/documentation/stable/reference/readwrite/edgelist.html
+__ Edge_
+.. _GraphML: http://graphml.graphdrawing.org
+.. _BEL: https://language.bel.bio/
+.. _GML: http://docs.yworks.com/yfiles/doc/developers-guide/gml.html
+
+
+Minimally, please ensure each of the following columns are included in the network file you submit:
+
+- FirstNode
+- SecondNode
+
+Optionally, you can choose to add a third column, "Relation" in your network (as in the example below).
+
+Custom-network example
+~~~~~~~~~~~~~~~~~~~~~~
+
++-----------+--------------+-------------+
+| FirstNode | SecondNode   | Relation    |
++===========+==============+=============+
+| Gene A    | Gene B       | Increase    |
++-----------+--------------+-------------+
+| Gene B    | Metabolite C | Association |
++-----------+--------------+-------------+
+| Gene A    | Pathology D  | Association |
++-----------+--------------+-------------+
+
+You can also take a look at our Resources page for some example networks.
+
 
 References
 ----------
@@ -114,7 +155,7 @@ References
 .. [7] Fabregat, A *et al.* (2016). `The Reactome Pathway Knowledgebase <https://doi.org/10.1093/nar/gkv1351>`_. Nucleic
    Acids Research 44. Database issue: D481–D487.
 
-.. [9] Kuhn, M., *et al.* (2016). `The SIDER database of drugs and side effects <https://doi.org/10.1093/nar/gkv1075>`_.
+.. [8] Kuhn, M., *et al.* (2016). `The SIDER database of drugs and side effects <https://doi.org/10.1093/nar/gkv1075>`_.
    Nucleic Acids Research, 44(D1), D1075–D1079.
 
 .. [9] Slenter, D.N., *et al.* (2017). `WikiPathways: a multifaceted pathway database bridging metabolomics to other
