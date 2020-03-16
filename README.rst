@@ -1,5 +1,6 @@
 .. image:: https://github.com/multipaths/diffupath/blob/master/docs/source/meta/diffupath_logo.png
-    :align: center
+   :align: center
+   :target: https://diffupath.readthedocs.io/en/latest/
 
 Introduction |build| |docs|
 ===========================
