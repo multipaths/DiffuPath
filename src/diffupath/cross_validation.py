@@ -2,7 +2,6 @@
 
 """Cross-validation utilities."""
 
-import pickle
 from collections import defaultdict
 
 import numpy as np
@@ -12,6 +11,7 @@ from diffupy.process_input import generate_categoric_input_from_labels
 from sklearn import metrics
 from tqdm import tqdm
 
+from .topological_analyses import generate_pagerank_baseline
 from .utils import random_disjoint_intersection_three_subsets, hide_true_positives
 
 """Random cross validation_datasets"""
@@ -21,15 +21,17 @@ def get_random_cv_split_input_and_validation(input, background_mat):
     """Get random CV split."""
     prepare_input_labels = hide_true_positives(input)
 
-    return (generate_categoric_input_from_labels(
-        prepare_input_labels,
-        'input with hidden true positives',
-        background_mat),
-            generate_categoric_input_from_labels(
-                input,
-                'original input labels',
-                background_mat
-            )
+    return (
+        generate_categoric_input_from_labels(
+            prepare_input_labels,
+            'input with hidden true positives',
+            background_mat
+        ),
+        generate_categoric_input_from_labels(
+            input,
+            'original input labels',
+            background_mat
+        )
     )
 
 
@@ -194,41 +196,36 @@ def cross_validation_by_method(all_labels_mapping, graph, kernel, k=100):
     auroc_metrics = defaultdict(list)
     auprc_metrics = defaultdict(list)
 
-    input_diff, validation_diff = get_random_cv_split_input_and_validation(
-        all_labels_mapping, kernel
-    )
+    for _ in tqdm(range(k)):
+        input_diff, validation_diff = get_random_cv_split_input_and_validation(
+            all_labels_mapping, kernel
+        )
 
-    with open('validation_diff.pickle', 'wb') as file:
-        pickle.dump(validation_diff, file)
+        scores_z = diffuse_raw(graph=None, scores=input_diff, k=kernel, z=True)
+        scores_raw = diffuse_raw(graph=None, scores=input_diff, k=kernel, z=False)
+        scores_page_rank = generate_pagerank_baseline(graph, kernel)
 
-    with open('input_diff.pickle', 'wb') as file:
-        pickle.dump(input_diff, file)
+        method_validation_inputs = {
+            'raw': (validation_diff,
+                    scores_raw
+                    ),
+            'z': (validation_diff,
+                  scores_z
+                  ),
+            'random_baseline': (
+                validation_diff,
+                generate_random_score_ranking(kernel)
+            ),
+            'page_rank_baseline': (
+                validation_diff,
+                scores_page_rank
+            ),
 
-    scores_z = diffuse_raw(graph=None, scores=input_diff, k=kernel, z=True)
+        }
 
-    with open('z_scores.pickle', 'wb') as file:
-        pickle.dump(scores_z, file)
-
-    scores_raw = diffuse_raw(graph=None, scores=input_diff, k=kernel, z=False)
-
-    with open('scores_raw.pickle', 'wb') as file:
-        pickle.dump(scores_raw, file)
-
-    method_validation_inputs = {
-        'raw': (validation_diff,
-                scores_raw
-                ),
-        'z': (validation_diff,
-              scores_z
-              ),
-        'random_baseline': (validation_diff,
-                            generate_random_score_ranking(kernel)
-                            ),
-    }
-
-    for method, validation_set in method_validation_inputs.items():
-        auroc, auprc = get_metrics(*validation_set)
-        auroc_metrics[method].append(auroc)
-        auprc_metrics[method].append(auprc)
+        for method, validation_set in method_validation_inputs.items():
+            auroc, auprc = get_metrics(*validation_set)
+            auroc_metrics[method].append(auroc)
+            auprc_metrics[method].append(auprc)
 
     return auroc_metrics, auprc_metrics
