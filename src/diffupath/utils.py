@@ -96,8 +96,8 @@ def check_substrings(dataset_nodes, db_nodes):
     return mapping_substrings
 
 
-def split_random_two_subsets(to_split):
-    """Hide relative """
+def split_random_two_subsets(to_split, k=0.5):
+    """Hide relative number of labels."""
     if isinstance(to_split, set):
         to_split = list(to_split)
 
