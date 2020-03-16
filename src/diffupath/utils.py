@@ -97,14 +97,24 @@ def check_substrings(dataset_nodes, db_nodes):
 
 
 def split_random_two_subsets(to_split):
-    half_1 = random.sample(population=list(to_split), k=int(len(to_split) / 2))
-    half_2 = list(set(to_split) - set(half_1))
+    """Hide relative """
+    new_labels = to_split[:]
 
-    return half_1, half_2
+    # Check for -1
+    if -1 in new_labels:
+        new_labels = [0 if label == -1 else label for label in new_labels]
+
+    indices = [index for index, label in enumerate(new_labels) if label != 0]
+
+    for index in random.choices(indices, k=int(k * len(indices))):
+        new_labels[index] = 0
+
+    return new_labels, to_split
 
 
 def split_random_three_subsets(to_split):
     half_1 = random.sample(population=list(to_split), k=int(len(to_split) / 3))
+    # TODO: This is broken
     half_2, half_3 = split_random_two_subsets(list(set(to_split) - set(half_1)))
 
     return half_1, half_2, half_3
@@ -131,6 +141,7 @@ def get_three_venn_intersections(set1, set2, set3):
 
 
 def random_disjoint_intersection_two_subsets(unique_set1, unique_set2, intersection):
+    # TODO: This is not working
     set1, set2 = split_random_two_subsets(intersection)
 
     return unique_set1 | set(set1), unique_set2 | set(set2)
