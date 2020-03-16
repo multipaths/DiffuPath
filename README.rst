@@ -82,6 +82,42 @@ The following command will run a diffusion method on a given network with the gi
 
     $ python3 -m diffupath diffusion run --network=<path-to-network-file> --input=<path-to-data-file> --method=<method>
 
+Input Data
+----------
+
+You can submit your dataset in any of the following formats:
+
+- CSV (.csv)
+- TSV (.tsv)
+- TXT (.txt)
+
+Please ensure the dataset has a column for each of the following:
+
+- Node Name
+- Expresssion Data [*]_
+- p-value
+
+Optionally, you can also include a fourth column "Threshold" if you choose to label data according to a threshold value.
+
+.. [*] Differential expression values e.g. fold change (FC)
+
+Input dataset example
+~~~~~~~~~~~~~~~~~~~~~
+
++--------------+------------------+---------+-----------+
+| Node Name    | Expression Data  | p-value | Threshold |
++==============+==================+=========+===========+
+| Gene A       | 4                | 0.03    | 2         |
++--------------+------------------+---------+-----------+
+| Gene  B      | -1               | 0.05    | 2         |
++--------------+------------------+---------+-----------+
+| Metabolite C | 1.5              | 0.001   | 2         |
++--------------+------------------+---------+-----------+
+| Gene D       | 3                |  0.07   | 2         |
++--------------+------------------+---------+-----------+
+
+You can take a look at our Resources page for some more examples files.
+
 Networks
 --------
 In this section, we describe the types of networks you can select to run diffusion methods over. These include the
@@ -167,13 +203,31 @@ of networks representing integrated biological databases.
 
 Custom-network formats
 ~~~~~~~~~~~~~~~~~~~~~~
-You can submit your own networks in any one of the following formats: ::
+You can also submit your own networks in any of the following formats:
 
-    CSV
-    TSV
-    TXT
-    GML
-    GraphML
+- BEL_ (.bel)
+
+- CSV (.csv)
+
+-  Edge_ `list`__ (.lst or .list)
+
+- GML_ (.gml or .xml)
+
+- GraphML_ (.graphml or .xml)
+
+- Pickle (.pickle)
+
+- TSV (.tsv)
+
+- TXT (.txt)
+
+.. _Edge: https://networkx.github.io/documentation/stable/reference/readwrite/edgelist.html
+__ Edge_
+.. _GraphML: http://graphml.graphdrawing.org
+.. _BEL: https://language.bel.bio/
+.. _GML: http://docs.yworks.com/yfiles/doc/developers-guide/gml.html
+
+You can take a look at our Resources page for some example networks.
 
 Disclaimer
 ----------
