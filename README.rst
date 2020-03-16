@@ -97,9 +97,8 @@ Please ensure the dataset has a column for each of the following:
 - Expresssion Data [*]_
 - p-value
 
-Optionally, you can also include a fourth column "Threshold" if you choose to label data according to a threshold value.
-
-.. [*] Differential expression values e.g. fold change (FC)
+Optionally, you can also include a fourth column "Threshold" if you choose to label data according to a threshold value
+(as in the table below).
 
 Input dataset example
 ~~~~~~~~~~~~~~~~~~~~~
@@ -116,7 +115,9 @@ Input dataset example
 | Gene D       | 3                |  0.07   | 2         |
 +--------------+------------------+---------+-----------+
 
-You can take a look at our Resources page for some more examples files.
+You can also take a look at our Resources page for some examples files.
+
+.. [*] Differential expression values e.g. fold change (FC)
 
 Networks
 --------
@@ -209,7 +210,7 @@ You can also submit your own networks in any of the following formats:
 
 - CSV (.csv)
 
--  Edge_ `list`__ (.lst or .list)
+- Edge_ `list`__ (.lst or .list)
 
 - GML_ (.gml or .xml)
 
@@ -227,7 +228,28 @@ __ Edge_
 .. _BEL: https://language.bel.bio/
 .. _GML: http://docs.yworks.com/yfiles/doc/developers-guide/gml.html
 
-You can take a look at our Resources page for some example networks.
+
+Minimally, please ensure each of the following columns are included in the network file you submit:
+
+- FirstNode
+- SecondNode
+
+Optionally, you can choose to add a third column, "Relation" in your network (as in the example below).
+
+Custom-network example
+~~~~~~~~~~~~~~~~~~~~~~
+
++-----------+--------------+-------------+
+| FirstNode | SecondNode   | Relation    |
++===========+==============+=============+
+| Gene A    | Gene B       | Increase    |
++-----------+--------------+-------------+
+| Gene B    | Metabolite C | Association |
++-----------+--------------+-------------+
+| Gene A    | Pathology D  | Association |
++-----------+--------------+-------------+
+
+You can also take a look at our Resources page for some example networks.
 
 Disclaimer
 ----------
