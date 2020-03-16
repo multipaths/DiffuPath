@@ -98,6 +98,9 @@ def check_substrings(dataset_nodes, db_nodes):
 
 def split_random_two_subsets(to_split):
     """Hide relative """
+    if isinstance(to_split, set):
+        to_split = list(to_split)
+
     new_labels = to_split[:]
 
     # Check for -1
