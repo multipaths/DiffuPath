@@ -1,5 +1,4 @@
 .. image:: https://github.com/multipaths/diffupath/blob/master/docs/source/meta/diffupath_logo.png
-    :width: 500px
     :align: center
 
 Introduction |build| |docs|
