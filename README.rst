@@ -1,6 +1,6 @@
 .. image:: https://github.com/multipaths/diffupath/blob/master/docs/source/meta/diffupath_logo.png
     :width: 500px
-    
+
 Introduction |build| |docs|
 ===========================
 DiffuPath is an analytic tool for biological networks that connects the generic label propagation algorithms from
