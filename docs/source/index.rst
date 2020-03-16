@@ -1,12 +1,27 @@
 DiffuPath
 =========
+DiffuPath is an analytic tool for biological networks that connects the generic label propagation algorithms from
+`DiffuPy <https://github.com/multipaths/DiffuPy/>`_ to biological networks encoded in several formats such as
+Simple Interaction Format (SIF) or Biological Expression Language (BEL). For example, in the application scenario
+presented in the paper, we use three pathway databases (i.e., KEGG, Reactome and WikiPathways) and their integrated
+network retrieved from `PathMe <https://github.com/PathwayMerger/PathMe/>`_ [1]_ to analyze three multi-omics datasets.
+However, other biological networks can be imported from the Bio2BEL ecosystem [2]_.
 
-.. automodule:: diffupath
+Installation is as easy as getting the code from `PyPI <https://pypi.python.org/pypi/diffupath>`_ with
+:code:`python3 -m pip install diffupath`. See the :doc:`installation <installation>` documentation.
+
+.. seealso::
+
+    - Documented on `Read the Docs <http://diffupath.readthedocs.io/>`_
+    - Versioned on `GitHub <https://github.com/multipaths/diffupath>`_
+    - Tested on `Travis CI <https://travis-ci.org/multipaths/diffupath>`_
+    - Distributed by `PyPI <https://pypi.python.org/pypi/diffupath>`_
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   installation
    cli
    constants
    database
@@ -16,6 +31,9 @@ DiffuPath
    topological_analyses
    input_mapping
 
-Index
-=====
-* :ref:`genindex`
+
+Disclaimer
+----------
+DiffuPath is a scientific software that has been developed in an academic capacity, and thus comes with no warranty or
+guarantee of maintenance, support, or back-up of data.
+
