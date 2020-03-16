@@ -12,14 +12,14 @@ from diffupy.process_input import generate_categoric_input_from_labels
 from sklearn import metrics
 from tqdm import tqdm
 
-from .utils import split_random_two_subsets, random_disjoint_intersection_three_subsets
+from .utils import random_disjoint_intersection_three_subsets, hide_true_positives
 
 """Random cross validation_datasets"""
 
 
 def get_random_cv_split_input_and_validation(input, background_mat):
     """Get random CV split."""
-    prepare_input_labels = split_random_two_subsets(input)
+    prepare_input_labels = hide_true_positives(input)
 
     return (generate_categoric_input_from_labels(
         prepare_input_labels,
@@ -41,15 +41,15 @@ def get_random_cv_inputs_from_subsets_same_diff_input(input_subsets, background_
     validation_mats_by_entity_type = defaultdict()
 
     for entity_type, input in input_subsets.items():
-        randomized_input_labels, validation_labels = split_random_two_subsets(input[0])
+        hidden_input = hide_true_positives(input[0])
         validation_mats_by_entity_type[entity_type] = generate_categoric_input_from_labels(
-            validation_labels,
+            input[0],
             'Dataset 1 ' + str(
                 entity_type),
             background_mat
         )
-        input_unlabeled.update(set(validation_labels))
-        input_labels.update(set(randomized_input_labels))
+        input_unlabeled.update(set(input[0]))
+        input_labels.update(set(hidden_input))
 
     input_mat = generate_categoric_input_from_labels(input_labels, 'Dataset1', background_mat, input_unlabeled)
 

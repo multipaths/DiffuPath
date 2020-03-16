@@ -95,8 +95,13 @@ def check_substrings(dataset_nodes, db_nodes):
 
     return mapping_substrings
 
+def split_random_two_subsets(to_split):
+    half_1 = random.sample(population=list(to_split), k=int(len(to_split) / 2))
+    half_2 = list(set(to_split) - set(half_1))
 
-def split_random_two_subsets(to_split, k=0.5):
+    return half_1, half_2
+
+def hide_true_positives(to_split, k=0.5):
     """Hide relative number of labels."""
     if isinstance(to_split, set):
         to_split = list(to_split)
@@ -117,7 +122,6 @@ def split_random_two_subsets(to_split, k=0.5):
 
 def split_random_three_subsets(to_split):
     half_1 = random.sample(population=list(to_split), k=int(len(to_split) / 3))
-    # TODO: This is broken
     half_2, half_3 = split_random_two_subsets(list(set(to_split) - set(half_1)))
 
     return half_1, half_2, half_3
@@ -144,7 +148,6 @@ def get_three_venn_intersections(set1, set2, set3):
 
 
 def random_disjoint_intersection_two_subsets(unique_set1, unique_set2, intersection):
-    # TODO: This is not working
     set1, set2 = split_random_two_subsets(intersection)
 
     return unique_set1 | set(set1), unique_set2 | set(set2)
@@ -158,10 +161,11 @@ def random_disjoint_intersection_three_subsets(sets_dict):
 
     intersections = get_three_venn_intersections(set1, set2, set3)
 
-    set1, set2 = random_disjoint_intersection_two_subsets(intersections['unique_set1'],
-                                                          intersections['unique_set2'],
-                                                          intersections['set1_set2']
-                                                          )
+    set1, set2 = random_disjoint_intersection_two_subsets(
+        intersections['unique_set1'],
+        intersections['unique_set2'],
+        intersections['set1_set2']
+    )
 
     set1, set3 = random_disjoint_intersection_two_subsets(set1,
                                                           intersections['unique_set3'],
