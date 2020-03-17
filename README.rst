@@ -94,7 +94,7 @@ You can submit your dataset in any of the following formats:
 Please ensure the dataset has a column for each of the following:
 
 - Node
-- Expresssion [*]_ [*]_ 
+- Expresssion [*]_
 - p-value
 
 Input dataset example
@@ -112,7 +112,7 @@ Input dataset example
 | Gene D       | 3          |  0.07   | 
 +--------------+------------+---------+
 
-You can also take a look at our Resources page for some examples files. 
+You can also take a look at our Resources page for some examples files.
 
 .. [*] Differential expression values e.g. fold change (FC)
 
