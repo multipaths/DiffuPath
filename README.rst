@@ -89,7 +89,6 @@ You can submit your dataset in any of the following formats:
 
 - CSV (.csv)
 - TSV (.tsv)
-- TXT (.txt)
 
 Please ensure the dataset has a column for each of the following:
 
@@ -207,7 +206,7 @@ You can also submit your own networks in any of the following formats:
 
 - CSV (.csv)
 
-- Edge_ `list`__ (.lst or .list)
+- Edge_ `list`__ (.lst)
 
 - GML_ (.gml or .xml)
 
@@ -231,7 +230,10 @@ Minimally, please ensure each of the following columns are included in the netwo
 - FirstNode
 - SecondNode
 
-Optionally, you can choose to add a third column, "Relation" in your network (as in the example below).
+Optionally, you can choose to add a third column, "Relation" in your network (as in the example below). If the relation
+between the **Source** and **Target** nodes is omitted, and/or if the directionality is ambiguous, either node can be
+assigned as the **Source** or **Target**.
+
 
 Custom-network example
 ~~~~~~~~~~~~~~~~~~~~~~

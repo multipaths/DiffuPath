@@ -90,7 +90,7 @@ You can also submit your own networks in any of the following formats:
 
 - CSV (.csv)
 
-- Edge_ `list`__ (.lst or .list)
+- Edge_ `list`__ (.lst)
 
 - GML_ (.gml or .xml)
 
@@ -99,8 +99,6 @@ You can also submit your own networks in any of the following formats:
 - Pickle (.pickle)
 
 - TSV (.tsv)
-
-- TXT (.txt)
 
 .. _Edge: https://networkx.github.io/documentation/stable/reference/readwrite/edgelist.html
 __ Edge_
@@ -111,16 +109,18 @@ __ Edge_
 
 Minimally, please ensure each of the following columns are included in the network file you submit:
 
-- FirstNode
-- SecondNode
+- Source
+- Target
 
-Optionally, you can choose to add a third column, "Relation" in your network (as in the example below).
+Optionally, you can choose to add a third column, "Relation" in your network (as in the example below). If the relation
+between the **Source** and **Target** nodes is omitted, and/or if the directionality is ambiguous, either node can be
+assigned as the **Source** or **Target**.
 
 Custom-network example
 ~~~~~~~~~~~~~~~~~~~~~~
 
 +-----------+--------------+-------------+
-| FirstNode | SecondNode   | Relation    |
+| Source    | Target       | Relation    |
 +===========+==============+=============+
 | Gene A    | Gene B       | Increase    |
 +-----------+--------------+-------------+
