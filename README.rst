@@ -93,29 +93,26 @@ You can submit your dataset in any of the following formats:
 
 Please ensure the dataset has a column for each of the following:
 
-- Node Name
-- Expresssion Data [*]_
+- Node
+- Expresssion [*]_ [*]_ 
 - p-value
-
-Optionally, you can also include a fourth column "Threshold" if you choose to label data according to a threshold value
-(as in the table below).
 
 Input dataset example
 ~~~~~~~~~~~~~~~~~~~~~
 
-+--------------+------------------+---------+-----------+
-| Node Name    | Expression Data  | p-value | Threshold |
-+==============+==================+=========+===========+
-| Gene A       | 4                | 0.03    | 2         |
-+--------------+------------------+---------+-----------+
-| Gene  B      | -1               | 0.05    | 2         |
-+--------------+------------------+---------+-----------+
-| Metabolite C | 1.5              | 0.001   | 2         |
-+--------------+------------------+---------+-----------+
-| Gene D       | 3                |  0.07   | 2         |
-+--------------+------------------+---------+-----------+
++--------------+------------+---------+
+| Node         | Expression | p-value | 
++==============+============+=========+
+| Gene A       | 4          | 0.03    |
++--------------+------------+---------+
+| Gene  B      | -1         | 0.05    | 
++--------------+------------+---------+
+| Metabolite C | 1.5        | 0.001   | 
++--------------+------------+---------+
+| Gene D       | 3          |  0.07   | 
++--------------+------------+---------+
 
-You can also take a look at our Resources page for some examples files.
+You can also take a look at our Resources page for some examples files. 
 
 .. [*] Differential expression values e.g. fold change (FC)
 
