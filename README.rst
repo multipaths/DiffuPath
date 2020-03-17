@@ -101,15 +101,15 @@ Input dataset example
 ~~~~~~~~~~~~~~~~~~~~~
 
 +--------------+------------+---------+
-| Node         | Expression | p-value | 
+| Node         | Expression | p-value |
 +==============+============+=========+
 | Gene A       | 4          | 0.03    |
 +--------------+------------+---------+
-| Gene  B      | -1         | 0.05    | 
+| Gene  B      | -1         | 0.05    |
 +--------------+------------+---------+
-| Metabolite C | 1.5        | 0.001   | 
+| Metabolite C | 1.5        | 0.001   |
 +--------------+------------+---------+
-| Gene D       | 3          |  0.07   | 
+| Gene D       | 3          |  0.07   |
 +--------------+------------+---------+
 
 You can also take a look at our Resources page for some examples files.
