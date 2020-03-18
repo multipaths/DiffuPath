@@ -189,7 +189,7 @@ of networks representing integrated biological databases.
 .. _drugbank.json: https://drive.google.com/open?id=13E1mr0c-aKFaAqAW_8aQglSium0Ji0fp
 .. _go.json: https://drive.google.com/open?id=1BzKSShbPMqZQpElVDd-WJGnei_fy94Qg
 .. _hsdn.json: https://drive.google.com/open?id=1KSP6lu76jk2B45ShGJEKId8ZkAQCtjHP
-.. _kegg.json: https://drive.google.com/open?id=1zNwH8rTdoBSRegMFxCzlPJBOTRs2WFaf
+.. _kegg.json: https://drive.google.com/open?id=1jiAWFeSxbu4PVApil4jBn7-IzSP5UeCr
 .. _mirtarbase.json: https://drive.google.com/open?id=1LNtung6mWp1azqBSx8KKKCzki7M4l--8
 .. _reactome.json: https://drive.google.com/open?id=19u1rlhGkN2UACNcMMf6sXyVOzjcVww2t
 .. _sider.json: https://drive.google.com/open?id=1izVj2MneOh5y8DHTEaUPGUNgyFdS7MQM
