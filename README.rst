@@ -58,7 +58,7 @@ Requirements
 
 Command Line Interface
 ----------------------
-The following commands can be used directly use from your terminal:
+The following commands can be used directly from your terminal:
 
 1. **Download a database for network analysis**.
 
