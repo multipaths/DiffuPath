@@ -240,7 +240,7 @@ Custom-network example
 ~~~~~~~~~~~~~~~~~~~~~~
 
 +-----------+--------------+-------------+
-| FirstNode | SecondNode   | Relation    |
+|  Source   |   Target     | Relation    |
 +===========+==============+=============+
 | Gene A    | Gene B       | Increase    |
 +-----------+--------------+-------------+
