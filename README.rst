@@ -90,14 +90,45 @@ You can submit your dataset in any of the following formats:
 - CSV (.csv)
 - TSV (.tsv)
 
-Please ensure the dataset has a column for each of the following:
 
-- Node
+Please ensure that minimally, the dataset has a column 'Node' containing node IDs. Optionally, you can also add the
+following columns to your dataset:
+
 - Expresssion [*]_
 - p-value
 
 Input dataset example
 ~~~~~~~~~~~~~~~~~~~~~
+
+1. Minimally, you must provide a list of entities as input.
+
++--------------+
+| Node         |
++==============+
+| Gene A       |
++--------------+
+| Gene  B      |
++--------------+
+| Metabolite C |
++--------------+
+| Gene D       |
++--------------+
+
+2. You can also choose to provide entities as well as their expression values (e.g., logFC).
+
++--------------+------------+
+| Node         | Expression |
++==============+============+
+| Gene A       | 4          |
++--------------+------------+
+| Gene  B      | -1         |
++--------------+------------+
+| Metabolite C | 1.5        |
++--------------+------------+
+| Gene D       | 3          |
++--------------+------------+
+
+3. Finally, you can provide entities with expression values and adjusted p-values.
 
 +--------------+------------+---------+
 | Node         | Expression | p-value |
