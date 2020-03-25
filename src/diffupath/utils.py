@@ -6,6 +6,7 @@ import itertools
 import logging
 import pickle
 import random
+
 from statistics import mean
 
 import numpy as np
