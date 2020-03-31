@@ -90,8 +90,8 @@ You can submit your dataset in any of the following formats:
 - CSV (.csv)
 - TSV (.tsv)
 
-Please ensure that the dataset has a column 'Node' containing node IDs. If you only provide the node IDs, you must
-also ensure your dataset has a column 'NodeType' indicating the entity type for each node. You can also optionally add
+Please ensure that the dataset has a column 'Node' containing node IDs. If you only provide the node IDs, you can
+also include a column in your dataset 'NodeType' indicating the entity type for each node. You can also optionally add
 the following columns to your dataset:
 
 - LogFC [*]_
@@ -99,25 +99,27 @@ the following columns to your dataset:
 
 .. [*] log :sub:`2`  fold change
 
-Input dataset example
-~~~~~~~~~~~~~~~~~~~~~
+Input dataset examples
+~~~~~~~~~~~~~~~~~~~~~~
+
 DiffuPath accepts several input formats which can be codified in different ways. See the
 `diffusion scores <https://github.com/multipaths/DiffuPy/blob/master/docs/source/diffusion.rst>`_ summary for more
 details.
 
-1. You can provide a dataset with a column 'Node' containing node IDs along with a column 'NodeType' indicating the entity type.
+1. You can provide a dataset with a column 'Node' containing node IDs along with a column 'NodeType' indicating the
+entity type.
 
-+--------------+------------+
-|   NodeType   |    Node    |
-+==============+============+
-|     Gene     |     A      |
-+--------------+------------+
-|     Gene     |     B      |
-+--------------+------------+
-|  Metabolite  |     C      |
-+--------------+------------+
-|     Gene     |     D      |
-+--------------+------------+
++------------+--------------+
+|     Node   |   NodeType   |
++============+==============+
+|      A     |     Gene     |
++------------+--------------+
+|      B     |     Gene     |
++------------+--------------+
+|      C     |  Metabolite  |
++------------+--------------+
+|      D     |    Gene      |
++------------+--------------+
 
 2. You can also choose to provide a dataset with a column 'Node' containing node IDs as well as a column 'logFC' with
 their log :sub:`2` FC.
@@ -264,8 +266,8 @@ __ Edge_
 
 Minimally, please ensure each of the following columns are included in the network file you submit:
 
-- FirstNode
-- SecondNode
+- Source
+- Target
 
 Optionally, you can choose to add a third column, "Relation" in your network (as in the example below). If the relation
 between the **Source** and **Target** nodes is omitted, and/or if the directionality is ambiguous, either node can be
@@ -287,8 +289,6 @@ Custom-network example
 
 You can also take a look at our `sample networks <https://github.com/multipaths/DiffuPy/tree/master/examples/networks>`_
 folder for some examples.
-
-
 
 
 Disclaimer
