@@ -13,7 +13,7 @@ from diffupath.validation_datasets_parsers import parse_set1
 
 from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.process_input import generate_categoric_input_from_labels
-from diffupy.utils import process_network_from_cli, _process_input, process_kernel_from_cli, print_dict_dimensions, \
+from diffupy.utils import process_network_from_cli, process_kernel_from_cli, print_dict_dimensions, \
     get_label_list_graph
 from .constants import *
 
@@ -74,6 +74,7 @@ def run(
 
     click.secho(f'{EMOJI} Loading graph from {network} {EMOJI}')
 
+    #TODO: Universal input processing
     #input_scores = _process_input(input)
     dataset1_labels_by_omics = parse_set1(input)
     dataset1_all_labels = get_labels_set_from_dict(dataset1_labels_by_omics)
@@ -138,7 +139,7 @@ def run(
             k=k,
         )
 
-    json.dump(results, output, indent=2)
+    results.to_csv(output)
 
 
 @main.group()
