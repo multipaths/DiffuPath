@@ -40,6 +40,12 @@ def diffusion():
     type=click.Path(exists=True, dir_okay=False)
 )
 @click.option(
+    '-c', '--categoric',
+    help='Generate categorical input from labels',
+    show_default=False,
+    is_flag=False
+)
+@click.option(
     '-n', '--network',
     help='Path to the network graph or kernel',
     default=os.path.join(DEFAULT_DIFFUPY_DIR, 'kernels', 'kernel_regularized_pathme_universe.pickle'),
@@ -68,16 +74,18 @@ def diffusion():
 )
 def run(
         input: str,
+        categoric: bool = False,
         network: str = os.path.join(DEFAULT_DIFFUPY_DIR, 'kernels', 'kernel_regularized_pathme_universe.pickle'),
         graph: bool = False,
         method: str = 'raw',
         output: str = OUTPUT_DIR,
 ):
-    """Run a diffusion method over a network or pregenerated kernel."""
+    """Run a diffusion method given an input over a network or a pre-generated kernel."""
     click.secho(f'{EMOJI} Running diffusion... {EMOJI}')
 
     click.secho(f'{EMOJI} Loading graph from {network} {EMOJI}')
 
+    # Load input from dataset
     # TODO: Universal input processing, now parse set 1 specific, use from diffuPy process_input
     # input_scores = _process_input(input)
     dataset_labels_by_omics = parse_set1(input)
@@ -87,6 +95,7 @@ def run(
 
     mirnas_dataset = dataset_labels_by_omics['micrornas']
 
+    # Load background network from the input graph (if indicated as flag) or kernel
     if graph:
         graph = process_network_from_cli(network)
 
@@ -97,6 +106,7 @@ def run(
             f'{EMOJI}'
         )
 
+        # Generate the kernel from the input graph
         k = regularised_laplacian_kernel(graph)
 
     else:
@@ -110,6 +120,7 @@ def run(
 
     background_labels = k.rows_labels
 
+    # Dataset label mapping to the network
     mapping_scores = get_mapping(dataset1_all_labels,
                                  background_labels,
                                  title='Global mapping: ',
@@ -117,17 +128,28 @@ def run(
                                  print_percentage=True
                                  )
 
-    input_scores = generate_categoric_input_from_labels(mapping_scores,
-                                                        'input with hidden true positives',
-                                                        k
-                                                        )
+    # Format input
+    if categoric:
+        # Generate input as a categoric input from labels
+        input_scores = generate_categoric_input_from_labels(mapping_scores,
+                                                            'input with hidden true positives',
+                                                            k
+                                                            )
+    else:
+        #TODO: Import from input column continuous scores as in diffuPy process_input
+        input_scores = generate_categoric_input_from_labels(mapping_scores,
+                                                            'input with hidden true positives',
+                                                            k
+                                                            )
 
+    # Perform/run diffusion
     results = run_diffusion(
         input_scores,
         method,
         k=k,
     )
 
+    # Export diffusion scores as a csv data file
     results.to_csv(output)
 
 
