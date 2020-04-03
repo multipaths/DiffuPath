@@ -8,14 +8,14 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 SOURCE_DIR = os.path.join(os.path.abspath(os.path.join(dir_path, os.pardir)))
 
 #: Default DiffuPath directory
-DEFAULT_DIFFUPY_DIR = os.path.join(os.path.expanduser('~'), '.diffupath')
+DEFAULT_DIFFUPATH_DIR = os.path.join(os.path.expanduser('~'), '.diffupath')
 #: Default DiffuPath output directory
-OUTPUT_DIR = os.path.join(DEFAULT_DIFFUPY_DIR, 'output')
+OUTPUT_DIR = os.path.join(DEFAULT_DIFFUPATH_DIR, 'output')
 
 
 def ensure_output_dirs():
     """Ensure that the output directories exists."""
-    os.makedirs(DEFAULT_DIFFUPY_DIR, exist_ok=True)
+    os.makedirs(DEFAULT_DIFFUPATH_DIR, exist_ok=True)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 

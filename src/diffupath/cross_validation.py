@@ -11,31 +11,37 @@ from diffupy.process_input import generate_categoric_input_from_labels
 from sklearn import metrics
 from tqdm import tqdm
 
+from typing import Union, Tuple
+
 from .topological_analyses import generate_pagerank_baseline
-from .utils import random_disjoint_intersection_three_subsets, hide_true_positives
+from .utils import random_disjoint_intersection_three_subsets, hide_true_positives, split_random_two_subsets
 
 """Random cross validation_datasets"""
 
 
-def get_random_cv_split_input_and_validation(input, background_mat):
+def get_random_cv_split_input_and_validation(input: Union[list, set],
+                                             background_mat: Matrix
+                                             ) -> Tuple[Matrix, Matrix]:
     """Get random CV split."""
-    prepare_input_labels = hide_true_positives(input)
+    input_labels, validation_labels = split_random_two_subsets(input)
 
     return (
         generate_categoric_input_from_labels(
-            prepare_input_labels,
+            input_labels,
             'input with hidden true positives',
             background_mat
         ),
         generate_categoric_input_from_labels(
-            input,
+            validation_labels,
             'original input labels',
             background_mat
         )
     )
 
 
-def get_random_cv_inputs_from_subsets_same_diff_input(input_subsets, background_mat):
+def get_random_cv_inputs_from_subsets_same_diff_input(input_subsets: Union[list, set],
+                                                      background_mat
+                                                      ):
     """Get random CV input from subsets with different input."""
     input_labels = set()
     input_unlabeled = set()
@@ -95,20 +101,20 @@ def get_one_x_in_cv_inputs_from_subsets(
     return input_dict
 
 
-def get_metrics(validation_labels, scores):
+def get_metrics(validation_labels,
+                scores
+                ):
     """Return metrics."""
     validation_labels_vec = validation_labels.__copy__()
 
-    # TODO: What's going on
-    for score, i, j in validation_labels_vec.__iter__(get_labels=False, get_indices=True):
-        if score not in [0, 1]:
-            validation_labels_vec.mat[i, j] = 0
-
-    return metrics.roc_auc_score(validation_labels_vec.mat, scores.mat), metrics.average_precision_score(
-        validation_labels_vec.mat, scores.mat)
+    return metrics.roc_auc_score(validation_labels.mat, scores.mat), metrics.average_precision_score(
+        validation_labels.mat, scores.mat)
 
 
-def cross_validation_by_subset_same_diff_input(mapping_by_subsets, kernel, k=3, z=True):
+def cross_validation_by_subset_same_diff_input(mapping_by_subsets,
+                                               kernel,
+                                               k=3,
+                                               z=True):
     """Cross validation helper."""
     auroc_metrics = defaultdict(list)
     auprc_metrics = defaultdict(list)
@@ -129,8 +135,14 @@ def cross_validation_by_subset_same_diff_input(mapping_by_subsets, kernel, k=3, 
     return auroc_metrics, auprc_metrics
 
 
-def cross_validation_one_x_in(mapping_by_subsets, kernel, k=1, missing_value=-1, disjoint=False, rows_unlabeled=False,
-                              z=False):
+def cross_validation_one_x_in(mapping_by_subsets,
+                              kernel,
+                              k=1,
+                              missing_value=-1,
+                              disjoint=False,
+                              rows_unlabeled=False,
+                              z=False
+                              ):
     """Cross validation one."""
     auroc_metrics = defaultdict(lambda: defaultdict(list))
     auprc_metrics = defaultdict(lambda: defaultdict(list))
@@ -191,7 +203,11 @@ def generate_random_score_ranking(background_mat):
     )
 
 
-def cross_validation_by_method(all_labels_mapping, graph, kernel, k=100):
+def cross_validation_by_method(all_labels_mapping,
+                               graph,
+                               kernel,
+                               k=100
+                               ):
     """Cross validation by method."""
     auroc_metrics = defaultdict(list)
     auprc_metrics = defaultdict(list)

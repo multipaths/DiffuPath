@@ -10,11 +10,15 @@ from diffupy.matrix import LaplacianMatrix, Matrix
 from diffupy.utils import get_simple_graph_from_multigraph
 
 
-def generate_pagerank_baseline(graph, background_mat):
+def generate_pagerank_baseline(graph: nx.Graph, background_mat: Matrix) -> Matrix:
     """Generate baseline results using page rank algorithm."""
     graph = get_simple_graph_from_multigraph(graph)
 
     pagerank_scores = nx.pagerank(graph)
+
+    if len(pagerank_scores.values()) != len(background_mat.mat):
+        raise Warning ('The provided graph do not match the kernel nodes amount. '
+                       'The missing nodes will be filled out with the comparison but it may occasionate dimension troubles.')
 
     return Matrix(mat=np.array(
         list(pagerank_scores.values())).reshape(

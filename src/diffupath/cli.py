@@ -40,7 +40,7 @@ def diffusion():
     type=click.Path(exists=True, dir_okay=False)
 )
 @click.option(
-    '-c', '--categoric',
+    '-q', '--quantitative',
     help='Generate categorical input from labels',
     show_default=False,
     is_flag=False
@@ -48,7 +48,7 @@ def diffusion():
 @click.option(
     '-n', '--network',
     help='Path to the network graph or kernel',
-    default=os.path.join(DEFAULT_DIFFUPY_DIR, 'kernels', 'kernel_regularized_pathme_universe.pickle'),
+    default=os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'kernel_regularized_pathme_universe.pickle'),
     show_default=True,
     type=click.Path(exists=True, dir_okay=False)
 )
@@ -74,8 +74,8 @@ def diffusion():
 )
 def run(
         input: str,
-        categoric: bool = False,
-        network: str = os.path.join(DEFAULT_DIFFUPY_DIR, 'kernels', 'kernel_regularized_pathme_universe.pickle'),
+        quantitative: bool = False,
+        network: str = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'kernel_regularized_pathme_universe.pickle'),
         graph: bool = False,
         method: str = 'raw',
         output: str = OUTPUT_DIR,
@@ -128,15 +128,15 @@ def run(
                                  print_percentage=True
                                  )
 
-    # Format input
-    if categoric:
+    # Format input as Matrix for run_diffusion
+    if quantitative:
+        #TODO: Import from input column continuous scores as in diffuPy process_input
         # Generate input as a categoric input from labels
         input_scores = generate_categoric_input_from_labels(mapping_scores,
                                                             'input with hidden true positives',
                                                             k
                                                             )
     else:
-        #TODO: Import from input column continuous scores as in diffuPy process_input
         input_scores = generate_categoric_input_from_labels(mapping_scores,
                                                             'input with hidden true positives',
                                                             k
