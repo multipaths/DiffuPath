@@ -4,6 +4,8 @@
 
 from collections import defaultdict
 
+import warnings
+
 import networkx as nx
 import numpy as np
 from diffupy.matrix import LaplacianMatrix, Matrix
@@ -17,8 +19,8 @@ def generate_pagerank_baseline(graph: nx.Graph, background_mat: Matrix) -> Matri
     pagerank_scores = nx.pagerank(graph)
 
     if len(pagerank_scores.values()) != len(background_mat.mat):
-        raise Warning ('The provided graph do not match the kernel nodes amount. '
-                       'The missing nodes will be filled out with the comparison but it may occasionate dimension troubles.')
+        warnings.warn('The provided graph do not match the kernel nodes amount. '
+                       'The missing nodes will be filled and deleted according to the reference Matrix.')
 
     return Matrix(mat=np.array(
         list(pagerank_scores.values())).reshape(
@@ -26,7 +28,7 @@ def generate_pagerank_baseline(graph: nx.Graph, background_mat: Matrix) -> Matri
     ),
         rows_labels=list(pagerank_scores.keys()),
         cols_labels=['PageRank']
-    ).match_missing_rows(background_mat.rows_labels, 0).match_rows(background_mat)
+    ).match_missing_rows(background_mat.rows_labels, 0, delete_difference = True).match_rows(background_mat)
 
 
 def resistance_distance(G=None, M=None, normalized=False):
