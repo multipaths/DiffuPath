@@ -239,7 +239,7 @@ def evaluate(
     with open(os.path.join(output, 'metrics.json'), 'w') as outfile:
         json.dump(
             {'auroc_metrics': auroc_metrics,
-             'auprc_metrics_by_method': auprc_metrics
+             'auprc_metrics': auprc_metrics
              },
             outfile,
             indent=2,
