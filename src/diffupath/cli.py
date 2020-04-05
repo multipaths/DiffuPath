@@ -21,9 +21,9 @@ logger = logging.getLogger(__name__)
 
 #: Parsing methods for each dataset
 PARSING_METHODS = {
-    1: parse_set1,
-    2: parse_set2,
-    3: parse_set3,
+    '1': parse_set1,
+    '2': parse_set2,
+    '3': parse_set3,
 }
 
 
@@ -173,7 +173,7 @@ def diffuse(
     type=int,
 )
 @click.option(
-    '-c', '--comparison_method',
+    '-c', '--comparison',
     help='Comparison method',
     default='by_method',
     show_default=True,
@@ -182,8 +182,8 @@ def diffuse(
 @click.option(
     '-k', '--dataset',
     help='Key for the datasets presented in the paper',
-    default=1,
     show_default=True,
+    default=1,
     type=click.Choice(DATASETS),
 )
 def evaluate(
@@ -194,7 +194,7 @@ def evaluate(
     network_as_graph: bool,  # TODO Automatize if possible, check type of graph.
     output: str,
     iterations: int,
-    comparison_method: str,
+    comparison: str,
     dataset: int,
 ):
     """Evaluate a kernel/network on one of the three presented datasets."""
@@ -214,7 +214,7 @@ def evaluate(
     if not network_as_graph:
         graph = process_network_from_cli(graph_path)
 
-    if comparison_method == 'by_method':
+    if comparison == 'by_method':
         click.secho(f'{EMOJI} Evaluating by method... {EMOJI}')
 
         auroc_metrics, auprc_metrics = cross_validation_by_method(
@@ -223,7 +223,7 @@ def evaluate(
             kernel,
             k=iterations,
         )
-    elif comparison_method == 'by_db':
+    elif comparison == 'by_db':
         click.secho(f'{EMOJI} Evaluating by database... {EMOJI}')
 
         # TODO to adapt from 'get_one_x_in_cv_inputs_from_subsets', and label_input treatment subset division.

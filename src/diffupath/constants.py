@@ -33,9 +33,9 @@ EVALUATION_METHODS = {
 }
 
 DATASETS = {
-    1,
-    2,
-    3,
+    '1',
+    '2',
+    '3',
 }
 
 # Rename DiffuPy methods
