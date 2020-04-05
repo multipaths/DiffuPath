@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Validate input utilities."""
+"""Validate label_input utilities."""
 
 import logging
 

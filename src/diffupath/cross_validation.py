@@ -28,12 +28,12 @@ def get_random_cv_split_input_and_validation(input: Union[list, set],
     return (
         generate_categoric_input_from_labels(
             input_labels,
-            'input with hidden true positives',
+            'label_input with hidden true positives',
             background_mat
         ),
         generate_categoric_input_from_labels(
             validation_labels,
-            'original input labels',
+            'original label_input labels',
             background_mat
         )
     )
@@ -42,7 +42,7 @@ def get_random_cv_split_input_and_validation(input: Union[list, set],
 def get_random_cv_inputs_from_subsets_same_diff_input(input_subsets: Union[list, set],
                                                       background_mat
                                                       ):
-    """Get random CV input from subsets with different input."""
+    """Get random CV label_input from subsets with different label_input."""
     input_labels = set()
     input_unlabeled = set()
 
@@ -73,7 +73,7 @@ def get_one_x_in_cv_inputs_from_subsets(
         rows_unlabeled=False,
         missing_value=-1
 ):
-    """Get one cross input from subsets."""
+    """Get one cross label_input from subsets."""
     input_dict = {}
     input_labels = input_subsets.pop(one_in)
     rows_unlabel = None
@@ -86,14 +86,14 @@ def get_one_x_in_cv_inputs_from_subsets(
         input_dict[labels_type] = (
             generate_categoric_input_from_labels(
                 input_labels,
-                'two out input',
+                'two out label_input',
                 background_mat,
                 missing_value,
                 rows_unlabeled=rows_unlabel
             ),
             generate_categoric_input_from_labels(
                 validation_labels,
-                'two out input',
+                'two out label_input',
                 background_mat,
                 missing_value,
             )

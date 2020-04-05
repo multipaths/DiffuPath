@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """Input mapping."""
+
 from typing import Set, Tuple
 
 import networkx as nx
@@ -14,13 +15,13 @@ from .utils import get_labels_set_from_dict, check_substrings
 
 
 def get_mapping(
-        to_map: Set,
-        background_map: Set,
-        mirnas=None,
-        mirnas_mapping=None,
-        submapping=None,
-        title='',
-        print_percentage=False
+    to_map: Set,
+    background_map: Set,
+    mirnas=None,
+    mirnas_mapping=None,
+    submapping=None,
+    title='',
+    print_percentage=False,
 ):
     intersection = to_map.intersection(background_map)
 
@@ -41,14 +42,14 @@ def get_mapping(
 
 
 def get_mapping_subsets(
-        subsets_dict,
-        map_labels,
-        title,
-        percentage_reference_labels=False,
-        submapping=None,
-        mirnas=None,
-        mirnas_mapping=None,
-        relative_statistics=None,
+    subsets_dict,
+    map_labels,
+    title,
+    percentage_reference_labels=False,
+    submapping=None,
+    mirnas=None,
+    mirnas_mapping=None,
+    relative_statistics=None,
 ):
     entity_type_map = {'metabolite_nodes': 'metabolite', 'mirna_nodes': 'micrornas', 'gene_nodes': 'genes',
                        'bp_nodes': 'bps'}
@@ -103,26 +104,27 @@ def get_mapping_subsets(
 
 
 def get_mapping_two_dim_subsets(
-        two_dimentional_dict,
-        map_labels,
-        background_labels=None,
-        percentage_reference_background_labels=False,
-        mirnas=None,
-        relative_statistics=None,
-        mirnas_mapping=None,
+    two_dimentional_dict,
+    map_labels,
+    background_labels=None,
+    percentage_reference_background_labels=False,
+    mirnas=None,
+    relative_statistics=None,
+    mirnas_mapping=None,
 ):
     mapping_dict = {}
     total_entites = set()
 
     for subset_title, subsets_dict in two_dimentional_dict.items():
-        mapping, percentage, entites = get_mapping_subsets(subsets_dict,
-                                                           map_labels,
-                                                           relative_statistics=relative_statistics,
-                                                           submapping=background_labels,
-                                                           mirnas=mirnas,
-                                                           mirnas_mapping=mirnas_mapping,
-                                                           title=subset_title.capitalize()
-                                                           )
+        mapping, percentage, entites = get_mapping_subsets(
+            subsets_dict,
+            map_labels,
+            relative_statistics=relative_statistics,
+            submapping=background_labels,
+            mirnas=mirnas,
+            mirnas_mapping=mirnas_mapping,
+            title=subset_title.capitalize(),
+        )
 
         mapping_dict[subset_title] = (mapping, percentage)
         total_entites.update(entites)
@@ -139,16 +141,18 @@ def get_mapping_two_dim_subsets(
     return mapping_dict, total_percentage, total_dimention
 
 
-def process_input_from_cli(click,
-                           parse_set_funct,
-                           network_path,
-                           input_path,
-                           graph: bool = False,
-                           quantitative=False) -> Tuple[Matrix, Matrix, set, nx.Graph]:
+def process_input_from_cli(
+    click,
+    parse_set_funct,
+    network_path,
+    input_path,
+    graph: bool = False,
+    quantitative=False,
+) -> Tuple[Matrix, Matrix, set, nx.Graph]:
     click.secho(f'{EMOJI} Loading networs (as graph or kernel) from {network_path} {EMOJI}')
 
-    # Load input from dataset
-    # TODO: Consider universal input processing, now parse set specific function by parameter, use from diffuPy process_input
+    # Load label_input from dataset
+    # TODO: Consider universal label_input processing, now parse set specific function by parameter, use from diffuPy process_input
     # input_scores = _process_input(input_path)
     dataset_labels_by_omics = parse_set_funct(input_path)
     dataset_all_labels = get_labels_set_from_dict(dataset_labels_by_omics)
@@ -157,7 +161,7 @@ def process_input_from_cli(click,
 
     mirnas_dataset = dataset_labels_by_omics['micrornas']
 
-    # Load background network from the input graph (if indicated as flag) or kernel
+    # Load background network from the label_input graph (if indicated as flag) or kernel
     if graph:
         graph = process_network_from_cli(network_path)
 
@@ -168,7 +172,7 @@ def process_input_from_cli(click,
             f'{EMOJI}'
         )
 
-        # Generate the kernel from the input graph
+        # Generate the kernel from the label_input graph
         kernel = regularised_laplacian_kernel(graph)
 
     else:
@@ -183,25 +187,28 @@ def process_input_from_cli(click,
     background_labels = kernel.rows_labels
 
     # Dataset label mapping to the network
-    mapping_scores = get_mapping(dataset_all_labels,
-                                 background_labels,
-                                 title='Global mapping: ',
-                                 mirnas=mirnas_dataset,
-                                 print_percentage=True
-                                 )
+    mapping_scores = get_mapping(
+        dataset_all_labels,
+        background_labels,
+        title='Global mapping: ',
+        mirnas=mirnas_dataset,
+        print_percentage=True,
+    )
 
-    # Format input as Matrix for run_diffusion
+    # Format label_input as Matrix for run_diffusion
     if quantitative:
-        # TODO: Import from input column continuous scores as in diffuPy process_input
-        # Generate input as a categoric input from labels
-        input_scores = generate_categoric_input_from_labels(mapping_scores,
-                                                            'input with hidden true positives',
-                                                            kernel
-                                                            )
+        # TODO: Import from label_input column continuous scores as in diffuPy process_input
+        # Generate label_input as a categoric label_input from labels
+        input_scores = generate_categoric_input_from_labels(
+            mapping_scores,
+            'label_input with hidden true positives',
+            kernel,
+        )
     else:
-        input_scores = generate_categoric_input_from_labels(mapping_scores,
-                                                            'input with hidden true positives',
-                                                            kernel
-                                                            )
+        input_scores = generate_categoric_input_from_labels(
+            mapping_scores,
+            'label_input with hidden true positives',
+            kernel,
+        )
 
     return input_scores, kernel, mapping_scores, graph

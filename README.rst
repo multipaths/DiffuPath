@@ -66,7 +66,7 @@ The following command generates a BEL file representing the network of the given
 
 .. code-block:: sh
 
-    $ python3 -m diffupath database network --database=<database-name>
+    $ python3 -m diffupath database get-database --database=<database-name>
 
 To check the available databases, run the following command:
 
@@ -80,7 +80,13 @@ The following command will run a diffusion method on a given network with the gi
 
 .. code-block:: sh
 
-    $ python3 -m diffupath diffusion run --network=<path-to-network-file> --input=<path-to-data-file> --method=<method>
+    $ python3 -m diffupath diffusion run --network=<path-to-network-file> --data=<path-to-data-file> --method=<method>
+
+2. **Run a diffusion analysis**
+
+.. code-block:: sh
+
+    $ python3 -m diffupath diffusion evaluate -i ./validation_datasets/set1.xlsx
 
 Input Data
 ----------

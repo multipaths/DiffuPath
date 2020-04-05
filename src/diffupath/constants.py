@@ -27,8 +27,9 @@ ensure_output_dirs()
 BY_METHOD = 'by_method'
 BY_DB = 'by_db'
 
-CV_METHODS = {
+EVALUATION_METHODS = {
     BY_METHOD,
+    BY_DB,
 }
 
 # Rename DiffuPy methods

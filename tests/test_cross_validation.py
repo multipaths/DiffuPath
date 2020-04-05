@@ -14,7 +14,7 @@ class ValidateCVInputTest(unittest.TestCase):
     """Test cross validation."""
 
     def test_validate_cross_validation_input_1(self):
-        """Test input of CV."""
+        """Test label_input of CV."""
         set_1 = {'adenine', 'adp', 'tyramine', 'nadph', 'glycine', 'glutathione', 'choline', 'inosine'}
         set_2 = {'g6pc3', 'oscar', 'lin37', 'pip4k2c', 'asap3', 'smg7', 'fosl1', 'atg3', 'plod3', 'apoe', 'calcoco2',
                  'hbegf', 'ccne1', 'magi3', 'gpc1', 'dusp5', 'idi1', 'ids', 'il12a', 'fancd2', 'zmpste24', 'znf383',
@@ -37,13 +37,13 @@ class ValidateCVInputTest(unittest.TestCase):
 
         input_diffuse = generate_categoric_input_from_labels(
             set_1,
-            'two out input',
+            'two out label_input',
             background_matrix,
             rows_unlabeled=set_2)
 
         input_validate = generate_categoric_input_from_labels(
             set_2,
-            'two out input',
+            'two out label_input',
             background_matrix
         )
 
