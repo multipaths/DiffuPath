@@ -28,7 +28,7 @@ def generate_pagerank_baseline(graph: nx.Graph, background_mat: Matrix) -> Matri
     ),
         rows_labels=list(pagerank_scores.keys()),
         cols_labels=['PageRank']
-    ).match_missing_rows(background_mat.rows_labels, 0).match_rows(background_mat)
+    ).match_delete_rows(background_mat.rows_labels).match_missing_rows(background_mat.rows_labels).match_rows(background_mat)
 
 
 def resistance_distance(G=None, M=None, normalized=False):

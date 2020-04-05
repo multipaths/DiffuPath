@@ -21,8 +21,19 @@ def ensure_output_dirs():
 
 ensure_output_dirs()
 
+"""Available diffusion cross-validation methods"""
+
+#: raw
+BY_METHOD = 'by_method'
+BY_DB = 'by_db'
+
+CV_METHODS = {
+    BY_METHOD,
+}
+
 # Rename DiffuPy methods
 DIFFUPY_METHODS = METHODS
+
 EMOJI = "🌐"
 
 # Available databases from PathMe

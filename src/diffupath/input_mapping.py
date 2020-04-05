@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
 
 """Input mapping."""
+from typing import Set, Tuple
 
+import networkx as nx
+from diffupy.kernels import regularised_laplacian_kernel
+from diffupy.matrix import Matrix
+from diffupy.process_input import generate_categoric_input_from_labels
+from diffupy.utils import process_kernel_from_cli, process_network_from_cli, print_dict_dimensions
+
+from .constants import EMOJI
 from .utils import get_labels_set_from_dict, check_substrings
-from typing import Set
 
 
 def get_mapping(
@@ -130,3 +137,71 @@ def get_mapping_two_dim_subsets(
     print(f'Total ({total_dimention}) {total_percentage * 100}% \n')
 
     return mapping_dict, total_percentage, total_dimention
+
+
+def process_input_from_cli(click,
+                           parse_set_funct,
+                           network_path,
+                           input_path,
+                           graph: bool = False,
+                           quantitative=False) -> Tuple[Matrix, Matrix, set, nx.Graph]:
+    click.secho(f'{EMOJI} Loading networs (as graph or kernel) from {network_path} {EMOJI}')
+
+    # Load input from dataset
+    # TODO: Consider universal input processing, now parse set specific function by parameter, use from diffuPy process_input
+    # input_scores = _process_input(input_path)
+    dataset_labels_by_omics = parse_set_funct(input_path)
+    dataset_all_labels = get_labels_set_from_dict(dataset_labels_by_omics)
+
+    print_dict_dimensions(dataset_labels_by_omics, 'Dataset1 imported labels:')
+
+    mirnas_dataset = dataset_labels_by_omics['micrornas']
+
+    # Load background network from the input graph (if indicated as flag) or kernel
+    if graph:
+        graph = process_network_from_cli(network_path)
+
+        click.secho(
+            f'{EMOJI} Graph loaded with: \n'
+            f'{graph.number_of_nodes()} nodes\n'
+            f'{graph.number_of_edges()} edges\n'
+            f'{EMOJI}'
+        )
+
+        # Generate the kernel from the input graph
+        kernel = regularised_laplacian_kernel(graph)
+
+    else:
+        kernel = process_kernel_from_cli(network_path)
+
+        click.secho(
+            f'{EMOJI} Kernel loaded with: \n'
+            f'{len(kernel.rows_labels)} nodes\n'
+            f'{EMOJI}'
+        )
+
+    background_labels = kernel.rows_labels
+
+    # Dataset label mapping to the network
+    mapping_scores = get_mapping(dataset_all_labels,
+                                 background_labels,
+                                 title='Global mapping: ',
+                                 mirnas=mirnas_dataset,
+                                 print_percentage=True
+                                 )
+
+    # Format input as Matrix for run_diffusion
+    if quantitative:
+        # TODO: Import from input column continuous scores as in diffuPy process_input
+        # Generate input as a categoric input from labels
+        input_scores = generate_categoric_input_from_labels(mapping_scores,
+                                                            'input with hidden true positives',
+                                                            kernel
+                                                            )
+    else:
+        input_scores = generate_categoric_input_from_labels(mapping_scores,
+                                                            'input with hidden true positives',
+                                                            kernel
+                                                            )
+
+    return input_scores, kernel, mapping_scores, graph

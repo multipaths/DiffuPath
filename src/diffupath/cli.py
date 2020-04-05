@@ -7,15 +7,16 @@ import logging
 
 import click
 from bio2bel.constants import get_global_connection
-from diffupath.input_mapping import get_mapping
-from diffupath.utils import get_labels_set_from_dict
-from diffupath.validation_datasets_parsers import parse_set1
+from diffupy.utils import process_network_from_cli
+
+from .cross_validation import cross_validation_by_method
 
 from diffupy.diffuse import diffuse as run_diffusion
-from diffupy.kernels import regularised_laplacian_kernel
-from diffupy.process_input import generate_categoric_input_from_labels
-from diffupy.utils import process_network_from_cli, process_kernel_from_cli, print_dict_dimensions, \
-    get_label_list_graph
+
+from .input_mapping import process_input_from_cli
+
+from .validation_datasets_parsers import parse_set1
+
 from .constants import *
 
 logger = logging.getLogger(__name__)
@@ -40,7 +41,7 @@ def diffusion():
     type=click.Path(exists=True, dir_okay=False)
 )
 @click.option(
-    '-q', '--quantitative',
+    '-q', '--quantitative', # TODO Automatize if possible, check type of input.
     help='Generate categorical input from labels',
     show_default=False,
     is_flag=False
@@ -83,74 +84,126 @@ def run(
     """Run a diffusion method given an input over a network or a pre-generated kernel."""
     click.secho(f'{EMOJI} Running diffusion... {EMOJI}')
 
-    click.secho(f'{EMOJI} Loading graph from {network} {EMOJI}')
-
-    # Load input from dataset
-    # TODO: Universal input processing, now parse set 1 specific, use from diffuPy process_input
-    # input_scores = _process_input(input)
-    dataset_labels_by_omics = parse_set1(input)
-    dataset1_all_labels = get_labels_set_from_dict(dataset_labels_by_omics)
-
-    print_dict_dimensions(dataset_labels_by_omics, 'Dataset1 imported labels:')
-
-    mirnas_dataset = dataset_labels_by_omics['micrornas']
-
-    # Load background network from the input graph (if indicated as flag) or kernel
-    if graph:
-        graph = process_network_from_cli(network)
-
-        click.secho(
-            f'{EMOJI} Graph loaded with: \n'
-            f'{graph.number_of_nodes()} nodes\n'
-            f'{graph.number_of_edges()} edges\n'
-            f'{EMOJI}'
-        )
-
-        # Generate the kernel from the input graph
-        k = regularised_laplacian_kernel(graph)
-
-    else:
-        k = process_kernel_from_cli(network)
-
-        click.secho(
-            f'{EMOJI} Kernel loaded with: \n'
-            f'{len(k.rows_labels)} nodes\n'
-            f'{EMOJI}'
-        )
-
-    background_labels = k.rows_labels
-
-    # Dataset label mapping to the network
-    mapping_scores = get_mapping(dataset1_all_labels,
-                                 background_labels,
-                                 title='Global mapping: ',
-                                 mirnas=mirnas_dataset,
-                                 print_percentage=True
-                                 )
-
-    # Format input as Matrix for run_diffusion
-    if quantitative:
-        #TODO: Import from input column continuous scores as in diffuPy process_input
-        # Generate input as a categoric input from labels
-        input_scores = generate_categoric_input_from_labels(mapping_scores,
-                                                            'input with hidden true positives',
-                                                            k
-                                                            )
-    else:
-        input_scores = generate_categoric_input_from_labels(mapping_scores,
-                                                            'input with hidden true positives',
-                                                            k
-                                                            )
+    input_scores, kernel, _, _ = process_input_from_cli(click, parse_set1, network, input, graph, quantitative)
 
     # Perform/run diffusion
     results = run_diffusion(
         input_scores,
         method,
-        k=k,
+        k=kernel,
     )
 
     # Export diffusion scores as a csv data file
     results.to_csv(output)
+
+    click.secho(f'{EMOJI} Diffusion performed with success. Output located at {output}... {EMOJI}')
+
+
+@diffusion.command()
+@click.option(
+    '-i', '--input',
+    help='Input data',
+    required=True,
+    type=click.Path(exists=True, dir_okay=False)
+)
+@click.option(
+    '-q', '--quantitative', # TODO Automatize if possible, check type of input.
+    help='Generate categorical input from labels',
+    show_default=False,
+    is_flag=False
+)
+@click.option(
+    '-n', '--network',
+    help='Path to the network graph or kernel',
+    default=os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'kernel_regularized_pathme_universe.pickle'),
+    show_default=True,
+    type=click.Path(exists=True, dir_okay=False)
+)
+@click.option(
+    '-n', '--network_as_graph',
+    help='network_as_graph',
+    show_default=True,
+    is_flag=False
+)
+@click.option(
+    '-g', '--graph_path',
+    help='Path to the network as a graph',
+    default=os.path.join(DEFAULT_DIFFUPATH_DIR, 'pickles', 'universe', 'pathme_universe_bel_graph.bel.pickle'),
+    show_default=True,
+    type=click.Path(exists=True, dir_okay=False)
+)
+@click.option(
+    '-o', '--output',
+    help='Output path for the results',
+    default=OUTPUT_DIR,
+    show_default=True,
+    type=click.Path(exists=True, file_okay=False)
+)
+@click.option(
+    '-k', '--k_iterations',
+    help='Number of iterations for the cross validation',
+    default=20,
+    show_default=True,
+    type=int
+)
+@click.option(
+    '-c', '--comparaison_method',
+    help='Comparaison method',
+    default='by_method',
+    show_default=True,
+    type=click.Choice(CV_METHODS),
+)
+def random_cross_validation(
+        input: str,
+        quantitative: bool = False, # TODO Automatize if possible, check type of input.
+        network: str = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'kernel_regularized_pathme_universe.pickle'),
+        network_as_graph: bool = False,  # TODO Automatize if possible, check type of graph.
+        graph_path: str = os.path.join(DEFAULT_DIFFUPATH_DIR, 'pickles', 'universe', 'pathme_universe_bel_graph.pickle'),
+        output: str = OUTPUT_DIR,
+        k_iterations: int = 20,
+        comparaison_method: str = 'by_method',
+):
+    """Run a diffusion method given an input over a network or a pre-generated kernel."""
+    click.secho(f'{EMOJI} Loading input for cross-validation... {EMOJI}')
+
+    if not network_as_graph and not graph_path:
+        raise Warning("Network not provided in graph format, which required for the random baseline generation.")
+
+    _, kernel, labels_mapping, graph = process_input_from_cli(click, parse_set1, network, input, network_as_graph, quantitative)
+
+    if not network_as_graph:
+        graph = process_network_from_cli(graph_path)
+
+    if comparaison_method == 'by_method':
+        click.secho(f'{EMOJI} Running random cross-validation by method... {EMOJI}')
+
+        auroc_metrics, auprc_metrics = cross_validation_by_method(
+            labels_mapping,
+            graph,
+            kernel,
+            k=k_iterations,
+        )
+    elif comparaison_method == 'by_db':
+        # TODO to adapt from 'get_one_x_in_cv_inputs_from_subsets', and input treatment subset division.
+        auroc_metrics, auprc_metrics = cross_validation_by_method(
+            labels_mapping,
+            graph,
+            kernel,
+            k=k_iterations,
+        )
+    else:
+        raise Warning("Comparaison method provided not match any provided method.")
+
+
+    with open(os.path.join(output, 'metrics_set1_universe.json'), 'w') as outfile:
+        json.dump(
+            {'auroc_metrics': auroc_metrics,
+             'auprc_metrics_by_method': auprc_metrics
+            },
+            outfile
+        )
+
+    click.secho(f'{EMOJI} Random cross-validation performed with success. Output located at {output}... {EMOJI}')
 
 
 @main.group()
