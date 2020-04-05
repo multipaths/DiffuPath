@@ -2,6 +2,7 @@
 
 """Input mapping."""
 
+import logging
 from typing import Set, Tuple
 
 import networkx as nx
@@ -12,6 +13,8 @@ from diffupy.utils import process_kernel_from_cli, process_network_from_cli, pri
 
 from .constants import EMOJI
 from .utils import get_labels_set_from_dict, check_substrings
+
+logger = logging.getLogger(__name__)
 
 
 def get_mapping(
@@ -142,14 +145,14 @@ def get_mapping_two_dim_subsets(
 
 
 def process_input_from_cli(
-    click,
     parse_set_funct,
     network_path,
     input_path,
     graph: bool = False,
-    quantitative=False,
+    quantitative: bool = False,
 ) -> Tuple[Matrix, Matrix, set, nx.Graph]:
-    click.secho(f'{EMOJI} Loading networs (as graph or kernel) from {network_path} {EMOJI}')
+    """Process input from cli."""
+    logger.info(f'{EMOJI} Loading networs (as graph or kernel) from {network_path} {EMOJI}')
 
     # Load label_input from dataset
     # TODO: Consider universal label_input processing, now parse set specific function by parameter, use from diffuPy process_input
@@ -157,7 +160,7 @@ def process_input_from_cli(
     dataset_labels_by_omics = parse_set_funct(input_path)
     dataset_all_labels = get_labels_set_from_dict(dataset_labels_by_omics)
 
-    print_dict_dimensions(dataset_labels_by_omics, 'Dataset1 imported labels:')
+    print_dict_dimensions(dataset_labels_by_omics, 'Dataset imported labels:')
 
     mirnas_dataset = dataset_labels_by_omics['micrornas']
 
@@ -165,7 +168,7 @@ def process_input_from_cli(
     if graph:
         graph = process_network_from_cli(network_path)
 
-        click.secho(
+        logger.info(
             f'{EMOJI} Graph loaded with: \n'
             f'{graph.number_of_nodes()} nodes\n'
             f'{graph.number_of_edges()} edges\n'
@@ -178,7 +181,7 @@ def process_input_from_cli(
     else:
         kernel = process_kernel_from_cli(network_path)
 
-        click.secho(
+        logger.info(
             f'{EMOJI} Kernel loaded with: \n'
             f'{len(kernel.rows_labels)} nodes\n'
             f'{EMOJI}'

@@ -4,18 +4,27 @@
 
 import json
 import logging
+import sys
 
 import click
 from bio2bel.constants import get_global_connection
 from diffupy.diffuse import diffuse as run_diffusion
+from diffupy.process_input import process_input
 from diffupy.utils import process_network_from_cli
 
 from .constants import *
 from .cross_validation import cross_validation_by_method
 from .input_mapping import process_input_from_cli
-from .validation_datasets_parsers import parse_set1
+from .validation_datasets_parsers import parse_set1, parse_set2, parse_set3
 
 logger = logging.getLogger(__name__)
+
+#: Parsing methods for each dataset
+PARSING_METHODS = {
+    1: parse_set1,
+    2: parse_set2,
+    3: parse_set3,
+}
 
 
 @click.group(help='DiffuPy')
@@ -31,73 +40,99 @@ def diffusion():
 
 @diffusion.command()
 @click.option(
-    '-i', '--label_input',
+    '-n', '--network',
+    help='Path to the network graph or kernel',
+    required=True,
+    type=click.Path(exists=True, dir_okay=False)
+)
+@click.option(
+    '-i', '--data',
     help='Input data',
     required=True,
     type=click.Path(exists=True, dir_okay=False)
 )
 @click.option(
-    '-q', '--quantitative',  # TODO Automatize if possible, check type of label_input.
-    help='Generate categorical label_input from labels',
-    show_default=False,
-    is_flag=False
-)
-@click.option(
-    '-n', '--network',
-    help='Path to the network graph or kernel',
-    default=os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'kernel_regularized_pathme_universe.pickle'),
-    show_default=True,
-    type=click.Path(exists=True, dir_okay=False)
-)
-@click.option(
-    '-g', '--graph',
-    help='Network provided as a graph',
-    show_default=False,
-    is_flag=False
+    '-o', '--output',
+    type=click.File('w'),
+    help="Output file",
+    default=sys.stdout,
 )
 @click.option(
     '-m', '--method',
-    help='Difussion method',
-    default='raw',
-    show_default=True,
-    type=click.Choice(DIFFUPY_METHODS),
+    help='Diffusion method',
+    type=click.Choice(METHODS),
+    required=True,
 )
 @click.option(
-    '-o', '--output',
-    help='Output path for the results',
-    default=OUTPUT_DIR,
+    '-b', '--binarize',
+    help='If logFC provided in dataset, convert logFC to binary (e.g., up-regulated entities to 1, down-regulated to '
+         '-1). For scoring methods that accept quantitative values (i.e., raw & z), node labels can also be codified '
+         'with LogFC (in this case, set binarize==False).',
+    type=bool,
+    default=True,
     show_default=True,
-    type=click.Path(exists=True, file_okay=False)
 )
-def run(
+@click.option(
+    '-t', '--threshold',
+    help='Codify node labels by applying a threshold to logFC in input.',
+    type=float,
+)
+@click.option(
+    '-a', '--absolute_value',
+    help='Codify node labels by applying threshold to |logFC| in input. If absolute_value is set to False, node labels '
+         'will be signed.',
+    type=bool,
+    default=True,
+    show_default=True,
+)
+@click.option(
+    '-p', '--p_value',
+    help='Statistical significance (p-value).',
+    type=float,
+    default=0.05,
+    show_default=True,
+)
+def diffuse(
+    network: str,
     data: str,
-    quantitative: bool = False,
-    network: str = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'kernel_regularized_pathme_universe.pickle'),
-    graph: bool = False,
-    method: str = 'raw',
-    output: str = OUTPUT_DIR,
+    output: str,
+    method: str,
+    binarize: bool,
+    absolute_value: bool,
+    threshold: float,
+    p_value: float,
 ):
-    """Run a diffusion method given an label_input over a network or a pre-generated kernel."""
-    click.secho(f'{EMOJI} Running diffusion... {EMOJI}')
+    """Run a diffusion method over a network or pre-generated kernel."""
+    click.secho(f'{EMOJI} Loading graph from {network} {EMOJI}')
+    graph = process_network_from_cli(network)
 
-    input_scores, kernel, _, _ = process_input_from_cli(click, parse_set1, network, data, graph, quantitative)
-
-    # Perform/run diffusion
-    results = run_diffusion(
-        input_scores,
-        method,
-        k=kernel,
+    click.secho(
+        f'{EMOJI} Graph loaded with: \n'
+        f'{graph.number_of_nodes()} nodes\n'
+        f'{graph.number_of_edges()} edges\n'
+        f'{EMOJI}'
     )
 
-    # Export diffusion scores as a csv data file
-    results.to_csv(output)
+    click.secho(f'Codifying data from {data}.')
 
-    click.secho(f'{EMOJI} Successful diffusion. Output located at {output}... {EMOJI}')
+    input_scores_dict = process_input(data, method, binarize, absolute_value, p_value, threshold)
+
+    click.secho(f'Running the diffusion algorithm.')
+
+    results = run_diffusion(
+        input_scores_dict,
+        method,
+        graph,
+    )
+
+    json.dump(results, output, indent=2)
+
+    click.secho(f'Finished!')
 
 
 @diffusion.command()
 @click.option(
-    '-i', '--label_input',
+    '-d', '--data',
     help='Input data',
     required=True,
     type=click.Path(exists=True, dir_okay=False),
@@ -109,23 +144,19 @@ def run(
     type=click.Path(exists=True, dir_okay=False)
 )
 @click.option(
+    '-g', '--graph_path',
+    help='Path to the network as a graph',
+    type=click.Path(exists=True, dir_okay=False),
+)
+@click.option(
     '-q', '--quantitative',  # TODO Automatize if possible, check type of label_input.
     help='Generate categorical label_input from labels',
-    show_default=False,
     is_flag=False,
 )
 @click.option(
     '-n', '--network_as_graph',
-    help='network_as_graph',
-    show_default=True,
-    is_flag=False
-)
-@click.option(
-    '-g', '--graph_path',
-    help='Path to the network as a graph',
-    default=os.path.join(DEFAULT_DIFFUPATH_DIR, 'pickles', 'universe', 'pathme_universe_bel_graph.bel.pickle'),
-    show_default=True,
-    type=click.Path(exists=True, dir_okay=False),
+    help='If given expects graph else expects as a kernel',
+    is_flag=False,
 )
 @click.option(
     '-o', '--output',
@@ -135,7 +166,7 @@ def run(
     type=click.Path(exists=True, file_okay=False),
 )
 @click.option(
-    '-k', '--iterations',
+    '-i', '--iterations',
     help='Number of distinct cross validations',
     default=25,
     show_default=True,
@@ -148,25 +179,32 @@ def run(
     show_default=True,
     type=click.Choice(EVALUATION_METHODS),
 )
+@click.option(
+    '-k', '--dataset',
+    help='Key for the datasets presented in the paper',
+    default=1,
+    show_default=True,
+    type=click.Choice(DATASETS),
+)
 def evaluate(
     data: str,
     network: str,
-    graph_path: str = os.path.join(DEFAULT_DIFFUPATH_DIR, 'pickles', 'universe', 'pathme_universe_bel_graph.pickle'),
-    quantitative: bool = False,  # TODO Automatize if possible, check type of label_input.
-    network_as_graph: bool = False,  # TODO Automatize if possible, check type of graph.
-    output: str = OUTPUT_DIR,
-    iterations: int = 20,
-    comparison_method: str = 'by_method',
+    graph_path: str,
+    quantitative: bool,  # TODO Automatize if possible, check type of label_input.
+    network_as_graph: bool,  # TODO Automatize if possible, check type of graph.
+    output: str,
+    iterations: int,
+    comparison_method: str,
+    dataset: int,
 ):
-    """Evaluate a kernel on a given dataset."""
+    """Evaluate a kernel/network on one of the three presented datasets."""
     click.secho(f'{EMOJI} Loading label_input for cross-validation... {EMOJI}')
 
     if not network_as_graph and not graph_path:
-        raise Warning("Network not provided in graph format, which required for the random baseline generation.")
+        raise ValueError("Network not provided in graph format, which is required for evaluation.")
 
     _, kernel, labels_mapping, graph = process_input_from_cli(
-        click,
-        parse_set1,
+        PARSING_METHODS[dataset],
         network,
         data,
         network_as_graph,

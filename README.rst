@@ -80,13 +80,13 @@ The following command will run a diffusion method on a given network with the gi
 
 .. code-block:: sh
 
-    $ python3 -m diffupath diffusion run --network=<path-to-network-file> --data=<path-to-data-file> --method=<method>
+    $ python3 -m diffupath diffusion diffuse --network=<path-to-network-file> --data=<path-to-data-file> --method=<method>
 
 2. **Run a diffusion analysis**
 
 .. code-block:: sh
 
-    $ python3 -m diffupath diffusion evaluate -i ./validation_datasets/set1.xlsx
+    $ python3 -m diffupath diffusion evaluate -i=<input_data> -n=<path_network>
 
 Input Data
 ----------

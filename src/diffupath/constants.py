@@ -32,6 +32,12 @@ EVALUATION_METHODS = {
     BY_DB,
 }
 
+DATASETS = {
+    1,
+    2,
+    3,
+}
+
 # Rename DiffuPy methods
 DIFFUPY_METHODS = METHODS
 
