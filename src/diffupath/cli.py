@@ -242,6 +242,7 @@ def evaluate(
              'auprc_metrics_by_method': auprc_metrics
              },
             outfile,
+            indent=2,
         )
 
     click.secho(f'{EMOJI} Random cross-validation performed with success. Output located at {output}... {EMOJI}')
