@@ -8,6 +8,7 @@ log = logging.getLogger(__name__)
 
 
 def validation_input_from_dict(mapping_by_subsets, diffuse_input_type, validation_type, input_diffuse):
+    """Validate cross validation from dict."""
     input_labels = mapping_by_subsets[diffuse_input_type]
     validation_labels = mapping_by_subsets[validation_type]
     out_labels = set(input_diffuse.rows_labels) - input_labels - validation_labels
@@ -16,6 +17,7 @@ def validation_input_from_dict(mapping_by_subsets, diffuse_input_type, validatio
 
 
 def validate_cross_validation_input_1(input_diffuse, input_validate, sets):
+    """Validate cross validation input 1."""
     labeled, unlabeled, no_labeled = set(), set(), set()
 
     for score, i, j, row_label, col_label in input_diffuse.__iter__(get_indices=True, get_labels=True):
