@@ -249,17 +249,17 @@ def evaluate(
 
 
 @main.group()
-def databases():
+def database():
     """Commands related to available databases."""
 
 
-@databases.command()
+@database.command()
 def ls():
     """Print the list of the available databases."""
     click.secho(f'{EMOJI} Available databases {DATABASES}')
 
 
-@databases.command()
+@database.command()
 @click.option(
     '-d', '--database',
     help='Database',
