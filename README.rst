@@ -350,12 +350,12 @@ References
     :target: https://codecov.io/gh/multipaths/diffupath?branch=master
     :alt: Coverage Status
 
-.. |python_versions| image:: https://img.shields.io/pypi/pyversions/diffupy.svg
+.. |python_versions| image:: https://img.shields.io/pypi/pyversions/diffupath.svg
     :alt: Stable Supported Python Versions
 
-.. |pypi_version| image:: https://img.shields.io/pypi/v/diffupy.svg
+.. |pypi_version| image:: https://img.shields.io/pypi/v/diffupath.svg
     :alt: Current version on PyPI
 
-.. |pypi_license| image:: https://img.shields.io/pypi/l/diffupy.svg
+.. |pypi_license| image:: https://img.shields.io/pypi/l/diffupath.svg
     :alt: Apache-2.0
 
