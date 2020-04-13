@@ -12,8 +12,8 @@ network retrieved from `PathMe <https://github.com/PathwayMerger/PathMe/>`_ [1]_
 However, other biological networks can be imported from the Bio2BEL ecosystem [2]_.
 
 
-Installation
-------------
+Installation |pypi_version| |python_versions| |pypi_license|
+------------------------------------------------------------
 The latest stable code can be installed from `PyPI <https://pypi.python.org/pypi/diffupath>`_ with:
 
 .. code-block:: sh
@@ -349,3 +349,13 @@ References
 .. |coverage| image:: https://codecov.io/gh/multipaths/diffupath/coverage.svg?branch=master
     :target: https://codecov.io/gh/multipaths/diffupath?branch=master
     :alt: Coverage Status
+
+.. |python_versions| image:: https://img.shields.io/pypi/pyversions/diffupy.svg
+    :alt: Stable Supported Python Versions
+
+.. |pypi_version| image:: https://img.shields.io/pypi/v/diffupy.svg
+    :alt: Current version on PyPI
+
+.. |pypi_license| image:: https://img.shields.io/pypi/l/diffupy.svg
+    :alt: Apache-2.0
+
