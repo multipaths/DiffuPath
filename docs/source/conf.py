@@ -21,7 +21,7 @@ project = 'diffupath'
 copyright = '2020,  Josep Marín-Llaó, Sergi Picart Armada, Daniel Domingo-Fernández'
 author = ' Josep Marín-Llaó, Sergi Picart Armada, Daniel Domingo-Fernández'
 
-release = 'release = '0.0.2''
+release = 'release = '0.0.3-dev''
 
 parsed_version = re.match(
     '(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(?:-(?P<release>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+(?P<build>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?',
