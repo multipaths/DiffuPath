@@ -79,7 +79,7 @@ def diffusion():
 )
 @click.option(
     '-a', '--absolute_value',
-    help='Codify node labels by applying threshold to |logFC| in input. If absolute_value is set to False, node labels '
+    help='Codify node labels by applying threshold to | logFC | in input. If absolute_value is set to False, node labels '
          'will be signed.',
     type=bool,
     default=True,
