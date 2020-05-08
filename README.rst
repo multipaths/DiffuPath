@@ -300,13 +300,13 @@ Custom-network example
 ~~~~~~~~~~~~~~~~~~~~~~
 
 +-----------+--------------+-------------+
-|  Source   |   Target     | Relation    |
+| Source    | Target       | Relation    |
 +===========+==============+=============+
-| Gene A    | Gene B       | Increase    |
+|     A     |      B       | Increase    |
 +-----------+--------------+-------------+
-| Gene B    | Metabolite C | Association |
+|     B     |      C       | Association |
 +-----------+--------------+-------------+
-| Gene A    | Pathology D  | Association |
+|     A     |      D       | Association |
 +-----------+--------------+-------------+
 
 You can also take a look at our `sample networks <https://github.com/multipaths/DiffuPy/tree/master/examples/networks>`_
