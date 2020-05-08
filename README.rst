@@ -96,14 +96,16 @@ You can submit your dataset in any of the following formats:
 - CSV (.csv)
 - TSV (.tsv)
 
-Please ensure that the dataset has a column 'Node' containing node IDs. If you only provide the node IDs, you can
-also include a column in your dataset 'NodeType' indicating the entity type for each node. You can also optionally add
-the following columns to your dataset:
+Please ensure that the dataset minimally has a column 'Node' containing node IDs. You can also optionally add the
+following columns to your dataset:
 
+- NodeType
 - LogFC [*]_
 - p-value
 
-.. [*] log :sub:`2`  fold change
+.. [*] |Log| fold change
+
+.. |Log| replace:: Log\ :sub:`2`
 
 Input dataset examples
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -112,8 +114,22 @@ DiffuPath accepts several input formats which can be codified in different ways.
 `diffusion scores <https://github.com/multipaths/DiffuPy/blob/master/docs/source/diffusion.rst>`_ summary for more
 details.
 
-1. You can provide a dataset with a column 'Node' containing node IDs along with a column 'NodeType' indicating the
-entity type.
+1. You can provide a dataset with a column 'Node' containing node IDs.
+
++------------+
+|     Node   |
++============+
+|      A     |
++------------+
+|      B     |
++------------+
+|      C     |
++------------+
+|      D     |
++------------+
+
+2. You can also provide a dataset with a column 'Node' containing node IDs as well as a column 'NodeType', indicating
+the entity type of the node to run diffusion by entity type.
 
 +------------+--------------+
 |     Node   |   NodeType   |
@@ -127,34 +143,34 @@ entity type.
 |      D     |    Gene      |
 +------------+--------------+
 
-2. You can also choose to provide a dataset with a column 'Node' containing node IDs as well as a column 'logFC' with
-their log :sub:`2` FC.
+3. You can also choose to provide a dataset with a column 'Node' containing node IDs as well as a column 'logFC' with
+their LogFC. You may also add a 'NodeType' column to run diffusion by entity type.
 
 +--------------+------------+
 | Node         |   LogFC    |
 +==============+============+
-| Gene A       | 4          |
+|      A       | 4          |
 +--------------+------------+
-| Gene  B      | -1         |
+|      B       | -1         |
 +--------------+------------+
-| Metabolite C | 1.5        |
+|      C       | 1.5        |
 +--------------+------------+
-| Gene D       | 3          |
+|      D       | 3          |
 +--------------+------------+
 
-3. Finally, you can provide a dataset with a column 'Node' containing node IDs, a column 'logFC' with their log :sub:`2`
-FC and a column 'p-value' with adjusted p-values.
+4. Finally, you can provide a dataset with a column 'Node' containing node IDs, a column 'logFC' with their logFC
+and a column 'p-value' with adjusted p-values. You may also add a 'NodeType' column to run diffusion by entity type.
 
 +--------------+------------+---------+
 | Node         |   LogFC    | p-value |
 +==============+============+=========+
-| Gene A       | 4          | 0.03    |
+|      A       | 4          | 0.03    |
 +--------------+------------+---------+
-| Gene  B      | -1         | 0.05    |
+|      B       | -1         | 0.05    |
 +--------------+------------+---------+
-| Metabolite C | 1.5        | 0.001   |
+|      C       | 1.5        | 0.001   |
 +--------------+------------+---------+
-| Gene D       | 3          | 0.07    |
+|      D       | 3          | 0.07    |
 +--------------+------------+---------+
 
 You can also take a look at our `sample datasets <https://github.com/multipaths/DiffuPy/tree/master/examples/datasets>`_
