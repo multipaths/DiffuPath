@@ -9,7 +9,7 @@ import warnings
 import networkx as nx
 import numpy as np
 from diffupy.matrix import LaplacianMatrix, Matrix
-from diffupy.utils import get_simple_graph_from_multigraph
+from diffupy.process_network import get_simple_graph_from_multigraph
 
 
 def generate_pagerank_baseline(graph: nx.Graph, background_mat: Matrix) -> Matrix:
