@@ -59,8 +59,62 @@ def cross_validation_by_method(data_input,
 
         }
 
-        for method, validation_set in method_validation_inputs.items():
-            auroc, auprc = get_metrics(*validation_set)
+        for method, validation_set in method_validation_scores.items():
+            auroc, auprc = _get_metrics(*validation_set)
+            auroc_metrics[method].append(auroc)
+            auprc_metrics[method].append(auprc)
+
+    return auroc_metrics, auprc_metrics
+
+
+def cross_validation_by_subgraph(data_input,
+                                 graph,
+                                 graph_parameter,
+                                 type_list,
+                                 universe_kernel=None,
+                                 z_normalization=False,
+                                 k=100
+                                 ):
+    """Cross validation by subgraph."""
+    auroc_metrics = defaultdict(list)
+    auprc_metrics = defaultdict(list)
+
+    # Pre-process kernel for subgraphs
+    kernels = {parameter: regularised_laplacian_kernel(get_subgraph_by_annotation_value(graph,
+                                                                                        graph_parameter,
+                                                                                        parameter)
+                                                       )
+               for parameter in tqdm(type_list, 'Generate kernels from subgraphs')
+               }
+
+    for _ in tqdm(range(k), 'Computate validation scores'):
+        subgraph_validation_scores = {}
+
+        for type, kernel in kernels.items():
+
+            if universe_kernel is None:
+                universe_kernel = kernel
+
+
+            input_diff, validation_diff = _get_random_cv_split_input_and_validation(data_input[type],
+                                                                                    kernel)
+            input_diff_universe, validation_diff_universe = _get_random_cv_split_input_and_validation(data_input[type],
+                                                                                                      universe_kernel)
+
+            scores_on_subgraph = diffuse_raw(graph=None,
+                                             scores=input_diff,
+                                             k=kernel,
+                                             z=z_normalization)
+            scores_on_universe = diffuse_raw(graph=None,
+                                             scores=input_diff_universe,
+                                             k=universe_kernel,
+                                             z=z_normalization)
+
+            subgraph_validation_scores[type + 'on ' + type] = (validation_diff, scores_on_subgraph)
+            subgraph_validation_scores[type + 'on PathMeUniverse'] = (validation_diff_universe, scores_on_universe)
+
+        for method, validation_set in subgraph_validation_scores.items():
+            auroc, auprc = _get_metrics(*validation_set)
             auroc_metrics[method].append(auroc)
             auprc_metrics[method].append(auprc)
 
