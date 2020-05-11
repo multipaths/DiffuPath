@@ -2,14 +2,13 @@
 
 """Topological analyses."""
 
-from collections import defaultdict
-
 import warnings
+from collections import defaultdict
 
 import networkx as nx
 import numpy as np
 from diffupy.matrix import LaplacianMatrix, Matrix
-from diffupy.utils import get_simple_graph_from_multigraph
+from diffupy.process_network import get_simple_graph_from_multigraph
 
 
 def generate_pagerank_baseline(graph: nx.Graph, background_mat: Matrix) -> Matrix:
@@ -19,8 +18,8 @@ def generate_pagerank_baseline(graph: nx.Graph, background_mat: Matrix) -> Matri
     pagerank_scores = nx.pagerank(graph)
 
     if len(pagerank_scores.values()) != len(background_mat.mat):
-        warnings.warn('The provided graph do not match the kernel nodes amount. '
-                       'The nodes will be matched (deleting and filling missing) according to the reference Matrix.')
+        warnings.warn(
+            'The provided graph do not match the kernel nodes amount. The nodes will be matched (deleting and filling missing) according to the reference Matrix.')
 
     return Matrix(mat=np.array(
         list(pagerank_scores.values())).reshape(
@@ -28,7 +27,8 @@ def generate_pagerank_baseline(graph: nx.Graph, background_mat: Matrix) -> Matri
     ),
         rows_labels=list(pagerank_scores.keys()),
         cols_labels=['PageRank']
-    ).match_delete_rows(background_mat.rows_labels).match_missing_rows(background_mat.rows_labels).match_rows(background_mat)
+    ).match_delete_rows(background_mat.rows_labels).match_missing_rows(background_mat.rows_labels).match_rows(
+        background_mat)
 
 
 def resistance_distance(G=None, M=None, normalized=False):

@@ -9,8 +9,13 @@ SOURCE_DIR = os.path.join(os.path.abspath(os.path.join(dir_path, os.pardir)))
 
 #: Default DiffuPath directory
 DEFAULT_DIFFUPATH_DIR = os.path.join(os.path.expanduser('~'), '.diffupath')
+
 #: Default DiffuPath output directory
 OUTPUT_DIR = os.path.join(DEFAULT_DIFFUPATH_DIR, 'output')
+
+ROOT_RESULTS_DIR = os.path.join(os.path.abspath(os.path.join(SOURCE_DIR, os.pardir)))
+ROOT_RESULTS_DIR = os.path.join(os.path.abspath(os.path.join(ROOT_RESULTS_DIR, os.pardir)))
+ROOT_RESULTS_DIR = os.path.join(ROOT_RESULTS_DIR, 'Results')
 
 
 def ensure_output_dirs():
@@ -24,19 +29,14 @@ ensure_output_dirs()
 """Available diffusion cross-validation methods"""
 
 #: raw
-BY_METHOD = 'by_method'
-BY_DB = 'by_db'
+BY_METHOD = 'method'
+BY_DB = 'database'
 
-EVALUATION_METHODS = {
+EVALUATION_COMPARISONS = {
     BY_METHOD,
     BY_DB,
 }
 
-DATASETS = {
-    '1',
-    '2',
-    '3',
-}
 
 # Rename DiffuPy methods
 DIFFUPY_METHODS = METHODS

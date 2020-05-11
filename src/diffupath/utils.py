@@ -6,7 +6,6 @@ import itertools
 import logging
 import pickle
 import random
-
 from statistics import mean
 
 import numpy as np
@@ -29,23 +28,31 @@ def to_pickle(to_pickle, output):
         pickle.dump(to_pickle, file)
 
 
-def print_dict_dimensions(entities_db, title):
+def print_dict_dimensions(entities_db, title='', message='Total number of '):
     """Print dimension of the dictionary"""
-    total = 0
+    total = set()
+    m = f'{title}\n'
 
     for k1, v1 in entities_db.items():
         m = ''
         if isinstance(v1, dict):
             for k2, v2 in v1.items():
                 m += f'{k2}({len(v2)}), '
-                total += len(v2)
+                total.update(v2)
         else:
             m += f'{len(v1)} '
-            total += len(v1)
+            total.update(v1)
 
-        print(f'Total number of {k1}: {m} ')
+        print(f'{message} {k1}: {m} ')
 
-    print(f'Total: {total} ')
+    print(f'Total: {len(total)} ')
+
+
+def print_dict(dict_to_print, message=''):
+    """Print dimension of the dictionary"""
+
+    for k1, v1 in dict_to_print.items():
+        print(f'{message} {k1}: {v1} ')
 
 
 def get_labels_set_from_dict(entities):
@@ -58,49 +65,34 @@ def get_labels_set_from_dict(entities):
 
 def reduce_dict_dimension(dict):
     """Reduce dictionary dimension."""
-    return {
-        k: set(itertools.chain.from_iterable(entities.values()))
-        for k, entities in dict.items()
-    }
+    reduced_dict = {}
 
+    for k1, entities1 in dict.items():
+        for k2, entities2 in entities1.items():
+            if k1 in reduced_dict.keys():
+                reduced_dict[k1].update(entities2)
+            else:
+                reduced_dict[k1] = entities2
 
-def check_substrings(dataset_nodes, db_nodes):
-    mapping_substrings = set()
+    return reduced_dict
 
-    for entity in dataset_nodes:
-        if isinstance(entity, tuple):
-            for subentity in entity:
-                for entity_db in db_nodes:
-                    if isinstance(entity_db, tuple):
-                        for subentity_db in entity_db:
-                            if subentity_db in subentity or subentity in subentity_db:
-                                mapping_substrings.add(entity_db)
-                                break
-                        break
-                    else:
-                        if entity_db in subentity or subentity in entity_db:
-                            mapping_substrings.add(entity_db)
-                            break
-        else:
-            for entity_db in db_nodes:
-                if isinstance(entity_db, tuple):
-                    for subentity_db in entity_db:
-                        if subentity_db in entity or entity in subentity_db:
-                            mapping_substrings.add(entity_db)
-                            break
-                    break
-                else:
-                    if entity_db in entity or entity in entity_db:
-                        mapping_substrings.add(entity_db)
-                        break
-
-    return mapping_substrings
 
 def split_random_two_subsets(to_split):
-    half_1 = random.sample(population=list(to_split), k=int(len(to_split) / 2))
-    half_2 = list(set(to_split) - set(half_1))
+    """Split random two subsets."""
+    if isinstance(to_split, dict):
+        to_split_labels = list(to_split.keys())
+    else:
+        to_split_labels = to_split
 
-    return half_1, half_2
+    half_1 = random.sample(population=list(to_split_labels), k=int(len(to_split_labels) / 2))
+    half_2 = list(set(to_split_labels) - set(half_1))
+
+    if isinstance(to_split, dict):
+        return {entity_label: to_split[entity_label] for entity_label in half_1}, \
+               {entity_label: to_split[entity_label] for entity_label in half_2}
+    else:
+        return half_1, half_2
+
 
 def hide_true_positives(to_split, k=0.5):
     """Hide relative number of labels."""
@@ -195,18 +187,18 @@ def get_count_and_labels_from_two_dim_dict(mapping_by_database_and_entity):
 
     # entity_type_map = {'metabolite_nodes': 'metabolite', 'mirna_nodes': 'micrornas', 'gene_nodes': 'genes', 'bp_nodes': 'bps'}
 
-    for db_name, entities_by_type in mapping_by_database_and_entity.items():
+    for type_label, entities in mapping_by_database_and_entity.items():
         db_count = []
         db_percentage = []
 
-        db_labels.append(db_name)
+        db_labels.append(type_label)
 
-        if not types_labels:
-            types_labels = entities_by_type[0].keys()
+        if types_labels == []:
+            types_labels = list(entities.keys())
 
-        for entity_type, entities_tupple in entities_by_type[0].items():
-            db_count.append(len(entities_tupple[0]))
-            db_percentage.append(entities_tupple[1])
+        for entity_type, entities_tupple in entities.items():
+            db_count.append(entities_tupple[1])
+            db_percentage.append(entities_tupple[0])
 
         all_count.append(db_count)
         all_percentage.append(db_percentage)

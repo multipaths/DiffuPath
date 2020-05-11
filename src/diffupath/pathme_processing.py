@@ -13,7 +13,9 @@ from pybel.dsl import Abundance, BiologicalProcess, CentralDogma, ListAbundance,
 
 def calculate_database_sets_as_dict(nodes, database):
     gene_nodes, mirna_nodes, metabolite_nodes, bp_nodes = calculate_database_sets(nodes, database)
-    return {'gene_nodes': gene_nodes, 'mirna_nodes': mirna_nodes, 'metabolite_nodes': metabolite_nodes,
+    return {'gene_nodes': gene_nodes,
+            'mirna_nodes': mirna_nodes,
+            'metabolite_nodes': metabolite_nodes,
             'bp_nodes': bp_nodes}
 
 
