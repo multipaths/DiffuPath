@@ -95,7 +95,6 @@ def cross_validation_by_subgraph(data_input,
             if universe_kernel is None:
                 universe_kernel = kernel
 
-
             input_diff, validation_diff = _get_random_cv_split_input_and_validation(data_input[type],
                                                                                     kernel)
             input_diff_universe, validation_diff_universe = _get_random_cv_split_input_and_validation(data_input[type],

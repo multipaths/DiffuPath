@@ -255,8 +255,6 @@ def evaluate(
             graph,
             kernel,
             k=iterations)
-
-
     else:
         raise ValueError("The comparison method provided not match any provided method.")
 

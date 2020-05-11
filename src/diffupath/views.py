@@ -111,7 +111,7 @@ def show_venn_diagram(
     intersections_len = [len(intersection) for name, intersection in intersections.items()]
 
     plt.figure(figsize=(17, 8))
-    v = venn3(subsets=intersections_len, set_labels=set_labels)
+    _ = venn3(subsets=intersections_len, set_labels=set_labels)
 
     plt.show()
 
