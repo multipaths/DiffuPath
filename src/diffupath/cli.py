@@ -101,15 +101,15 @@ def diffusion():
     show_default=True,
 )
 def run(
-        input: str,
-        network: str = KERNEL_PATH,
-        output: str = OUTPUT_DIR,
-        method: str = RAW,
-        binarize: bool = False,
-        threshold: float = None,
-        absolute_value: bool = False,
-        p_value: float = 0.05,
-        output_format: str = CSV
+    input: str,
+    network: str = KERNEL_PATH,
+    output: str = OUTPUT_DIR,
+    method: str = RAW,
+    binarize: bool = False,
+    threshold: float = None,
+    absolute_value: bool = False,
+    p_value: float = 0.05,
+    output_format: str = CSV
 ):
     """Run a diffusion method over a network or pre-generated kernel."""
     click.secho(f'{EMOJI} Loading graph from {network} {EMOJI}')
@@ -185,12 +185,12 @@ def run(
     type=int,
 )
 def evaluate(
-        comparison: str = BY_METHOD,
-        input_path: str = os.path.join(ROOT_RESULTS_DIR, 'data', 'input_mappings'),
-        graph: str = GRAPH_PATH,
-        kernel: str = KERNEL_PATH,
-        output: str = OUTPUT_DIR,
-        iterations: int = 100,
+    comparison: str = BY_METHOD,
+    input_path: str = os.path.join(ROOT_RESULTS_DIR, 'data', 'input_mappings'),
+    graph: str = GRAPH_PATH,
+    kernel: str = KERNEL_PATH,
+    output: str = OUTPUT_DIR,
+    iterations: int = 100,
 ):
     """Evaluate a kernel/network on one of the three presented datasets."""
     click.secho(f'{EMOJI} Loading network for random cross-validation... {EMOJI}')
@@ -258,7 +258,7 @@ def evaluate(
     else:
         raise ValueError("The comparison method provided not match any provided method.")
 
-    to_json(metrics_by_method, output)
+    to_json(metrics_by_method, os.path.join(output, 'results.json'))
 
     click.secho(f'{EMOJI} Random cross-validation performed with success. Output located at {output}... {EMOJI}')
 
