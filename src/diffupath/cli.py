@@ -111,7 +111,19 @@ def run(
         p_value: float = 0.05,
         output_format: str = CSV
 ):
-    """Run a diffusion method over a network or pre-generated kernel."""
+    """Run a diffusion method for the provided input_scores over (by default) PathMeUniverse integrated network.
+
+    :param input: Path to a (miscellaneous format) data input to be processed/formatted.
+    :param network: Path to the network as a graph or as a kernel. By default 'KERNEL_PATH', pointing to PathMeUniverse kernel
+    :param output: Path (with file name) for the generated scores output file. By default '$OUTPUT/diffusion_scores.csv'
+    :param method:  Elected method ["raw", "ml", "gm", "ber_s", "ber_p", "mc", "z"]. By default 'raw'
+    :param binarize: If logFC provided in dataset, convert logFC to binary. By default False
+    :param threshold: Codify node labels by applying a threshold to logFC in input. By default None
+    :param absolute_value: Codify node labels by applying threshold to | logFC | in input. By default False
+    :param p_value: Statistical significance. By default 0.05
+    :param format_output: Elected output format ["CSV", "JSON"]. By default "CSV"'
+
+    """
     click.secho(f'{EMOJI} Loading graph from {network} {EMOJI}')
 
     kernel = get_kernel_from_network_path(network)
@@ -177,6 +189,7 @@ def run(
     show_default=True,
     type=click.Path(exists=True, file_okay=False),
 )
+
 @click.option(
     '-i', '--iterations',
     help='Number of distinct cross validations',
