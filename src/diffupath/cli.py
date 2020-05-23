@@ -4,13 +4,12 @@
 
 import json
 import logging
-import sys
 from collections import defaultdict
+from typing import Optional
 
 import click
-import networkx as nx
 from bio2bel.constants import get_global_connection
-from diffupath.utils import reduce_dict_dimension
+from diffupath.utils import reduce_dict_dimension, reduce_dict_two_dimensional
 from diffupy.constants import EMOJI, RAW, CSV, JSON
 from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.process_input import process_map_and_format_input_data_for_diff
@@ -41,27 +40,28 @@ def diffusion():
 @diffusion.command()
 @click.option(
     '-i', '--input',
-    help='Input data',
+    help='Path to a (miscellaneous format) data input to be processed/formatted.',
     required=True,
     type=click.Path(exists=True, dir_okay=True)
 )
 @click.option(
     '-n', '--network',
-    help='Path to the network graph or kernel',
+    help='Path to the network as a graph or as a kernel. By default "KERNEL_PATH", pointing to PathMeUniverse kernel',
     default=KERNEL_PATH,
     type=click.Path(exists=True, dir_okay=True)
 )
 @click.option(
     '-o', '--output',
     type=click.File('w'),
-    help="Output file",
-    default=sys.stdout,
+    help='Path (with file name) for the generated scores output file. By default "$OUTPUT/diffusion_scores.csv"',
+    default=os.path.join(OUTPUT_DIR, 'diffusion_scores_on_pathme.csv'),
 )
 @click.option(
     '-m', '--method',
-    help='Diffusion method',
+    help='Method to elect among ["raw", "ml", "gm", "ber_s", "ber_p", "mc", "z"]. By default "raw"',
     type=click.Choice(METHODS),
     default=RAW,
+    show_default=True,
 )
 @click.option(
     '-b', '--binarize',
@@ -74,14 +74,13 @@ def diffusion():
 )
 @click.option(
     '-t', '--threshold',
-    help='Codify node labels by applying a threshold to logFC in input.',
+    help='Codify node labels by applying a threshold to logFC in input. By default None',
     default=None,
     type=float,
 )
 @click.option(
     '-a', '--absolute_value',
-    help='Codify node labels by applying threshold to | logFC | in input. If absolute_value is set to False,'
-         'node labels will be signed.',
+    help='Codify node labels by applying threshold to | logFC | in input. By default False',
     type=bool,
     default=False,
     show_default=True,
@@ -94,22 +93,22 @@ def diffusion():
     show_default=True,
 )
 @click.option(
-    '-f', '--output_format',
-    help='Statistical significance (p-value).',
-    type=float,
+    '-f', '--format_output',
+    help='Choose CSV or JSON output scores file format.',
+    type=str,
     default=CSV,
     show_default=True,
 )
 def run(
         input: str,
-        network: str = KERNEL_PATH,
-        output: str = OUTPUT_DIR,
-        method: str = RAW,
-        binarize: bool = False,
-        threshold: float = None,
-        absolute_value: bool = False,
-        p_value: float = 0.05,
-        output_format: str = CSV
+        network: Optional[str] = KERNEL_PATH,
+        output: Optional[str] = os.path.join(OUTPUT_DIR, 'diffusion_scores_on_pathme.csv'),
+        method: Optional[str] = RAW,
+        binarize: Optional[bool] = False,
+        threshold: Optional[float] = None,
+        absolute_value: Optional[bool] = False,
+        p_value: Optional[float] = 0.05,
+        format_output: Optional[str] = CSV
 ):
     """Run a diffusion method for the provided input_scores over (by default) PathMeUniverse integrated network.
 
@@ -128,7 +127,7 @@ def run(
 
     kernel = get_kernel_from_network_path(network)
 
-    click.secho(f'Processing data input from {input}.')
+    click.secho(f'{EMOJI} Processing data input from {input}. {EMOJI}')
 
     input_scores_dict = process_map_and_format_input_data_for_diff(input,
                                                                    kernel,
@@ -139,7 +138,7 @@ def run(
                                                                    threshold,
                                                                    )
 
-    click.secho(f'Computing the diffusion algorithm.')
+    click.secho(f'{EMOJI} Computing the diffusion algorithm. {EMOJI}')
 
     results = run_diffusion(
         input_scores_dict,
@@ -147,13 +146,13 @@ def run(
         k=kernel
     )
 
-    if output_format is CSV:
+    if format_output == CSV:
         results.to_csv(output)
 
-    elif output_format is JSON:
+    elif format_output == JSON:
         json.dump(results, output, indent=2)
 
-    click.secho(f'{EMOJI} Diffusion performed with success. Output located at {output} {EMOJI}')
+    click.secho(f'{EMOJI} Diffusion performed with success. Output located at {output} {EMOJI}\n')
 
 
 @diffusion.command()
@@ -165,10 +164,10 @@ def run(
     type=click.Choice(EVALUATION_COMPARISONS),
 )
 @click.option(
-    '-i', '--input_path',
+    '-d', '--data_path',
     default=os.path.join(ROOT_RESULTS_DIR, 'data', 'input_mappings'),
     show_default=True,
-    type=click.Path(exists=True, dir_okay=True),
+    type=click.Path(exists=True, dir_okay=True, file_okay=False),
 )
 @click.option(
     '-k', '--kernel',
@@ -185,9 +184,9 @@ def run(
 @click.option(
     '-o', '--output',
     help='Output path for the results',
-    default=OUTPUT_DIR,
+    default= os.path.join(OUTPUT_DIR, 'evaluation_metrics.json'),
     show_default=True,
-    type=click.Path(exists=True, file_okay=False),
+    type=click.Path(dir_okay=False),
 )
 
 @click.option(
@@ -198,50 +197,42 @@ def run(
     type=int,
 )
 def evaluate(
-        comparison: str = BY_METHOD,
-        input_path: str = os.path.join(ROOT_RESULTS_DIR, 'data', 'input_mappings'),
-        graph: str = GRAPH_PATH,
-        kernel: str = KERNEL_PATH,
-        output: str = OUTPUT_DIR,
-        iterations: int = 100,
+        comparison: Optional[str] = BY_METHOD,
+        data_path: Optional[str] = os.path.join(ROOT_RESULTS_DIR, 'data', 'input_mappings'),
+        graph: Optional[str] = GRAPH_PATH,
+        kernel: Optional[str] = KERNEL_PATH,
+        output: Optional[str] = os.path.join(OUTPUT_DIR, 'evaluation_metrics.json'),
+        iterations: Optional[int] = 100,
 ):
-    """Evaluate a kernel/network on one of the three presented datasets."""
+    """Evaluate a kernel/network on one of the three presented datasets.
+
+    :param comparison: Elected comparison ["by_method", "by_database", "by_entity_type"]. By default 'by_method'
+    :param data_path: Path to a DIRECTORY with a set of preprocessed and mapped data inputs in .json.
+    :param graph: Path to the network as a (NetworkX) graph.
+    :param kernel: Path to the network kernel (diffuPy.Matrix type).
+    :param output: Path (with file name) for the generated scores output file. By default '$OUTPUT/diffusion_scores.csv'
+    :param iterations: Number of iterations of the Cross-Validation.
+
+    """
     click.secho(f'{EMOJI} Loading network for random cross-validation... {EMOJI}')
+
     graph = process_graph_from_file(graph)
     kernel = process_kernel_from_file(kernel)
 
-    nx.number_of_isolates(graph)
-    graph.remove_nodes_from({
-        node
-        for node in nx.isolates(graph)
-    })
-
-    graph.summarize()
-
     click.secho(f'{EMOJI} Loading data for cross-validation... {EMOJI}')
-    MAPPING_PATH_DATASET_1 = os.path.join(input_path, 'dataset_1_mapping.json')
+
+    MAPPING_PATH_DATASET_1 = os.path.join(data_path, 'dataset_1_mapping.json')
     dataset1_mapping_by_database_and_entity = from_json(MAPPING_PATH_DATASET_1)
-    dataset1_mapping_by_database = reduce_dict_dimension(dataset1_mapping_by_database_and_entity)
-    dataset1_mapping_all_labels = {entity: entity_value
-                                   for entity_type, entity_set in dataset1_mapping_by_database.items()
-                                   for entity, entity_value in entity_set.items()
-                                   }
+    dataset1_mapping_all_labels = reduce_dict_two_dimensional(dataset1_mapping_by_database_and_entity)
 
-    MAPPING_PATH_DATASET_2 = os.path.join(input_path, 'dataset_2_mapping.json')
+    MAPPING_PATH_DATASET_2 = os.path.join(data_path, 'dataset_2_mapping.json')
     dataset2_mapping_by_database_and_entity = from_json(MAPPING_PATH_DATASET_2)
-    dataset2_mapping_by_database = reduce_dict_dimension(dataset2_mapping_by_database_and_entity)
-    dataset2_mapping_all_labels = {entity: entity_value
-                                   for entity_type, entity_set in dataset2_mapping_by_database.items()
-                                   for entity, entity_value in entity_set.items()
-                                   }
+    dataset2_mapping_all_labels = reduce_dict_two_dimensional(dataset2_mapping_by_database_and_entity)
 
-    MAPPING_PATH_DATASET_3 = os.path.join(input_path, 'dataset_3_mapping.json')
+
+    MAPPING_PATH_DATASET_3 = os.path.join(data_path, 'dataset_3_mapping.json')
     dataset3_mapping_by_database_and_entity = from_json(MAPPING_PATH_DATASET_3)
-    dataset3_mapping_by_database = reduce_dict_dimension(dataset3_mapping_by_database_and_entity)
-    dataset3_mapping_all_labels = {entity: entity_value
-                                   for entity_type, entity_set in dataset3_mapping_by_database.items()
-                                   for entity, entity_value in entity_set.items()
-                                   }
+    dataset3_mapping_all_labels = reduce_dict_two_dimensional(dataset3_mapping_by_database_and_entity)
 
     if comparison == BY_METHOD:
         click.secho(f'{EMOJI} Evaluating by method... {EMOJI}')
@@ -269,7 +260,7 @@ def evaluate(
             kernel,
             k=iterations)
     else:
-        raise ValueError("The comparison method provided not match any provided method.")
+        raise ValueError("The indicated comparison method do not match any provided method.")
 
     to_json(metrics_by_method, output)
 
