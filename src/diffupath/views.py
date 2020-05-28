@@ -15,13 +15,18 @@ def show_box_plot(
         data_dict,
         x_label='',
         y_label='',
+        y_lim=None,
         color_palette=None
 ):
     """Plot boxplot."""
+    if y_lim is None:
+        y_lim = [0, 1]
     if color_palette is None:
         color_palette = ['royalblue', 'forestgreen', 'khaki', 'lightcoral', 'yellow', 'green']
 
     bplots = []
+
+    plt.rcParams.update({'font.size': 15, 'font.weight':'normal', 'ytick.labelsize':'x-small'})
 
     fig, axs = plt.subplots(nrows=1,
                             ncols=len(data_dict),
@@ -37,7 +42,7 @@ def show_box_plot(
                                patch_artist=True,  # fill with color
                                labels=list(dataset.keys())
                                )  # will be used to label x-ticks
-        axs[i].set_title(dataset_label)
+        axs[i].set_title(dataset_label,fontweight="bold")
 
         bplots.append(bplot)
 
@@ -49,8 +54,16 @@ def show_box_plot(
     # adding horizontal grid lines
     for i, ax in enumerate(axs):
         ax.yaxis.grid(True)
-        ax.set_xlabel(x_label)
-        ax.set_ylabel(y_label)
+        ax.set_ylim(y_lim)
+
+        ax.yaxis.grid(True)
+
+        ax.set_xlabel(x_label,fontweight="bold")
+        ax.set_ylabel(y_label,fontweight="bold")
+
+        # Rotate the tick labels and set their alignment.
+        plt.setp(ax.get_xticklabels(), rotation=-25, ha="left",
+                 rotation_mode="anchor")
 
     plt.show()
 
@@ -59,6 +72,8 @@ def fdr_barchart_three_plot(
         metrics,
         p_values_func,
         title='Statistic Test',
+        x_label='',
+        y_label='normalized FDR -log10(p-value)',
         legend=None
 ):
     if legend is None:
@@ -87,12 +102,14 @@ def fdr_barchart_three_plot(
 
     fig.set_size_inches(14.5, 7.5)
 
+    ax.set_title(title,fontweight="bold")
+
     rects1 = ax.bar(ind, normalized_p_values[0], width, color='forestgreen')
     rects2 = ax.bar(ind + width, normalized_p_values[1], width, color='tomato')
     rects3 = ax.bar(ind + width * 2, normalized_p_values[2], width, color='steelblue')
 
-    ax.set_ylabel("normalized FDR -log10(p-value)")
-    plt.xlabel(title)
+    ax.set_ylabel(y_label)
+    plt.xlabel(x_label)
 
     ax.set_xticks(ind + width)
     ax.set_xticklabels(x, ha='left', rotation=-45)
