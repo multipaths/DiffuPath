@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""DiffuPy main."""
+"""DiffuPath main."""
 
 from .cli import main
 

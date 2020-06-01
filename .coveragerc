@@ -1,16 +1,16 @@
 [run]
 branch = True
-source = diffupy
+source = diffupath
 omit =
-    src/diffupy/__main__.py
-    src/diffupy/cli.py
+    src/diffupath/__main__.py
+    src/diffupath/cli.py
     tests/*
     docs/*
 
 [paths]
 source =
-    src/diffupy
-    .tox/*/lib/python*/site-packages/diffupy
+    src/diffupath
+    .tox/*/lib/python*/site-packages/diffupath
 
 [report]
 show_missing = True

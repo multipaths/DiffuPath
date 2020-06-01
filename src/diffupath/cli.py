@@ -26,9 +26,9 @@ GRAPH_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'pickles', 'universe',
 KERNEL_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'kernel_regularized_pathme_universe.pickle')
 
 
-@click.group(help='DiffuPy')
+@click.group(help='DiffuPath')
 def main():
-    """Run DiffuPy."""
+    """Run DiffuPath."""
     logging.basicConfig(format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
 
 
