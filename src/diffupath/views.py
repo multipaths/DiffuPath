@@ -26,7 +26,7 @@ def show_box_plot(
 
     bplots = []
 
-    plt.rcParams.update({'font.size': 15, 'font.weight':'normal', 'ytick.labelsize':'x-small'})
+    plt.rcParams.update({'font.size': 15, 'font.weight': 'normal', 'ytick.labelsize': 'x-small'})
 
     fig, axs = plt.subplots(nrows=1,
                             ncols=len(data_dict),
@@ -42,7 +42,7 @@ def show_box_plot(
                                patch_artist=True,  # fill with color
                                labels=list(dataset.keys())
                                )  # will be used to label x-ticks
-        axs[i].set_title(dataset_label,fontweight="bold")
+        axs[i].set_title(dataset_label, fontweight="bold")
 
         bplots.append(bplot)
 
@@ -58,8 +58,8 @@ def show_box_plot(
 
         ax.yaxis.grid(True)
 
-        ax.set_xlabel(x_label,fontweight="bold")
-        ax.set_ylabel(y_label,fontweight="bold")
+        ax.set_xlabel(x_label, fontweight="bold")
+        ax.set_ylabel(y_label, fontweight="bold")
 
         # Rotate the tick labels and set their alignment.
         plt.setp(ax.get_xticklabels(), rotation=-25, ha="left",
@@ -102,7 +102,7 @@ def fdr_barchart_three_plot(
 
     fig.set_size_inches(14.5, 7.5)
 
-    ax.set_title(title,fontweight="bold")
+    ax.set_title(title, fontweight="bold")
 
     rects1 = ax.bar(ind, normalized_p_values[0], width, color='forestgreen')
     rects2 = ax.bar(ind + width, normalized_p_values[1], width, color='tomato')

@@ -184,11 +184,10 @@ def run(
 @click.option(
     '-o', '--output',
     help='Output path for the results',
-    default= os.path.join(OUTPUT_DIR, 'evaluation_metrics.json'),
+    default=os.path.join(OUTPUT_DIR, 'evaluation_metrics.json'),
     show_default=True,
     type=click.Path(dir_okay=False),
 )
-
 @click.option(
     '-i', '--iterations',
     help='Number of distinct cross validations',
@@ -228,7 +227,6 @@ def evaluate(
     MAPPING_PATH_DATASET_2 = os.path.join(data_path, 'dataset_2_mapping.json')
     dataset2_mapping_by_database_and_entity = from_json(MAPPING_PATH_DATASET_2)
     dataset2_mapping_all_labels = reduce_dict_two_dimensional(dataset2_mapping_by_database_and_entity)
-
 
     MAPPING_PATH_DATASET_3 = os.path.join(data_path, 'dataset_3_mapping.json')
     dataset3_mapping_by_database_and_entity = from_json(MAPPING_PATH_DATASET_3)

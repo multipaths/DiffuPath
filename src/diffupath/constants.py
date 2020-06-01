@@ -19,6 +19,7 @@ ROOT_RESULTS_DIR = os.path.join(ROOT_RESULTS_DIR, 'Results')
 
 OUTPUT_DIR = os.path.join(ROOT_RESULTS_DIR, 'outputs')
 
+
 def ensure_output_dirs():
     """Ensure that the output directories exists."""
     os.makedirs(DEFAULT_DIFFUPATH_DIR, exist_ok=True)
@@ -37,7 +38,6 @@ EVALUATION_COMPARISONS = {
     BY_METHOD,
     BY_DB,
 }
-
 
 # Rename DiffuPy methods
 DIFFUPY_METHODS = METHODS
