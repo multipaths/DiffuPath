@@ -63,7 +63,7 @@ def get_labels_set_from_dict(entities):
         return set(itertools.chain.from_iterable(entities.values()))
 
 
-def reduce_dict_dimension(dict):
+def reduce_dict_dimension(dict: dict):
     """Reduce dictionary dimension."""
     reduced_dict = {}
 
@@ -75,6 +75,15 @@ def reduce_dict_dimension(dict):
                 reduced_dict[k1] = entities2
 
     return reduced_dict
+
+
+def reduce_dict_two_dimensional(d1: dict):
+    """Reduce dictionary two dimension."""
+    d2 = reduce_dict_dimension(d1)
+    return {entity: entity_value
+            for entity_type, entity_set in d2.items()
+            for entity, entity_value in entity_set.items()
+            }
 
 
 def split_random_two_subsets(to_split):

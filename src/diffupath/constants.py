@@ -11,11 +11,13 @@ SOURCE_DIR = os.path.join(os.path.abspath(os.path.join(dir_path, os.pardir)))
 DEFAULT_DIFFUPATH_DIR = os.path.join(os.path.expanduser('~'), '.diffupath')
 
 #: Default DiffuPath output directory
-OUTPUT_DIR = os.path.join(DEFAULT_DIFFUPATH_DIR, 'output')
+OUTPUT_DIFFUPATH_DIR = os.path.join(DEFAULT_DIFFUPATH_DIR, 'output')
 
 ROOT_RESULTS_DIR = os.path.join(os.path.abspath(os.path.join(SOURCE_DIR, os.pardir)))
 ROOT_RESULTS_DIR = os.path.join(os.path.abspath(os.path.join(ROOT_RESULTS_DIR, os.pardir)))
 ROOT_RESULTS_DIR = os.path.join(ROOT_RESULTS_DIR, 'Results')
+
+OUTPUT_DIR = os.path.join(ROOT_RESULTS_DIR, 'outputs')
 
 
 def ensure_output_dirs():
@@ -36,7 +38,6 @@ EVALUATION_COMPARISONS = {
     BY_METHOD,
     BY_DB,
 }
-
 
 # Rename DiffuPy methods
 DIFFUPY_METHODS = METHODS

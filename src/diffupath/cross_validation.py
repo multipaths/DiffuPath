@@ -109,8 +109,8 @@ def cross_validation_by_subgraph(data_input,
                                              k=universe_kernel,
                                              z=z_normalization)
 
-            subgraph_validation_scores[type + 'on ' + type] = (validation_diff, scores_on_subgraph)
-            subgraph_validation_scores[type + 'on PathMeUniverse'] = (validation_diff_universe, scores_on_universe)
+            subgraph_validation_scores[type + ' on ' + type] = (validation_diff, scores_on_subgraph)
+            subgraph_validation_scores[type + ' on PathMeUniverse'] = (validation_diff_universe, scores_on_universe)
 
         for method, validation_set in subgraph_validation_scores.items():
             auroc, auprc = _get_metrics(*validation_set)
