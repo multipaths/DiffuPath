@@ -76,6 +76,7 @@ def fdr_barchart_three_plot(
         y_label='normalized FDR -log10(p-value)',
         legend=None
 ):
+    """Plot FDR barchart_three_plot."""
     if legend is None:
         if isinstance(metrics, dict):
             legend = list(metrics.keys())

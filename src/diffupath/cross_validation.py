@@ -10,7 +10,8 @@ import numpy as np
 from diffupy.diffuse_raw import diffuse_raw
 from diffupy.kernels import regularised_laplacian_kernel
 from diffupy.matrix import Matrix
-from diffupy.process_input import format_input_for_diffusion, process_input_data
+from diffupy.process_input import format_input_for_diffusion, process_input_data, \
+    _type_dict_label_scores_dict_data_struct_check, _type_dict_label_list_data_struct_check, map_labels_input
 from pybel import get_subgraph_by_annotation_value
 from scipy import stats
 from sklearn import metrics
@@ -23,7 +24,7 @@ from .utils import split_random_two_subsets
 """Random cross validation datasets functions"""
 
 
-def cross_validation_by_method(data_input,
+def cross_validation_by_method(mapping_input,
                                graph,
                                kernel,
                                k=100
@@ -34,7 +35,7 @@ def cross_validation_by_method(data_input,
 
     for _ in tqdm(range(k)):
         input_diff, validation_diff = _get_random_cv_split_input_and_validation(
-            data_input, kernel
+            mapping_input, kernel
         )
 
         scores_z = diffuse_raw(graph=None, scores=input_diff, k=kernel, z=True)
@@ -67,7 +68,8 @@ def cross_validation_by_method(data_input,
     return auroc_metrics, auprc_metrics
 
 
-def cross_validation_by_subgraph(data_input,
+# noinspection PyArgumentList
+def cross_validation_by_subgraph(mapping_input,
                                  graph,
                                  graph_parameter,
                                  type_list,
@@ -76,8 +78,10 @@ def cross_validation_by_subgraph(data_input,
                                  k=100
                                  ):
     """Cross validation by subgraph."""
-    auroc_metrics = defaultdict(list)
-    auprc_metrics = defaultdict(list)
+    auroc_metrics = defaultdict(lambda: defaultdict(lambda: list()))
+    auprc_metrics = defaultdict(lambda: defaultdict(lambda: list()))
+
+    tmp_mapping = {}
 
     # Pre-process kernel for subgraphs
     kernels = {parameter: regularised_laplacian_kernel(get_subgraph_by_annotation_value(graph,
@@ -88,16 +92,33 @@ def cross_validation_by_subgraph(data_input,
                }
 
     for _ in tqdm(range(k), 'Computate validation scores'):
-        subgraph_validation_scores = {}
+        subgraph_validation_scores = defaultdict(lambda: defaultdict(lambda: tuple()))
 
-        for type, kernel in kernels.items():
+        for type, kernel in tqdm(kernels.items()):
 
             if universe_kernel is None:
                 universe_kernel = kernel
 
-            input_diff, validation_diff = _get_random_cv_split_input_and_validation(data_input[type],
+            if type in tmp_mapping.keys():
+                data_input_i = tmp_mapping[type]
+
+            elif (_type_dict_label_list_data_struct_check(mapping_input) or _type_dict_label_scores_dict_data_struct_check(
+                mapping_input)) and type in mapping_input:
+                data_input_i = mapping_input[type]
+
+            else:
+                print(f'\n Mapping to {type}')
+                data_input_i = map_labels_input(input_labels=mapping_input,
+                                                background_labels=kernel.rows_labels,
+                                                check_substrings=True,
+                                                show_descriptive_stat=True
+                                                )
+                tmp_mapping[type] = data_input_i
+
+
+            input_diff, validation_diff = _get_random_cv_split_input_and_validation(data_input_i,
                                                                                     kernel)
-            input_diff_universe, validation_diff_universe = _get_random_cv_split_input_and_validation(data_input[type],
+            input_diff_universe, validation_diff_universe = _get_random_cv_split_input_and_validation(data_input_i,
                                                                                                       universe_kernel)
 
             scores_on_subgraph = diffuse_raw(graph=None,
@@ -109,13 +130,19 @@ def cross_validation_by_subgraph(data_input,
                                              k=universe_kernel,
                                              z=z_normalization)
 
-            subgraph_validation_scores[type + ' on ' + type] = (validation_diff, scores_on_subgraph)
-            subgraph_validation_scores[type + ' on PathMeUniverse'] = (validation_diff_universe, scores_on_universe)
+            subgraph_validation_scores[type]['subgraph'] = (validation_diff, scores_on_subgraph)
+            subgraph_validation_scores[type]['PathMeUniverse'] = (validation_diff_universe, scores_on_universe)
 
-        for method, validation_set in subgraph_validation_scores.items():
-            auroc, auprc = _get_metrics(*validation_set)
-            auroc_metrics[method].append(auroc)
-            auprc_metrics[method].append(auprc)
+        for type, validation_set in subgraph_validation_scores.items():
+            auroc, auprc = _get_metrics(*validation_set['PathMeUniverse'])
+
+            auroc_metrics['PathMeUniverse'][type].append(auroc)
+            auprc_metrics['PathMeUniverse'][type].append(auprc)
+
+            auroc, auprc = _get_metrics(*validation_set['subgraph'])
+
+            auroc_metrics['subgraph'][type].append(auroc)
+            auprc_metrics['subgraph'][type].append(auprc)
 
     return auroc_metrics, auprc_metrics
 
@@ -167,6 +194,7 @@ def _get_metrics(validation_labels,
 
 
 def get_p_values(metrics):
+    """Get p_values."""
     p_values = {}
 
     result_list = map(dict, itertools.combinations(metrics.items(), 2))
@@ -180,6 +208,7 @@ def get_p_values(metrics):
 
 
 def get_p_values_multiple(metrics):
+    """Get p_values_multiple."""
     p_values = {}
 
     for k, v in metrics[0].items():
@@ -190,6 +219,7 @@ def get_p_values_multiple(metrics):
 
 
 def get_normalized_p_values(p_values):
+    """Get normalized_p_values."""
     normalized_p_values = {}
 
     fdr = fdrcorrection(list(p_values.values()),
