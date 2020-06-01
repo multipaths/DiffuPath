@@ -17,7 +17,7 @@ from diffupy.process_network import get_kernel_from_network_path, process_kernel
 from diffupy.utils import from_json, to_json
 
 from .constants import *
-from .cross_validation import cross_validation_by_method
+from .cross_validation import cross_validation_by_method, cross_validation_by_subgraph
 
 logger = logging.getLogger(__name__)
 
@@ -257,6 +257,71 @@ def evaluate(
             graph,
             kernel,
             k=iterations)
+
+    elif comparison == BY_DB:
+        click.secho(f'{EMOJI} Evaluating by data_base... {EMOJI}')
+
+        metrics_by_method = defaultdict(lambda: defaultdict(lambda: list))
+
+        click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 1... {EMOJI}')
+        metrics_by_method['auroc']['Dataset 1'], metrics_by_method['auprc']['Dataset 1'] = cross_validation_by_subgraph(
+            dataset1_mapping_all_labels,
+            graph,
+            'database',
+            ['kegg', 'reactome', 'wikipathways'],
+            universe_kernel=kernel,
+            k=iterations)
+
+        click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 2... {EMOJI}')
+        metrics_by_method['auroc']['Dataset 2'], metrics_by_method['auprc']['Dataset 2'] = cross_validation_by_subgraph(
+            dataset2_mapping_all_labels,
+            graph,
+            'database',
+            ['kegg', 'reactome', 'wikipathways'],
+            universe_kernel=kernel,
+            k=iterations)
+
+        click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 3... {EMOJI}')
+        metrics_by_method['auroc']['Dataset 3'], metrics_by_method['auprc']['Dataset 3'] = cross_validation_by_subgraph(
+            dataset3_mapping_all_labels,
+            graph,
+            'database',
+            ['kegg', 'reactome', 'wikipathways'],
+            universe_kernel=kernel,
+            k=iterations)
+
+    elif comparison == BY_ENTITY:
+        click.secho(f'{EMOJI} Evaluating by data_entity... {EMOJI}')
+
+        metrics_by_method = defaultdict(lambda: defaultdict(lambda: list))
+
+        click.secho(f'{EMOJI} Running cross_validation_by_entity for Dataset 1... {EMOJI}')
+        metrics_by_method['auroc']['Dataset 1'], metrics_by_method['auprc']['Dataset 1'] = cross_validation_by_subgraph(
+            dataset1_mapping_all_labels,
+            graph,
+            'entity',
+            ['mirnas', 'genes', 'metabolites'],
+            universe_kernel=kernel,
+            k=iterations)
+
+        click.secho(f'{EMOJI} Running cross_validation_by_entity for Dataset 2... {EMOJI}')
+        metrics_by_method['auroc']['Dataset 2'], metrics_by_method['auprc']['Dataset 2'] = cross_validation_by_subgraph(
+            dataset2_mapping_all_labels,
+            graph,
+            'database',
+            ['mirnas', 'genes', 'metabolites'],
+            universe_kernel=kernel,
+            k=iterations)
+
+        click.secho(f'{EMOJI} Running cross_validation_by_entity for Dataset 3... {EMOJI}')
+        metrics_by_method['auroc']['Dataset 3'], metrics_by_method['auprc']['Dataset 3'] = cross_validation_by_subgraph(
+            dataset3_mapping_all_labels,
+            graph,
+            'database',
+            ['mirnas', 'genes', 'metabolites'],
+            universe_kernel=kernel,
+            k=iterations)
+
     else:
         raise ValueError("The indicated comparison method do not match any provided method.")
 
