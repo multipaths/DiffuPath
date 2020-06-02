@@ -186,7 +186,7 @@ def run(
     help='Output path for the results',
     default=os.path.join(OUTPUT_DIR, 'evaluation_metrics.json'),
     show_default=True,
-    type=click.Path(dir_okay=False),
+    type=click.Path(dir_okay=True, file_okay=False),
 )
 @click.option(
     '-i', '--iterations',
