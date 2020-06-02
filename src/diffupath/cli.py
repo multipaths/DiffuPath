@@ -200,7 +200,7 @@ def evaluate(
         data_path: Optional[str] = os.path.join(ROOT_RESULTS_DIR, 'data', 'input_mappings'),
         graph: Optional[str] = GRAPH_PATH,
         kernel: Optional[str] = KERNEL_PATH,
-        output: Optional[str] = os.path.join(OUTPUT_DIR, 'evaluation_metrics.json'),
+        output: Optional[str] = OUTPUT_DIR,
         iterations: Optional[int] = 100,
 ):
     """Evaluate a kernel/network on one of the three presented datasets.
@@ -325,7 +325,7 @@ def evaluate(
     else:
         raise ValueError("The indicated comparison method do not match any provided method.")
 
-    to_json(metrics_by_method, os.path.join(output, 'results.json'))
+    to_json(metrics_by_method, os.path.join(output, 'evaluation_metrics.json'))
 
     click.secho(f'{EMOJI} Random cross-validation performed with success. Output located at {output}... {EMOJI}')
 
