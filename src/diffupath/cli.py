@@ -222,49 +222,54 @@ def evaluate(
 
     MAPPING_PATH_DATASET_1 = os.path.join(data_path, 'dataset_1_mapping.json')
     dataset1_mapping_by_database_and_entity = from_json(MAPPING_PATH_DATASET_1)
-    dataset1_mapping_all_labels = reduce_dict_two_dimensional(dataset1_mapping_by_database_and_entity)
 
     MAPPING_PATH_DATASET_2 = os.path.join(data_path, 'dataset_2_mapping.json')
     dataset2_mapping_by_database_and_entity = from_json(MAPPING_PATH_DATASET_2)
-    dataset2_mapping_all_labels = reduce_dict_two_dimensional(dataset2_mapping_by_database_and_entity)
 
     MAPPING_PATH_DATASET_3 = os.path.join(data_path, 'dataset_3_mapping.json')
     dataset3_mapping_by_database_and_entity = from_json(MAPPING_PATH_DATASET_3)
-    dataset3_mapping_all_labels = reduce_dict_two_dimensional(dataset3_mapping_by_database_and_entity)
 
     if comparison == BY_METHOD:
+        dataset1_mapping_all_labels = reduce_dict_two_dimensional(dataset1_mapping_by_database_and_entity)
+        dataset2_mapping_all_labels = reduce_dict_two_dimensional(dataset2_mapping_by_database_and_entity)
+        dataset3_mapping_all_labels = reduce_dict_two_dimensional(dataset3_mapping_by_database_and_entity)
+
         click.secho(f'{EMOJI} Evaluating by method... {EMOJI}')
 
-        metrics_by_method = defaultdict(lambda: defaultdict(lambda: list))
+        metrics = defaultdict(lambda: defaultdict(lambda: list))
 
         click.secho(f'{EMOJI} Running cross_validation_by_method for Dataset 1... {EMOJI}')
-        metrics_by_method['auroc']['Dataset 1'], metrics_by_method['auprc']['Dataset 1'] = cross_validation_by_method(
+        metrics['auroc']['Dataset 1'], metrics['auprc']['Dataset 1'] = cross_validation_by_method(
             dataset1_mapping_all_labels,
             graph,
             kernel,
             k=iterations)
 
         click.secho(f'{EMOJI} Running cross_validation_by_method for Dataset 2... {EMOJI}')
-        metrics_by_method['auroc']['Dataset 2'], metrics_by_method['auprc']['Dataset 2'] = cross_validation_by_method(
+        metrics['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = cross_validation_by_method(
             dataset2_mapping_all_labels,
             graph,
             kernel,
             k=iterations)
 
         click.secho(f'{EMOJI} Running cross_validation_by_method for Dataset 3... {EMOJI}')
-        metrics_by_method['auroc']['Dataset 3'], metrics_by_method['auprc']['Dataset 3'] = cross_validation_by_method(
+        metrics['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = cross_validation_by_method(
             dataset3_mapping_all_labels,
             graph,
             kernel,
             k=iterations)
 
     elif comparison == BY_DB:
+        dataset1_mapping_all_labels = reduce_dict_two_dimensional(dataset1_mapping_by_database_and_entity)
+        dataset2_mapping_all_labels = reduce_dict_two_dimensional(dataset2_mapping_by_database_and_entity)
+        dataset3_mapping_all_labels = reduce_dict_two_dimensional(dataset3_mapping_by_database_and_entity)
+
         click.secho(f'{EMOJI} Evaluating by data_base... {EMOJI}')
 
-        metrics_by_method = defaultdict(lambda: defaultdict(lambda: list))
+        metrics = defaultdict(lambda: defaultdict(lambda: list))
 
         click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 1... {EMOJI}')
-        metrics_by_method['auroc']['Dataset 1'], metrics_by_method['auprc']['Dataset 1'] = cross_validation_by_subgraph(
+        metrics['auroc']['Dataset 1'], metrics['auprc']['Dataset 1'] = cross_validation_by_subgraph(
             dataset1_mapping_all_labels,
             graph,
             'database',
@@ -273,7 +278,7 @@ def evaluate(
             k=iterations)
 
         click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 2... {EMOJI}')
-        metrics_by_method['auroc']['Dataset 2'], metrics_by_method['auprc']['Dataset 2'] = cross_validation_by_subgraph(
+        metrics['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = cross_validation_by_subgraph(
             dataset2_mapping_all_labels,
             graph,
             'database',
@@ -282,7 +287,7 @@ def evaluate(
             k=iterations)
 
         click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 3... {EMOJI}')
-        metrics_by_method['auroc']['Dataset 3'], metrics_by_method['auprc']['Dataset 3'] = cross_validation_by_subgraph(
+        metrics['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = cross_validation_by_subgraph(
             dataset3_mapping_all_labels,
             graph,
             'database',
@@ -290,42 +295,89 @@ def evaluate(
             universe_kernel=kernel,
             k=iterations)
 
-    elif comparison == BY_ENTITY:
+    elif comparison == BY_ENTITY_METHOD:
+        dataset1_mapping_by_entity = reduce_dict_dimension(dataset1_mapping_by_database_and_entity)
+        dataset2_mapping_by_entity = reduce_dict_dimension(dataset2_mapping_by_database_and_entity)
+        dataset3_mapping_by_entity = reduce_dict_dimension(dataset3_mapping_by_database_and_entity)
+
         click.secho(f'{EMOJI} Evaluating by data_entity... {EMOJI}')
 
-        metrics_by_method = defaultdict(lambda: defaultdict(lambda: list))
+        metrics = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: list)))
 
-        click.secho(f'{EMOJI} Running cross_validation_by_entity for Dataset 1... {EMOJI}')
-        metrics_by_method['auroc']['Dataset 1'], metrics_by_method['auprc']['Dataset 1'] = cross_validation_by_subgraph(
-            dataset1_mapping_all_labels,
-            graph,
-            'entity',
-            ['mirnas', 'genes', 'metabolites'],
-            universe_kernel=kernel,
-            k=iterations)
+        for entity_type, entity_set in dataset1_mapping_by_entity.items():
+            click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 1... {EMOJI}')
+            metrics[entity_type]['auroc']['Dataset 1'], metrics['auprc']['Dataset 1'] = cross_validation_by_method(
+                entity_set,
+                graph,
+                kernel,
+                k=iterations
+            )
 
-        click.secho(f'{EMOJI} Running cross_validation_by_entity for Dataset 2... {EMOJI}')
-        metrics_by_method['auroc']['Dataset 2'], metrics_by_method['auprc']['Dataset 2'] = cross_validation_by_subgraph(
-            dataset2_mapping_all_labels,
-            graph,
-            'database',
-            ['mirnas', 'genes', 'metabolites'],
-            universe_kernel=kernel,
-            k=iterations)
+            click.secho(f'{EMOJI} Running cross_validation_by_method for Dataset 1... {EMOJI}')
 
-        click.secho(f'{EMOJI} Running cross_validation_by_entity for Dataset 3... {EMOJI}')
-        metrics_by_method['auroc']['Dataset 3'], metrics_by_method['auprc']['Dataset 3'] = cross_validation_by_subgraph(
-            dataset3_mapping_all_labels,
-            graph,
-            'database',
-            ['mirnas', 'genes', 'metabolites'],
-            universe_kernel=kernel,
-            k=iterations)
+        for entity_type, entity_set in dataset2_mapping_by_entity.items():
+            click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 2... {EMOJI}')
+            metrics[entity_type]['auroc']['Dataset 2'], metrics['auprc']['Dataset 1'] = cross_validation_by_method(
+                entity_set,
+                graph,
+                kernel,
+                k=iterations
+            )
+
+        for entity_type, entity_set in dataset3_mapping_by_entity.items():
+            click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 3... {EMOJI}')
+            metrics[entity_type]['auroc']['Dataset 3'], metrics['auprc']['Dataset 1'] = cross_validation_by_method(
+                entity_set,
+                graph,
+                kernel,
+                k=iterations
+            )
+
+
+    elif comparison == BY_ENTITY_DB:
+        dataset1_mapping_by_entity = reduce_dict_dimension(dataset1_mapping_by_database_and_entity)
+        dataset2_mapping_by_entity = reduce_dict_dimension(dataset2_mapping_by_database_and_entity)
+        dataset3_mapping_by_entity = reduce_dict_dimension(dataset3_mapping_by_database_and_entity)
+
+        click.secho(f'{EMOJI} Evaluating by data_entity... {EMOJI}')
+
+        metrics = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: list)))
+
+        for entity_type, entity_set in dataset1_mapping_by_entity.items():
+            click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 1... {EMOJI}')
+            metrics[entity_type]['auroc']['Dataset 1'], metrics['auprc']['Dataset 1'] = cross_validation_by_subgraph(
+                entity_set,
+                graph,
+                'database',
+                ['kegg', 'reactome', 'wikipathways'],
+                universe_kernel=kernel,
+                k=iterations)
+
+        for entity_type, entity_set in dataset2_mapping_by_entity.items():
+            click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 2... {EMOJI}')
+            metrics[entity_type]['auroc']['Dataset 2'], metrics['auprc']['Dataset 1'] = cross_validation_by_subgraph(
+                entity_set,
+                graph,
+                'database',
+                ['kegg', 'reactome', 'wikipathways'],
+                universe_kernel=kernel,
+                k=iterations)
+
+        for entity_type, entity_set in dataset3_mapping_by_entity.items():
+            click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 3... {EMOJI}')
+            metrics[entity_type]['auroc']['Dataset 3'], metrics['auprc']['Dataset 1'] = cross_validation_by_subgraph(
+                entity_set,
+                graph,
+                'database',
+                ['kegg', 'reactome', 'wikipathways'],
+                universe_kernel=kernel,
+                k=iterations)
+
 
     else:
         raise ValueError("The indicated comparison method do not match any provided method.")
 
-    to_json(metrics_by_method, os.path.join(output, 'results.json'))
+    to_json(metrics, os.path.join(output, 'results.json'))
 
     click.secho(f'{EMOJI} Random cross-validation performed with success. Output located at {output}... {EMOJI}')
 
