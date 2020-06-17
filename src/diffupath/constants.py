@@ -33,12 +33,17 @@ ensure_output_dirs()
 #: raw
 BY_METHOD = 'method'
 BY_DB = 'database'
+
 BY_ENTITY = 'entity'
+BY_ENTITY_METHOD = 'by_entity_method'
+BY_ENTITY_DB = 'by_entity_db'
 
 EVALUATION_COMPARISONS = {
     BY_METHOD,
     BY_DB,
-    BY_ENTITY
+    BY_ENTITY,
+    BY_ENTITY_METHOD,
+    BY_ENTITY_DB
 }
 
 # Rename DiffuPy methods
