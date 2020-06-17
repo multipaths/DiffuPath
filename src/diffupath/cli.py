@@ -317,7 +317,7 @@ def evaluate(
 
         for entity_type, entity_set in dataset2_mapping_by_entity.items():
             click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 2... {EMOJI}')
-            metrics[entity_type]['auroc']['Dataset 2'], metrics['auprc']['Dataset 1'] = cross_validation_by_method(
+            metrics[entity_type]['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = cross_validation_by_method(
                 entity_set,
                 graph,
                 kernel,
@@ -326,7 +326,7 @@ def evaluate(
 
         for entity_type, entity_set in dataset3_mapping_by_entity.items():
             click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 3... {EMOJI}')
-            metrics[entity_type]['auroc']['Dataset 3'], metrics['auprc']['Dataset 1'] = cross_validation_by_method(
+            metrics[entity_type]['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = cross_validation_by_method(
                 entity_set,
                 graph,
                 kernel,
@@ -355,7 +355,7 @@ def evaluate(
 
         for entity_type, entity_set in dataset2_mapping_by_entity.items():
             click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 2... {EMOJI}')
-            metrics[entity_type]['auroc']['Dataset 2'], metrics['auprc']['Dataset 1'] = cross_validation_by_subgraph(
+            metrics[entity_type]['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = cross_validation_by_subgraph(
                 entity_set,
                 graph,
                 'database',
@@ -365,7 +365,7 @@ def evaluate(
 
         for entity_type, entity_set in dataset3_mapping_by_entity.items():
             click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 3... {EMOJI}')
-            metrics[entity_type]['auroc']['Dataset 3'], metrics['auprc']['Dataset 1'] = cross_validation_by_subgraph(
+            metrics[entity_type]['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = cross_validation_by_subgraph(
                 entity_set,
                 graph,
                 'database',
