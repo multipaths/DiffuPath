@@ -12,9 +12,12 @@ from bio2bel.constants import get_global_connection
 from diffupath.utils import reduce_dict_dimension, reduce_dict_two_dimensional
 from diffupy.constants import EMOJI, RAW, CSV, JSON
 from diffupy.diffuse import diffuse as run_diffusion
+from diffupy.kernels import regularised_laplacian_kernel
 from diffupy.process_input import process_map_and_format_input_data_for_diff
 from diffupy.process_network import get_kernel_from_network_path, process_kernel_from_file, process_graph_from_file
 from diffupy.utils import from_json, to_json
+from pybel import get_subgraph_by_annotation_value
+from tqdm import tqdm
 
 from .constants import *
 from .cross_validation import cross_validation_by_method, cross_validation_by_subgraph
@@ -266,32 +269,34 @@ def evaluate(
 
         click.secho(f'{EMOJI} Evaluating by data_base... {EMOJI}')
 
+        # Pre-process kernel for subgraphs
+        kernels = {parameter: regularised_laplacian_kernel(get_subgraph_by_annotation_value(graph,
+                                                                                            'database',
+                                                                                            parameter)
+                                                           )
+                   for parameter in tqdm(['kegg', 'reactome', 'wikipathways'], 'Generate kernels from subgraphs')
+                   }
+
         metrics = defaultdict(lambda: defaultdict(lambda: list))
 
         click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 1... {EMOJI}')
         metrics['auroc']['Dataset 1'], metrics['auprc']['Dataset 1'] = cross_validation_by_subgraph(
             dataset1_mapping_all_labels,
-            graph,
-            'database',
-            ['kegg', 'reactome', 'wikipathways'],
+            kernels,
             universe_kernel=kernel,
             k=iterations)
 
         click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 2... {EMOJI}')
         metrics['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = cross_validation_by_subgraph(
             dataset2_mapping_all_labels,
-            graph,
-            'database',
-            ['kegg', 'reactome', 'wikipathways'],
+            kernels,
             universe_kernel=kernel,
             k=iterations)
 
         click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 3... {EMOJI}')
         metrics['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = cross_validation_by_subgraph(
             dataset3_mapping_all_labels,
-            graph,
-            'database',
-            ['kegg', 'reactome', 'wikipathways'],
+            kernels,
             universe_kernel=kernel,
             k=iterations)
 
@@ -300,38 +305,46 @@ def evaluate(
         dataset2_mapping_by_entity = reduce_dict_dimension(dataset2_mapping_by_database_and_entity)
         dataset3_mapping_by_entity = reduce_dict_dimension(dataset3_mapping_by_database_and_entity)
 
-        click.secho(f'{EMOJI} Evaluating by data_entity... {EMOJI}')
-
         metrics = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: list)))
 
-        for entity_type, entity_set in dataset1_mapping_by_entity.items():
-            click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 1... {EMOJI}')
-            metrics[entity_type]['auroc']['Dataset 1'], metrics[entity_type]['auprc']['Dataset 1'] = cross_validation_by_method(
-                entity_set,
-                graph,
-                kernel,
-                k=iterations
-            )
+        click.secho(f'{EMOJI} Running cross_validation_by_method stratified by omic for Dataset 1... {EMOJI}')
 
-            click.secho(f'{EMOJI} Running cross_validation_by_method for Dataset 1... {EMOJI}')
+        for entity_type, entity_set in dataset1_mapping_by_entity.items():
+            if len(entity_set) > 2:
+                click.secho(f'{EMOJI} Running cross_validation_by_method for {entity_type}... {EMOJI}')
+                metrics[entity_type]['auroc']['Dataset 1'], metrics[entity_type]['auprc'][
+                    'Dataset 1'] = cross_validation_by_method(
+                    entity_set,
+                    graph,
+                    kernel,
+                    k=iterations
+                )
+
+        click.secho(f'{EMOJI} Running cross_validation_by_method stratified by omic for Dataset 2... {EMOJI}')
 
         for entity_type, entity_set in dataset2_mapping_by_entity.items():
-            click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 2... {EMOJI}')
-            metrics[entity_type]['auroc']['Dataset 2'], metrics[entity_type]['auprc']['Dataset 2'] = cross_validation_by_method(
-                entity_set,
-                graph,
-                kernel,
-                k=iterations
-            )
+            if len(entity_set) > 2:
+                click.secho(f'{EMOJI} Running cross_validation_by_method for {entity_type}... {EMOJI}')
+                metrics[entity_type]['auroc']['Dataset 2'], metrics[entity_type]['auprc'][
+                    'Dataset 2'] = cross_validation_by_method(
+                    entity_set,
+                    graph,
+                    kernel,
+                    k=iterations
+                )
+
+        click.secho(f'{EMOJI} Running cross_validation_by_method stratified by omic for Dataset 3... {EMOJI}')
 
         for entity_type, entity_set in dataset3_mapping_by_entity.items():
-            click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 3... {EMOJI}')
-            metrics[entity_type]['auroc']['Dataset 3'], metrics[entity_type]['auprc']['Dataset 3'] = cross_validation_by_method(
-                entity_set,
-                graph,
-                kernel,
-                k=iterations
-            )
+            if len(entity_set) > 2:
+                click.secho(f'{EMOJI} Running cross_validation_by_method for {entity_type}... {EMOJI}')
+                metrics[entity_type]['auroc']['Dataset 3'], metrics[entity_type]['auprc'][
+                    'Dataset 3'] = cross_validation_by_method(
+                    entity_set,
+                    graph,
+                    kernel,
+                    k=iterations
+                )
 
 
     elif comparison == BY_ENTITY_DB:
@@ -339,39 +352,49 @@ def evaluate(
         dataset2_mapping_by_entity = reduce_dict_dimension(dataset2_mapping_by_database_and_entity)
         dataset3_mapping_by_entity = reduce_dict_dimension(dataset3_mapping_by_database_and_entity)
 
-        click.secho(f'{EMOJI} Evaluating by data_entity... {EMOJI}')
+        # Pre-process kernel for subgraphs
+        kernels = {parameter: regularised_laplacian_kernel(get_subgraph_by_annotation_value(graph,
+                                                                                            'database',
+                                                                                            parameter)
+                                                           )
+                   for parameter in tqdm(['kegg', 'reactome', 'wikipathways'],
+                                         'Generate kernels from subgraphs')
+                   }
 
         metrics = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: list)))
 
+        click.secho(f'{EMOJI} Running cross_validation_by_database stratified by omic for Dataset 1... {EMOJI}')
+
         for entity_type, entity_set in dataset1_mapping_by_entity.items():
-            click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 1... {EMOJI}')
-            metrics[entity_type]['auroc']['Dataset 1'], metrics[entity_type]['auprc']['Dataset 1'] = cross_validation_by_subgraph(
-                entity_set,
-                graph,
-                'database',
-                ['kegg', 'reactome', 'wikipathways'],
-                universe_kernel=kernel,
-                k=iterations)
+            if len(entity_set) > 2:
+                click.secho(f'{EMOJI} Running cross_validation_by_database for {entity_type}... {EMOJI}')
+                metrics['auroc']['Dataset 1'], metrics['auprc']['Dataset 1'] = cross_validation_by_subgraph(
+                    entity_set,
+                    kernels,
+                    universe_kernel=kernel,
+                    k=iterations)
+
+        click.secho(f'{EMOJI} Running cross_validation_by_database stratified by omic for Dataset 2... {EMOJI}')
 
         for entity_type, entity_set in dataset2_mapping_by_entity.items():
-            click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 2... {EMOJI}')
-            metrics[entity_type]['auroc']['Dataset 2'], metrics[entity_type]['auprc']['Dataset 2'] = cross_validation_by_subgraph(
-                entity_set,
-                graph,
-                'database',
-                ['kegg', 'reactome', 'wikipathways'],
-                universe_kernel=kernel,
-                k=iterations)
+            if len(entity_set) > 2:
+                click.secho(f'{EMOJI} Running cross_validation_by_database for {entity_type}... {EMOJI}')
+                metrics['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = cross_validation_by_subgraph(
+                    entity_set,
+                    kernels,
+                    universe_kernel=kernel,
+                    k=iterations)
+
+        click.secho(f'{EMOJI} Running cross_validation_by_database stratified by omic for Dataset 3... {EMOJI}')
 
         for entity_type, entity_set in dataset3_mapping_by_entity.items():
-            click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 3... {EMOJI}')
-            metrics[entity_type]['auroc']['Dataset 3'], metrics[entity_type]['auprc']['Dataset 3'] = cross_validation_by_subgraph(
-                entity_set,
-                graph,
-                'database',
-                ['kegg', 'reactome', 'wikipathways'],
-                universe_kernel=kernel,
-                k=iterations)
+            if len(entity_set) > 2:
+                click.secho(f'{EMOJI} Running cross_validation_by_database for {entity_type}... {EMOJI}')
+                metrics['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = cross_validation_by_subgraph(
+                    entity_set,
+                    kernels,
+                    universe_kernel=kernel,
+                    k=iterations)
 
 
     else:
