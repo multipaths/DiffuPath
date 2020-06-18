@@ -70,9 +70,7 @@ def cross_validation_by_method(mapping_input,
 
 # noinspection PyArgumentList
 def cross_validation_by_subgraph(mapping_input,
-                                 graph,
-                                 graph_parameter,
-                                 type_list,
+                                 kernels,
                                  universe_kernel=None,
                                  z_normalization=False,
                                  k=100
@@ -83,13 +81,7 @@ def cross_validation_by_subgraph(mapping_input,
 
     tmp_mapping = {}
 
-    # Pre-process kernel for subgraphs
-    kernels = {parameter: regularised_laplacian_kernel(get_subgraph_by_annotation_value(graph,
-                                                                                        graph_parameter,
-                                                                                        parameter)
-                                                       )
-               for parameter in tqdm(type_list, 'Generate kernels from subgraphs')
-               }
+
 
     for _ in tqdm(range(k), 'Computate validation scores'):
         subgraph_validation_scores = defaultdict(lambda: defaultdict(lambda: tuple()))

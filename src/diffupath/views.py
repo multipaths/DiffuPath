@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 """Visualization methods."""
+from collections import defaultdict
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-
+import pandas as pd
+import seaborn as sns
 from diffupath.cross_validation import get_normalized_p_values
-
 from matplotlib_venn import venn3
 
 
@@ -68,12 +69,104 @@ def show_box_plot(
     plt.show()
 
 
+def preprocess_for_sb_ttest(data):
+    """Preprocess datainput for boxplot."""
+    metrics_by_method_to_df = defaultdict(lambda: defaultdict(lambda: list()))
+    metrics_by_method_df = defaultdict(lambda: defaultdict(lambda: list()))
+
+    for dataset, v1 in data.items():
+        for background, v2 in v1.items():
+            for database, scores in v2.items():
+                metrics_by_method_df[dataset][database + '_on_' + background] = scores
+
+    return metrics_by_method_df
+
+
+def preprocess_for_sb_boxplot(data):
+    """Preprocess datainput for boxplot."""
+    metrics_by_method_to_df = defaultdict(lambda: list())
+    metrics_by_method_df = {}
+
+    for dataset, v1 in data.items():
+        for background, v2 in v1.items():
+            for database, scores in v2.items():
+                for score in scores:
+                    metrics_by_method_to_df['Database'].append(database)
+                    metrics_by_method_to_df['Background'].append(background)
+
+                    metrics_by_method_to_df['AUROC'].append(score)
+
+        metrics_by_method_df[dataset] = pd.DataFrame(metrics_by_method_to_df)
+
+    return metrics_by_method_df
+
+
+def show_sb_box_plot(
+        data_dict,
+        x_label='',
+        y_label='',
+        y_lim=None,
+        color_palette=None
+):
+    """Plot boxplot."""
+    if y_lim is None:
+        y_lim = [0, 1]
+
+    plt.rcParams.update({'font.size': 15, 'font.weight': 'normal', 'ytick.labelsize': 'x-small'})
+
+    fig, (axs) = plt.subplots(1, len(data_dict), figsize=(17, 6))
+
+    if not isinstance(axs, np.ndarray):
+        axs = [axs]
+
+    for i, (dataset_label, dataset) in enumerate(data_dict.items()):
+        # rectangular box plot
+
+        _ = sns.boxplot(x="Database",
+                        y="AUROC",
+                        ax=axs[i],
+                        hue="Background",
+                        data=dataset,
+                        palette="Set3"
+                        )
+
+        if i == 2:
+            axs[i].legend(prop={'size': 16, 'weight': 'bold'})
+        else:
+            axs[i].get_legend().remove()
+
+        if i != 0:
+            axs[i].set_ylabel('')
+
+        fig.subplots_adjust(top=0.93)
+
+        axs[i].set_title(dataset_label, fontsize=17, fontweight="bold")
+
+    # adding horizontal grid lines
+    for i, ax in enumerate(axs):
+        ax.yaxis.grid(True)
+        ax.set_ylim(y_lim)
+
+        ax.yaxis.grid(True)
+
+        if i == 0:
+            ax.set_ylabel(y_label, fontweight="bold")
+        ax.set_xlabel(x_label, fontweight="bold")
+
+        # Rotate the tick labels and set their alignment.
+        plt.setp(ax.get_xticklabels(), size=12, rotation=-25, ha="left",
+                 rotation_mode="anchor")
+
+    plt.show()
+
+
 def fdr_barchart_three_plot(
         metrics,
         p_values_func,
         title='Statistic Test',
         x_label='',
         y_label='normalized FDR -log10(p-value)',
+        k_limit=14,
         legend=None
 ):
     """Plot FDR barchart_three_plot."""
@@ -116,7 +209,7 @@ def fdr_barchart_three_plot(
     ax.set_xticklabels(x, ha='left', rotation=-45)
     ax.legend((rects1[0], rects2[0], rects3[0]), legend)
 
-    ax.plot([-0.2, 6], [-np.math.log10(0.05), -np.math.log10(0.05)], "k--")
+    ax.plot([-0.2, k_limit], [-np.math.log10(0.05), -np.math.log10(0.05)], "k--")
 
     plt.show()
 

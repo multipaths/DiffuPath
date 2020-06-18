@@ -6,6 +6,7 @@ import itertools
 import logging
 import pickle
 import random
+from collections import defaultdict
 from statistics import mean
 
 import numpy as np
@@ -62,6 +63,16 @@ def get_labels_set_from_dict(entities):
     else:
         return set(itertools.chain.from_iterable(entities.values()))
 
+def subvert_twodim_dict(input_d: dict):
+    """Reduce dictionary dimension."""
+    d = defaultdict(lambda: defaultdict(lambda: list))
+
+    for k1, entities1 in input_d.items():
+        for k2, entities2 in entities1.items():
+            d[k2][k1] = entities2
+            d[k2] = dict(d[k2])
+
+    return dict(d)
 
 def reduce_dict_dimension(dict: dict):
     """Reduce dictionary dimension."""
