@@ -8,11 +8,9 @@ from typing import Union, Tuple
 
 import numpy as np
 from diffupy.diffuse_raw import diffuse_raw
-from diffupy.kernels import regularised_laplacian_kernel
 from diffupy.matrix import Matrix
 from diffupy.process_input import format_input_for_diffusion, process_input_data, \
     _type_dict_label_scores_dict_data_struct_check, _type_dict_label_list_data_struct_check, map_labels_input
-from pybel import get_subgraph_by_annotation_value
 from scipy import stats
 from sklearn import metrics
 from statsmodels.stats.multitest import fdrcorrection
@@ -61,7 +59,12 @@ def cross_validation_by_method(mapping_input,
         }
 
         for method, validation_set in method_validation_scores.items():
-            auroc, auprc = _get_metrics(*validation_set)
+            try:
+                auroc, auprc = _get_metrics(*validation_set)
+            except ValueError:
+                auroc, auprc = (0, 0)
+                print(f'ROC AUC unable to calculate for {validation_set}')
+
             auroc_metrics[method].append(auroc)
             auprc_metrics[method].append(auprc)
 
@@ -81,8 +84,6 @@ def cross_validation_by_subgraph(mapping_input,
 
     tmp_mapping = {}
 
-
-
     for _ in tqdm(range(k), 'Computate validation scores'):
         subgraph_validation_scores = defaultdict(lambda: defaultdict(lambda: tuple()))
 
@@ -94,7 +95,8 @@ def cross_validation_by_subgraph(mapping_input,
             if type in tmp_mapping.keys():
                 data_input_i = tmp_mapping[type]
 
-            elif (_type_dict_label_list_data_struct_check(mapping_input) or _type_dict_label_scores_dict_data_struct_check(
+            elif (_type_dict_label_list_data_struct_check(
+                    mapping_input) or _type_dict_label_scores_dict_data_struct_check(
                 mapping_input)) and type in mapping_input:
                 data_input_i = mapping_input[type]
 
@@ -107,34 +109,46 @@ def cross_validation_by_subgraph(mapping_input,
                                                 )
                 tmp_mapping[type] = data_input_i
 
+            if len(data_input_i) > 1:
+                input_diff, validation_diff = _get_random_cv_split_input_and_validation(data_input_i,
+                                                                                        kernel)
+                input_diff_universe, validation_diff_universe = _get_random_cv_split_input_and_validation(data_input_i,
+                                                                                                          universe_kernel)
 
-            input_diff, validation_diff = _get_random_cv_split_input_and_validation(data_input_i,
-                                                                                    kernel)
-            input_diff_universe, validation_diff_universe = _get_random_cv_split_input_and_validation(data_input_i,
-                                                                                                      universe_kernel)
+                scores_on_subgraph = diffuse_raw(graph=None,
+                                                 scores=input_diff,
+                                                 k=kernel,
+                                                 z=z_normalization)
+                scores_on_universe = diffuse_raw(graph=None,
+                                                 scores=input_diff_universe,
+                                                 k=universe_kernel,
+                                                 z=z_normalization)
 
-            scores_on_subgraph = diffuse_raw(graph=None,
-                                             scores=input_diff,
-                                             k=kernel,
-                                             z=z_normalization)
-            scores_on_universe = diffuse_raw(graph=None,
-                                             scores=input_diff_universe,
-                                             k=universe_kernel,
-                                             z=z_normalization)
+                subgraph_validation_scores[type]['subgraph'] = (validation_diff, scores_on_subgraph)
+                subgraph_validation_scores[type]['PathMeUniverse'] = (validation_diff_universe, scores_on_universe)
 
-            subgraph_validation_scores[type]['subgraph'] = (validation_diff, scores_on_subgraph)
-            subgraph_validation_scores[type]['PathMeUniverse'] = (validation_diff_universe, scores_on_universe)
+            else:
+                subgraph_validation_scores[type]['subgraph'] = (0, 0)
+                subgraph_validation_scores[type]['PathMeUniverse'] = (0, 0)
 
         for type, validation_set in subgraph_validation_scores.items():
-            auroc, auprc = _get_metrics(*validation_set['PathMeUniverse'])
+            if validation_set['PathMeUniverse'] == (0, 0):
+                auroc_sg, auprc_sg = (0, 0)
+                auroc_pu, auprc_pu = (0, 0)
+            else:
+                try:
+                    auroc_sg, auprc_sg = _get_metrics(*validation_set['subgraph'])
+                    auroc_pu, auprc_pu = _get_metrics(*validation_set['PathMeUniverse'])
+                except ValueError:
+                    auroc_sg, auprc_sg = (0, 0)
+                    auroc_pu, auprc_pu = (0, 0)
+                    print(f'ROC AUC unable to calculate for {validation_set}')
 
-            auroc_metrics['PathMeUniverse'][type].append(auroc)
-            auprc_metrics['PathMeUniverse'][type].append(auprc)
+            auroc_metrics['PathMeUniverse'][type].append(auroc_pu)
+            auprc_metrics['PathMeUniverse'][type].append(auprc_pu)
 
-            auroc, auprc = _get_metrics(*validation_set['subgraph'])
-
-            auroc_metrics['subgraph'][type].append(auroc)
-            auprc_metrics['subgraph'][type].append(auprc)
+            auroc_metrics['subgraph'][type].append(auroc_sg)
+            auprc_metrics['subgraph'][type].append(auprc_sg)
 
     return auroc_metrics, auprc_metrics
 
