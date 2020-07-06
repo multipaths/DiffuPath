@@ -7,7 +7,7 @@ import unittest
 from diffupath.validate_input import validate_cross_validation_input_1
 
 from diffupy.matrix import Matrix
-from diffupy.process_input import generate_categoric_input_from_labels
+from diffupy.process_input import format_categorical_input_matrix_from_label_list
 
 
 class ValidateCVInputTest(unittest.TestCase):
@@ -35,13 +35,13 @@ class ValidateCVInputTest(unittest.TestCase):
             name='Test Matrix 1'
         )
 
-        input_diffuse = generate_categoric_input_from_labels(
+        input_diffuse = format_categorical_input_matrix_from_label_list(
             set_1,
             'two out label_input',
             background_matrix,
             rows_unlabeled=set_2)
 
-        input_validate = generate_categoric_input_from_labels(
+        input_validate = format_categorical_input_matrix_from_label_list(
             set_2,
             'two out label_input',
             background_matrix
