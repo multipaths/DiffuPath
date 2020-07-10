@@ -9,7 +9,7 @@ from typing import Optional
 
 import click
 from bio2bel.constants import get_global_connection
-from diffupath.utils import reduce_dict_dimension, reduce_dict_two_dimensional
+from diffupath.utils import reduce_dict_dimension, reduce_dict_two_dimensional, subvert_twodim_dict
 from diffupy.constants import EMOJI, RAW, CSV, JSON
 from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.kernels import regularised_laplacian_kernel
@@ -301,9 +301,9 @@ def evaluate(
             k=iterations)
 
     elif comparison == BY_ENTITY_METHOD:
-        dataset1_mapping_by_entity = reduce_dict_dimension(dataset1_mapping_by_database_and_entity)
-        dataset2_mapping_by_entity = reduce_dict_dimension(dataset2_mapping_by_database_and_entity)
-        dataset3_mapping_by_entity = reduce_dict_dimension(dataset3_mapping_by_database_and_entity)
+        dataset1_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset1_mapping_by_database_and_entity))
+        dataset2_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset2_mapping_by_database_and_entity))
+        dataset3_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset3_mapping_by_database_and_entity))
 
         metrics = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: list)))
 
@@ -348,9 +348,9 @@ def evaluate(
 
 
     elif comparison == BY_ENTITY_DB:
-        dataset1_mapping_by_entity = reduce_dict_dimension(dataset1_mapping_by_database_and_entity)
-        dataset2_mapping_by_entity = reduce_dict_dimension(dataset2_mapping_by_database_and_entity)
-        dataset3_mapping_by_entity = reduce_dict_dimension(dataset3_mapping_by_database_and_entity)
+        dataset1_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset1_mapping_by_database_and_entity))
+        dataset2_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset2_mapping_by_database_and_entity))
+        dataset3_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset3_mapping_by_database_and_entity))
 
         # Pre-process kernel for subgraphs
         kernels = {parameter: regularised_laplacian_kernel(get_subgraph_by_annotation_value(graph,
@@ -368,7 +368,7 @@ def evaluate(
         for entity_type, entity_set in dataset1_mapping_by_entity.items():
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_database for {entity_type}... {EMOJI}')
-                metrics['auroc']['Dataset 1'], metrics['auprc']['Dataset 1'] = cross_validation_by_subgraph(
+                metrics[entity_type]['auroc']['Dataset 1'], metrics[entity_type]['auprc']['Dataset 1'] = cross_validation_by_subgraph(
                     entity_set,
                     kernels,
                     universe_kernel=kernel,
@@ -379,7 +379,7 @@ def evaluate(
         for entity_type, entity_set in dataset2_mapping_by_entity.items():
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_database for {entity_type}... {EMOJI}')
-                metrics['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = cross_validation_by_subgraph(
+                metrics[entity_type]['auroc']['Dataset 2'], metrics[entity_type]['auprc']['Dataset 2'] = cross_validation_by_subgraph(
                     entity_set,
                     kernels,
                     universe_kernel=kernel,
@@ -390,7 +390,7 @@ def evaluate(
         for entity_type, entity_set in dataset3_mapping_by_entity.items():
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_database for {entity_type}... {EMOJI}')
-                metrics['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = cross_validation_by_subgraph(
+                metrics[entity_type]['auroc']['Dataset 3'], metrics[entity_type]['auprc']['Dataset 3'] = cross_validation_by_subgraph(
                     entity_set,
                     kernels,
                     universe_kernel=kernel,

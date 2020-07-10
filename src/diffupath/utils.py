@@ -6,6 +6,8 @@ import itertools
 import logging
 import pickle
 import random
+import copy
+
 from collections import defaultdict
 from statistics import mean
 
@@ -53,7 +55,7 @@ def print_dict(dict_to_print, message=''):
     """Print dimension of the dictionary"""
 
     for k1, v1 in dict_to_print.items():
-        print(f'{message} {k1}: {v1} ')
+        print(f'{message} {k1}: {len(v1)} ')
 
 
 def get_labels_set_from_dict(entities):
@@ -65,20 +67,24 @@ def get_labels_set_from_dict(entities):
 
 def subvert_twodim_dict(input_d: dict):
     """Reduce dictionary dimension."""
+    dict1 = copy.deepcopy(input_d)
+
     d = defaultdict(lambda: defaultdict(lambda: list))
 
-    for k1, entities1 in input_d.items():
+    for k1, entities1 in dict1.items():
         for k2, entities2 in entities1.items():
             d[k2][k1] = entities2
             d[k2] = dict(d[k2])
 
     return dict(d)
 
-def reduce_dict_dimension(dict: dict):
+def reduce_dict_dimension(d: dict):
     """Reduce dictionary dimension."""
     reduced_dict = {}
 
-    for k1, entities1 in dict.items():
+    dict1 = copy.deepcopy(d)
+
+    for k1, entities1 in dict1.items():
         for k2, entities2 in entities1.items():
             if k1 in reduced_dict.keys():
                 reduced_dict[k1].update(entities2)
@@ -91,6 +97,7 @@ def reduce_dict_dimension(dict: dict):
 def reduce_dict_two_dimensional(d1: dict):
     """Reduce dictionary two dimension."""
     d2 = reduce_dict_dimension(d1)
+
     return {entity: entity_value
             for entity_type, entity_set in d2.items()
             for entity, entity_value in entity_set.items()
