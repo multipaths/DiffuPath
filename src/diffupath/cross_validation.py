@@ -104,7 +104,6 @@ def cross_validation_by_subgraph(mapping_input,
                 print(f'\n Mapping to {type}')
                 data_input_i = map_labels_input(input_labels=mapping_input,
                                                 background_labels=kernel.rows_labels,
-                                                check_substrings=True,
                                                 show_descriptive_stat=True
                                                 )
                 tmp_mapping[type] = data_input_i
