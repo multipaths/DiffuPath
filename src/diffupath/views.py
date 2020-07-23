@@ -106,7 +106,6 @@ def show_sb_box_plot(
         x_label='',
         y_label='',
         y_lim=None,
-        color_palette=None
 ):
     """Plot boxplot."""
     if y_lim is None:
@@ -225,6 +224,22 @@ def show_venn_diagram(
     _ = venn3(subsets=intersections_len, set_labels=set_labels)
 
     plt.show()
+
+
+def show_distribution(
+        values_type_dict,
+        title = "Input measures distribution",
+        subtitle = "distribution"
+):
+    """Show venn diagram."""
+    plt.rcParams.update({'font.size': 13, 'font.weight': 'normal', 'ytick.labelsize': 'x-small'})
+
+    fig, (axs) = plt.subplots(1, len(values_type_dict), figsize=(17, 6))
+    fig.suptitle(title)
+
+    for i, (dataset_label, dataset) in enumerate(values_type_dict.items()):
+        # rectangular box plot
+        _ = sns.distplot(a=np.asarray(list(dataset.values())), ax=axs[i]).set_title(f'{subtitle} {dataset_label}')
 
 
 def show_heatmap(
