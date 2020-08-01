@@ -223,7 +223,7 @@ def evaluate(
 
     click.secho(f'{EMOJI} Loading data for cross-validation... {EMOJI}')
 
-    MAPPING_PATH_DATASET_1 = os.path.join(data_path, 'dataset_1_mapping.json')
+    MAPPING_PATH_DATASET_1 = os.path.join(data_path, 'dataset_1_mapping_absolute_value.json')
     dataset1_mapping_by_database_and_entity = from_json(MAPPING_PATH_DATASET_1)
 
     MAPPING_PATH_DATASET_2 = os.path.join(data_path, 'dataset_2_mapping.json')
@@ -312,8 +312,8 @@ def evaluate(
         for entity_type, entity_set in dataset1_mapping_by_entity.items():
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_method for {entity_type}... {EMOJI}')
-                metrics[entity_type]['auroc']['Dataset 1'], metrics[entity_type]['auprc'][
-                    'Dataset 1'] = cross_validation_by_method(
+                metrics['auroc']['Dataset 1'][entity_type], metrics['auprc']['Dataset 1'][
+                    entity_type] = cross_validation_by_method(
                     entity_set,
                     graph,
                     kernel,
@@ -325,8 +325,8 @@ def evaluate(
         for entity_type, entity_set in dataset2_mapping_by_entity.items():
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_method for {entity_type}... {EMOJI}')
-                metrics[entity_type]['auroc']['Dataset 2'], metrics[entity_type]['auprc'][
-                    'Dataset 2'] = cross_validation_by_method(
+                metrics['auroc']['Dataset 2'][entity_type], metrics['auprc']['Dataset 2'][
+                    entity_type] = cross_validation_by_method(
                     entity_set,
                     graph,
                     kernel,
@@ -338,8 +338,8 @@ def evaluate(
         for entity_type, entity_set in dataset3_mapping_by_entity.items():
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_method for {entity_type}... {EMOJI}')
-                metrics[entity_type]['auroc']['Dataset 3'], metrics[entity_type]['auprc'][
-                    'Dataset 3'] = cross_validation_by_method(
+                metrics['auroc']['Dataset 3'][entity_type], metrics['auprc']['Dataset 3'][
+                    entity_type] = cross_validation_by_method(
                     entity_set,
                     graph,
                     kernel,
@@ -368,7 +368,8 @@ def evaluate(
         for entity_type, entity_set in dataset1_mapping_by_entity.items():
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_database for {entity_type}... {EMOJI}')
-                metrics[entity_type]['auroc']['Dataset 1'], metrics[entity_type]['auprc']['Dataset 1'] = cross_validation_by_subgraph(
+                metrics[entity_type]['auroc']['Dataset 1'], metrics[entity_type]['auprc'][
+                    'Dataset 1'] = cross_validation_by_subgraph(
                     entity_set,
                     kernels,
                     universe_kernel=kernel,
@@ -379,7 +380,8 @@ def evaluate(
         for entity_type, entity_set in dataset2_mapping_by_entity.items():
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_database for {entity_type}... {EMOJI}')
-                metrics[entity_type]['auroc']['Dataset 2'], metrics[entity_type]['auprc']['Dataset 2'] = cross_validation_by_subgraph(
+                metrics[entity_type]['auroc']['Dataset 2'], metrics[entity_type]['auprc'][
+                    'Dataset 2'] = cross_validation_by_subgraph(
                     entity_set,
                     kernels,
                     universe_kernel=kernel,
@@ -390,7 +392,8 @@ def evaluate(
         for entity_type, entity_set in dataset3_mapping_by_entity.items():
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_database for {entity_type}... {EMOJI}')
-                metrics[entity_type]['auroc']['Dataset 3'], metrics[entity_type]['auprc']['Dataset 3'] = cross_validation_by_subgraph(
+                metrics[entity_type]['auroc']['Dataset 3'], metrics[entity_type]['auprc'][
+                    'Dataset 3'] = cross_validation_by_subgraph(
                     entity_set,
                     kernels,
                     universe_kernel=kernel,
