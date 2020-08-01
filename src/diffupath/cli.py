@@ -403,7 +403,7 @@ def evaluate(
     else:
         raise ValueError("The indicated comparison method do not match any provided method.")
 
-    to_json(metrics, os.path.join(output, 'results.json'))
+    to_json(metrics, output)
 
     click.secho(f'{EMOJI} Random cross-validation performed with success. Output located at {output}... {EMOJI}')
 
