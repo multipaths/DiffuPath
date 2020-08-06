@@ -106,10 +106,13 @@ def show_sb_box_plot(
         x_label='',
         y_label='',
         y_lim=None,
+        color_palette=None
 ):
     """Plot boxplot."""
     if y_lim is None:
         y_lim = [0, 1]
+    if color_palette is None:
+        color_palette = ['royalblue', 'forestgreen', 'khaki', 'lightcoral', 'yellow', 'green']
 
     plt.rcParams.update({'font.size': 15, 'font.weight': 'normal', 'ytick.labelsize': 'x-small'})
 
@@ -126,7 +129,7 @@ def show_sb_box_plot(
                         ax=axs[i],
                         hue="Background",
                         data=dataset,
-                        palette="Set3"
+                        palette=color_palette
                         )
 
         if i == 2:
