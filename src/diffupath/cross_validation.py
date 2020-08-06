@@ -77,7 +77,7 @@ def cross_validation_by_method(mapping_input,
 def cross_validation_by_subgraph(mapping_input,
                                  kernels,
                                  universe_kernel=None,
-                                 z_normalization=False,
+                                 z_normalization=True,
                                  k=100
                                  ):
     """Cross validation by subgraph."""
