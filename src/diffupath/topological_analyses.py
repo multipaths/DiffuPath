@@ -51,8 +51,8 @@ def resistance_distance(g=None, m=None, normalized=False):
     d_lt = np.diag(lt)
 
     s_er = [x * -2
-           for x in lt
-           ] + d_lt[:, np.newaxis]
+            for x in lt
+            ] + d_lt[:, np.newaxis]
     ss_er = s_er + d_lt[np.newaxis, :]
 
     er.mat = ss_er
@@ -60,13 +60,14 @@ def resistance_distance(g=None, m=None, normalized=False):
     return er
 
 
-def filter_quadratic_mat_by_mapping(M, mapping):
+def filter_quadratic_mat_by_mapping(m, mapping):
+    """Filter a quadratic matrix."""
     d = defaultdict(lambda: defaultdict(lambda: list()))
 
     for k1, v1 in mapping.items():
         for k2, v2 in mapping.items():
             for e1 in v1[0]:
                 for e2 in v2[0]:
-                    d[k1][k2].append(M.get_cell_from_labels(e1, e2))
+                    d[k1][k2].append(m.get_cell_from_labels(e1, e2))
 
     return d
