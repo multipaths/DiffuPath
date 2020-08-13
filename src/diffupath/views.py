@@ -8,7 +8,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from diffupath.cross_validation import get_normalized_p_values
+
+from .cross_validation import get_normalized_p_values
+
 from matplotlib_venn import venn3
 
 
@@ -71,7 +73,6 @@ def show_box_plot(
 
 def preprocess_for_sb_ttest(data):
     """Preprocess datainput for boxplot."""
-    metrics_by_method_to_df = defaultdict(lambda: defaultdict(lambda: list()))
     metrics_by_method_df = defaultdict(lambda: defaultdict(lambda: list()))
 
     for dataset, v1 in data.items():
@@ -231,8 +232,8 @@ def show_venn_diagram(
 
 def show_distribution(
         values_type_dict,
-        title = "Input measures distribution",
-        subtitle = "distribution"
+        title="Input measures distribution",
+        subtitle="distribution"
 ):
     """Show venn diagram."""
     plt.rcParams.update({'font.size': 13, 'font.weight': 'normal', 'ytick.labelsize': 'x-small'})
@@ -252,6 +253,7 @@ def show_heatmap(
         entity_types,
         title="DiffuPath Mapping"
 ):
+    """Show heat-map."""
     fig, ax = plt.subplots(figsize=(15, 7))
 
     im, cbar = _generate_heatmap(entity_number, databases, entity_types, ax=ax,
@@ -276,18 +278,18 @@ def _generate_heatmap(
 ):
     """Create a heatmap from a numpy array and two lists of labels.
 
-     Optional parameters: ax: A matplotlib.axes.Axes instance to which the heatmap is plotted. If not provided, use
-     current axes or create a new one. cbar_kw: A dictionary with arguments to :meth:`matplotlib.Figure.colorbar`.
-     cbarlabel: The label for the colorbar.
+    Optional parameters: ax: A matplotlib.axes.Axes instance to which the heatmap is plotted. If not provided, use
+    current axes or create a new one. cbar_kw: A dictionary with arguments to :meth:`matplotlib.Figure.colorbar`.
+    cbarlabel: The label for the colorbar.
 
-     :param data: A 2D numpy array of shape (N,M)
-     :param row_labels: A list or array of length N with the labels for the rows
-     :param col_labels: A list or array of length N with the labels for the columns
-     :param ax: axis
-     :param cbar_kw: kwars for cbar
-     :param cbarlabel: label
-     :param title: title
-     """
+    :param data: A 2D numpy array of shape (N,M)
+    :param row_labels: A list or array of length N with the labels for the rows
+    :param col_labels: A list or array of length N with the labels for the columns
+    :param ax: axis
+    :param cbar_kw: kwars for cbar
+    :param cbarlabel: label
+    :param title: title
+    """
     if not ax:
         ax = plt.gca()
 
@@ -344,7 +346,6 @@ def _annotate_heatmap(
     :param textcolors: A list or array of two color specifications.
     :param threshold: Value in data units according to which the colors from textcolors are applied.
     """
-
     if not isinstance(data, (list, np.ndarray)):
         data = im.get_array()
 

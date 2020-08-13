@@ -12,6 +12,7 @@ from pybel.dsl import Abundance, BiologicalProcess, CentralDogma, ListAbundance,
 
 
 def calculate_database_sets_as_dict(nodes, database):
+    """Export as dict databse sets."""
     gene_nodes, mirna_nodes, metabolite_nodes, bp_nodes = calculate_database_sets(nodes, database)
     return {'gene_nodes': gene_nodes,
             'mirna_nodes': mirna_nodes,
@@ -35,7 +36,7 @@ def get_nodes_in_database(folder):
 
 
 def process_reactome_multiple_genes(genes):
-    """Process a wrong ID with multiple identifiers"""
+    """Process a wrong ID with multiple identifiers."""
     gene_list = []
 
     for counter, gene in enumerate(genes):
@@ -67,7 +68,7 @@ def process_reactome_multiple_genes(genes):
 
 
 def munge_reactome_gene(gene):
-    """Process Reactome gene"""
+    """Process/munge Reactome gene."""
     if "," in gene:
         return process_reactome_multiple_genes(gene.split(","))
 
@@ -78,10 +79,9 @@ def munge_reactome_gene(gene):
 
 
 def calculate_database_sets(nodes, database):
-    """Calculate node sets for each modality in the database"""
-
+    """Calculate node sets for each modality in the database."""
     # Entities in WikiPathways that required manual curation
-    WIKIPATHWAYS_BIOL_PROCESS = {'lipid biosynthesis', 'hsc survival', 'glycolysis & gluconeogenesis',
+    wikipathways_biol_process = {'lipid biosynthesis', 'hsc survival', 'glycolysis & gluconeogenesis',
                                  'triacylglyceride  synthesis', 'wnt canonical signaling',
                                  'regulation of actin skeleton', 'fatty acid metabolism',
                                  'mrna processing major splicing pathway', 'senescence', 'monocyte differentiation',
@@ -112,16 +112,16 @@ def calculate_database_sets(nodes, database):
                                  'inflammasome activation', 'melanin biosynthesis', 'proteasomal degradation',
                                  'g2/m checkpoint arrest', 'g1/s cell cycle transition', 'dna damage response',
                                  'gastric histamine release'}
-    WIKIPATHWAYS_METAB = {'2,8-dihydroxyadenine', '8,11-dihydroxy-delta-9-thc', 'adp-ribosyl', 'cocaethylene',
+    wikipathways_metab = {'2,8-dihydroxyadenine', '8,11-dihydroxy-delta-9-thc', 'adp-ribosyl', 'cocaethylene',
                           'dhcer1p', 'ecgonidine', 'f2-isoprostane', 'fumonisins b1', 'iodine', 'l-glutamate',
                           'lactosylceramide', 'methylecgonidine', 'n-acetyl-l-aspartate', 'nad+', 'nadph oxidase',
                           'neuromelanin', 'nicotinic acid (na)', 'nmn', 'pip2', 'sphingomyelin', 'thf'}
-    WIKIPATHWAYS_NAME_NORMALIZATION = {"Ca 2+": "ca 2+", "acetyl coa": "acetyl-coa", "acetyl-coa(mit)": "acetyl-coa",
+    wikipathways_name_normalization = {"Ca 2+": "ca 2+", "acetyl coa": "acetyl-coa", "acetyl-coa(mit)": "acetyl-coa",
                                        "h20": "h2o"}
 
     # Entities in Reactome that required manual curation
-    BLACK_LIST_REACTOME = {"5'"}
-    REACTOME_PROT = {'phospho-g2/m transition proteins', 'integrin alpha5beta1, integrin alphavbeta3, cd47',
+    black_list_reactome = {"5'"}
+    reactome_prot = {'phospho-g2/m transition proteins', 'integrin alpha5beta1, integrin alphavbeta3, cd47',
                      'food proteins', 'activated fgfr2', 'adherens junction-associated proteins',
                      'pi3k mutants,activator:pi3k', 'prolyl 3-hydroxylases', 'gpi-anchored proteins', 'c3d, c3dg, ic3b',
                      'c4s/c6s chains', 'activated fgfr1 mutants and fusions', 'activated fgfr3 mutants', 'protein',
@@ -178,7 +178,7 @@ def calculate_database_sets(nodes, database):
                     reactome_cell = munge_reactome_gene(name)
                     if isinstance(reactome_cell, list):
                         for name in reactome_cell:
-                            if name in BLACK_LIST_REACTOME:  # Filter entities in black list
+                            if name in black_list_reactome:  # Filter entities in black list
                                 continue
                             elif name.startswith("("):  # remove redundant parentheses
                                 name = name.strip("(").strip(")")
@@ -189,7 +189,7 @@ def calculate_database_sets(nodes, database):
                     continue
 
                 # WikiPathways and KEGG do not require any processing of genes
-                if name in WIKIPATHWAYS_BIOL_PROCESS:
+                if name in wikipathways_biol_process:
                     bp_nodes.add(name)
                     continue
                 gene_nodes.add(name)
@@ -202,21 +202,21 @@ def calculate_database_sets(nodes, database):
 
             if database == 'wikipathways':
                 # Biological processes that are captured as abundance in BEL since they were characterized wrong in WikiPathways
-                if name in WIKIPATHWAYS_BIOL_PROCESS:
+                if name in wikipathways_biol_process:
                     bp_nodes.add(name)
                     continue
 
-                elif node.namespace in {'WIKIDATA', 'WIKIPATHWAYS', 'REACTOME'} and name not in WIKIPATHWAYS_METAB:
+                elif node.namespace in {'WIKIDATA', 'WIKIPATHWAYS', 'REACTOME'} and name not in wikipathways_metab:
                     bp_nodes.add(name)
                     continue
 
                 # Fix naming in duplicate entity
-                if name in WIKIPATHWAYS_NAME_NORMALIZATION:
-                    name = WIKIPATHWAYS_NAME_NORMALIZATION[name]
+                if name in wikipathways_name_normalization:
+                    name = wikipathways_name_normalization[name]
 
             elif database == 'reactome':
                 # Curated proteins that were coded as metabolites
-                if name in REACTOME_PROT:
+                if name in reactome_prot:
                     gene_nodes.add(name)
                     continue
 
@@ -247,7 +247,6 @@ def calculate_database_sets(nodes, database):
 
 def get_set_database(database):
     """Return database content subsets by entity for a given db name."""
-
     if database == 'kegg':
         nodes = get_nodes_in_database(KEGG_BEL)
 
@@ -261,6 +260,7 @@ def get_set_database(database):
 
 
 def get_labels_by_db_and_omic_from_pathme(databases):
+    """Return labels by db and omic from pathme."""
     db_entites = defaultdict(dict)
     entites_db = defaultdict(lambda: defaultdict(set))
 
@@ -275,6 +275,7 @@ def get_labels_by_db_and_omic_from_pathme(databases):
 
 
 def get_labels_by_db_and_omic_from_graph(graph):
+    """Return labels by db and omic given a graph."""
     db_subsets = defaultdict(set)
     db_entites = defaultdict(dict)
     entites_db = defaultdict(dict)

@@ -9,6 +9,7 @@ import random
 import copy
 
 from collections import defaultdict
+
 from statistics import mean
 
 import numpy as np
@@ -32,7 +33,7 @@ def to_pickle(to_pickle, output):
 
 
 def print_dict_dimensions(entities_db, title='', message='Total number of '):
-    """Print dimension of the dictionary"""
+    """Print dimension of the dictionary."""
     total = set()
     m = f'{title}\n'
 
@@ -52,18 +53,19 @@ def print_dict_dimensions(entities_db, title='', message='Total number of '):
 
 
 def print_dict(dict_to_print, message=''):
-    """Print dimension of the dictionary"""
-
+    """Print dimension of the dictionary."""
     for k1, v1 in dict_to_print.items():
         print(f'{message} {k1}: {len(v1)} ')
 
 
 def get_labels_set_from_dict(entities):
+    """Return label set from entity dict values."""
     if isinstance(list(entities.values())[0], dict):
         # TODO: Check
         return set(itertools.chain.from_iterable(itertools.chain.from_iterable(entities.values())))
     else:
         return set(itertools.chain.from_iterable(entities.values()))
+
 
 def subvert_twodim_dict(input_d: dict):
     """Reduce dictionary dimension."""
@@ -77,6 +79,7 @@ def subvert_twodim_dict(input_d: dict):
             d[k2] = dict(d[k2])
 
     return dict(d)
+
 
 def reduce_dict_dimension(d: dict):
     """Reduce dictionary dimension."""
@@ -141,6 +144,7 @@ def hide_true_positives(to_split, k=0.5):
 
 
 def split_random_three_subsets(to_split):
+    """Split proportionally random-chosen a given set in three  subsets."""
     half_1 = random.sample(population=list(to_split), k=int(len(to_split) / 3))
     half_2, half_3 = split_random_two_subsets(list(set(to_split) - set(half_1)))
 
@@ -148,6 +152,7 @@ def split_random_three_subsets(to_split):
 
 
 def get_three_venn_intersections(set1, set2, set3):
+    """Get the intersection and disjunction sets from three given subsets."""
     set1, set2, set3 = set(set1), set(set2), set(set3)
     set1_set2 = set1.intersection(set2)
     set1_set3 = set1.intersection(set3)
@@ -168,12 +173,14 @@ def get_three_venn_intersections(set1, set2, set3):
 
 
 def random_disjoint_intersection_two_subsets(unique_set1, unique_set2, intersection):
+    """Split proportionaly random-chosen the intersection of two subsets and concatenate it to the disjoint part."""
     set1, set2 = split_random_two_subsets(intersection)
 
     return unique_set1 | set(set1), unique_set2 | set(set2)
 
 
 def random_disjoint_intersection_three_subsets(sets_dict):
+    """Split proportionally random-chosen the intersections of three subsets and concatenate it to the disjoint part."""
     set_labels = list(sets_dict.keys())
     set_values = list(sets_dict.values())
 
@@ -206,6 +213,7 @@ def random_disjoint_intersection_three_subsets(sets_dict):
 
 
 def get_count_and_labels_from_two_dim_dict(mapping_by_database_and_entity):
+    """Get count and raw labels from two dimensional dict."""
     db_labels = []
     types_labels = []
 
@@ -234,6 +242,7 @@ def get_count_and_labels_from_two_dim_dict(mapping_by_database_and_entity):
 
 
 def get_mean_from_two_dim_dict(d):
+    """Get a dict with the partial means of a two dimensional dict for each subset."""
     for k1, v1 in d.items():
         for k2, v2 in v1.items():
             if v2:

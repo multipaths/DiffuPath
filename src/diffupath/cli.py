@@ -9,16 +9,18 @@ from typing import Optional
 
 import click
 from bio2bel.constants import get_global_connection
-from diffupath.utils import reduce_dict_dimension, reduce_dict_two_dimensional, subvert_twodim_dict
+
 from diffupy.constants import EMOJI, RAW, CSV, JSON
 from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.kernels import regularised_laplacian_kernel
 from diffupy.process_input import process_map_and_format_input_data_for_diff
 from diffupy.process_network import get_kernel_from_network_path, process_kernel_from_file, process_graph_from_file
 from diffupy.utils import from_json, to_json
+
 from pybel import get_subgraph_by_annotation_value
 from tqdm import tqdm
 
+from .utils import reduce_dict_dimension, reduce_dict_two_dimensional, subvert_twodim_dict
 from .constants import *
 from .cross_validation import cross_validation_by_method, cross_validation_by_subgraph
 
@@ -223,14 +225,14 @@ def evaluate(
 
     click.secho(f'{EMOJI} Loading data for cross-validation... {EMOJI}')
 
-    MAPPING_PATH_DATASET_1 = os.path.join(data_path, 'dataset_1_mapping_absolute_value.json')
-    dataset1_mapping_by_database_and_entity = from_json(MAPPING_PATH_DATASET_1)
+    mapping_path_dataset_1 = os.path.join(data_path, 'dataset_1_mapping_absolute_value.json')
+    dataset1_mapping_by_database_and_entity = from_json(mapping_path_dataset_1)
 
-    MAPPING_PATH_DATASET_2 = os.path.join(data_path, 'dataset_2_mapping.json')
-    dataset2_mapping_by_database_and_entity = from_json(MAPPING_PATH_DATASET_2)
+    mapping_path_dataset_2 = os.path.join(data_path, 'dataset_2_mapping.json')
+    dataset2_mapping_by_database_and_entity = from_json(mapping_path_dataset_2)
 
-    MAPPING_PATH_DATASET_3 = os.path.join(data_path, 'dataset_3_mapping.json')
-    dataset3_mapping_by_database_and_entity = from_json(MAPPING_PATH_DATASET_3)
+    mapping_path_dataset_3 = os.path.join(data_path, 'dataset_3_mapping.json')
+    dataset3_mapping_by_database_and_entity = from_json(mapping_path_dataset_3)
 
     if comparison == BY_METHOD:
         dataset1_mapping_all_labels = reduce_dict_two_dimensional(dataset1_mapping_by_database_and_entity)
@@ -346,7 +348,6 @@ def evaluate(
                     k=iterations
                 )
 
-
     elif comparison == BY_ENTITY_DB:
         dataset1_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset1_mapping_by_database_and_entity))
         dataset2_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset2_mapping_by_database_and_entity))
@@ -398,7 +399,6 @@ def evaluate(
                     kernels,
                     universe_kernel=kernel,
                     k=iterations)
-
 
     else:
         raise ValueError("The indicated comparison method do not match any provided method.")

@@ -31,33 +31,33 @@ def generate_pagerank_baseline(graph: nx.Graph, background_mat: Matrix) -> Matri
         background_mat)
 
 
-def resistance_distance(G=None, M=None, normalized=False):
+def resistance_distance(g=None, m=None, normalized=False):
     """Calculate the resistance."""
-    if G:
-        ER = LaplacianMatrix(G, normalized)
-        add_edges_inv = 1 / G.number_of_edges()
+    if g:
+        er = LaplacianMatrix(g, normalized)
+        add_edges_inv = 1 / g.number_of_edges()
 
-    elif M:
-        ER = M
-        add_edges_inv = 1 / len(ER.rows_labels)
+    elif m:
+        er = m
+        add_edges_inv = 1 / len(er.rows_labels)
 
     else:
         raise Warning('A graph or a matrix must be given.')
 
-    LT = np.linalg.inv([x + add_edges_inv
-                        for x in ER.mat
+    lt = np.linalg.inv([x + add_edges_inv
+                        for x in er.mat
                         ]
                        )
-    dLT = np.diag(LT)
+    d_lt = np.diag(lt)
 
-    sER = [x * -2
-           for x in LT
-           ] + dLT[:, np.newaxis]
-    ssER = sER + dLT[np.newaxis, :]
+    s_er = [x * -2
+           for x in lt
+           ] + d_lt[:, np.newaxis]
+    ss_er = s_er + d_lt[np.newaxis, :]
 
-    ER.mat = ssER
+    er.mat = ss_er
 
-    return ER
+    return er
 
 
 def filter_quadratic_mat_by_mapping(M, mapping):

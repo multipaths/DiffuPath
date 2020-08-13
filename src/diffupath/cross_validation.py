@@ -97,9 +97,7 @@ def cross_validation_by_subgraph(mapping_input,
             if type in tmp_mapping.keys():
                 data_input_i = tmp_mapping[type]
 
-            elif (_type_dict_label_list_data_struct_check(
-                    mapping_input) or _type_dict_label_scores_dict_data_struct_check(
-                mapping_input)) and type in mapping_input:
+            elif (_type_dict_label_list_data_struct_check(mapping_input) or _type_dict_label_scores_dict_data_struct_check(mapping_input)) and type in mapping_input:
                 data_input_i = mapping_input[type]
 
             else:

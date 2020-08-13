@@ -26,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 def install_and_populate_database(name: str, connection: Optional[str] = None) -> Optional[str]:
     """Install biological database.
+
     :param name: The name of the databae
     :param connection: The optional database connection
     """
