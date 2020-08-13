@@ -4,10 +4,12 @@
 
 import json
 import logging
+
 import click
 
 from collections import defaultdict
 from typing import Optional
+
 from bio2bel.constants import get_global_connection
 from diffupy.constants import EMOJI, RAW, CSV, JSON
 from diffupy.diffuse import diffuse as run_diffusion

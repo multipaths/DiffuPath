@@ -251,7 +251,7 @@ def get_wilcoxon_test(metrics, dataframe=False, title=""):
 
             p_values[metrics_i][str(tuple(ch.keys()))] = p_value
 
-    if (dataframe == True):
+    if dataframe:
         df = pd.DataFrame.from_dict({(i, j): [i, j, p_values[i][j], p_values[i][j] < 0.017]
                                      for i in p_values.keys()
                                      for j in p_values[i].keys()},
