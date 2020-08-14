@@ -29,7 +29,6 @@ Installation is as easy as getting the code from `PyPI <https://pypi.python.org/
    views
    pathme_processing
    topological_analyses
-   input_mapping
 
 
 Disclaimer
