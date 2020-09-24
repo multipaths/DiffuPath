@@ -186,7 +186,7 @@ following and are described in detail in this section [*]_:
 - Select from one of four predefined collections of biological databases representing a harmonized network
 - Submit your own network [*]_ from one of the accepted formats
 
-.. [*] Please note that all networks available through DiffuPath have been generated using PyBEL v.0.13.2.
+.. [*] Please note that all networks available through DiffuPath have been generated using PyBEL v.0.13.2 [12]_.
 .. [*] If there are duplicated nodes in your network, please take a look at this `Jupyter Notebook <https://nbviewer.jupyter.org/github/multipaths/Results/blob/master/notebooks/filter_networks/solve_duplicate_labels_issue.ipynb>`_ to address the issue.
 
 Network Dumps
@@ -353,6 +353,9 @@ References
 
 .. [11] Slenter, D.N., *et al.* (2017). `WikiPathways: a multifaceted pathway database bridging metabolomics to other
    omics research <https://doi.org/10.1093/nar/gkx1064>`_. *Nucleic Acids Research*, 46(D1):D661-D667.
+   
+.. [12] Hoyt, C. T., *et al.* (2017). `PyBEL: a Computational Framework for Biological Expression Language
+       <https://doi.org/10.1093/bioinformatics/btx660>`_. *Bioinformatics*, 34(December), 1–2.
 
 .. |build| image:: https://travis-ci.com/multipaths/diffupath.svg?branch=master
     :target: https://travis-ci.com/multipaths/diffupath
