@@ -353,7 +353,7 @@ References
 
 .. [11] Slenter, D.N., *et al.* (2017). `WikiPathways: a multifaceted pathway database bridging metabolomics to other
    omics research <https://doi.org/10.1093/nar/gkx1064>`_. *Nucleic Acids Research*, 46(D1):D661-D667.
-   
+
 .. [12] Hoyt, C. T., *et al.* (2017). `PyBEL: a Computational Framework for Biological Expression Language
        <https://doi.org/10.1093/bioinformatics/btx660>`_. *Bioinformatics*, 34(December), 1–2.
 
