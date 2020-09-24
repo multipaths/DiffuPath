@@ -282,7 +282,7 @@ You can also submit your own networks in any of the following formats:
 .. _Edge: https://networkx.github.io/documentation/stable/reference/readwrite/edgelist.html
 __ Edge_
 .. _GraphML: http://graphml.graphdrawing.org
-.. _BEL: https://language.bel.bio/
+.. _BEL: https://biological-expression-language.github.io
 .. _GML: http://docs.yworks.com/yfiles/doc/developers-guide/gml.html
 
 
