@@ -2,8 +2,8 @@
    :align: center
    :target: https://diffupath.readthedocs.io/en/latest/
 
-Introduction |build| |docs|
-===========================
+Introduction |build| |docs| |zenodo|
+====================================
 DiffuPath is an analytic tool for biological networks that connects the generic label propagation algorithms from
 `DiffuPy <https://github.com/multipaths/DiffuPy/>`_ to biological networks encoded in several formats such as
 Simple Interaction Format (SIF) or `Biological Expression Language (BEL) <https://biological-expression-language.github.io>`_. For example, in the application scenario
@@ -378,3 +378,5 @@ References
 .. |pypi_license| image:: https://img.shields.io/pypi/l/diffupath.svg
     :alt: Apache-2.0
 
+..  |zenodo| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3825853.svg
+   :target: https://doi.org/10.5281/zenodo.3825853
