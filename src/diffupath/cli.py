@@ -4,14 +4,14 @@
 
 import json
 import logging
-
-import click
-
 from collections import defaultdict
 from typing import Optional
 
+import click
 from bio2bel.constants import get_global_connection
+
 from diffupath.ltoo import ltoo_by_method
+
 from diffupy.constants import EMOJI, RAW, CSV, JSON
 from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.kernels import regularised_laplacian_kernel
@@ -21,9 +21,9 @@ from diffupy.utils import from_json, to_json
 from pybel import get_subgraph_by_annotation_value
 from tqdm import tqdm
 
-from .utils import reduce_dict_dimension, reduce_dict_two_dimensional, subvert_twodim_dict
 from .constants import *
 from .repeated_holdout import cross_validation_by_method, cross_validation_by_subgraph
+from .utils import reduce_dict_dimension, reduce_dict_two_dimensional, subvert_twodim_dict
 
 logger = logging.getLogger(__name__)
 
@@ -267,7 +267,6 @@ def evaluate(
             kernel,
             k=iterations
         )
-
 
     if comparison == BY_METHOD:
         dataset1_mapping_all_labels = reduce_dict_two_dimensional(dataset1_mapping_by_database_and_entity)

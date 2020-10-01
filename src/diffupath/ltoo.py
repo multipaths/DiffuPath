@@ -76,6 +76,7 @@ def get_by_method_metrics_input_dict(
         scores_z: Matrix,
         scores_page_rank: Matrix,
         kernel: Matrix) -> Dict[str, Tuple[Matrix, Matrix]]:
+    """Get dict metric input by method."""
     return {
         'raw': (
             validation_diff,
@@ -110,7 +111,6 @@ def _get_split_by_type_input_and_validation(
         background_mat: Matrix,
         type_label: str) -> Tuple[Matrix, Matrix, Dict[str, Matrix]]:
     """Get LTOO split (One-out as diffuse input and Leave-One-Out as validation)."""
-
     input_labels = list(set(input[type_label]))
 
     all_validation_labels = list(set().union(*[v for label, v in input.items() if label != type_label]))
