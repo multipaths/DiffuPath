@@ -33,6 +33,7 @@ ensure_output_dirs()
 #: raw
 BY_METHOD = 'method'
 BY_DB = 'database'
+LTOO = 'ltoo'
 
 BY_ENTITY = 'entity'
 BY_ENTITY_METHOD = 'by_entity_method'

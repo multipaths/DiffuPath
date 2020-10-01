@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-from .cross_validation import get_normalized_p_values
+from .statistic_tests import get_normalized_p_values
 
 from matplotlib_venn import venn3
 

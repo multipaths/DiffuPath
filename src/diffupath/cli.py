@@ -11,6 +11,7 @@ from collections import defaultdict
 from typing import Optional
 
 from bio2bel.constants import get_global_connection
+from diffupath.ltoo import ltoo_by_method
 from diffupy.constants import EMOJI, RAW, CSV, JSON
 from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.kernels import regularised_laplacian_kernel
@@ -22,7 +23,7 @@ from tqdm import tqdm
 
 from .utils import reduce_dict_dimension, reduce_dict_two_dimensional, subvert_twodim_dict
 from .constants import *
-from .cross_validation import cross_validation_by_method, cross_validation_by_subgraph
+from .repeated_holdout import cross_validation_by_method, cross_validation_by_subgraph
 
 logger = logging.getLogger(__name__)
 
@@ -225,7 +226,7 @@ def evaluate(
 
     click.secho(f'{EMOJI} Loading data for cross-validation... {EMOJI}')
 
-    mapping_path_dataset_1 = os.path.join(data_path, 'dataset_1_mapping_absolute_value.json')
+    mapping_path_dataset_1 = os.path.join(data_path, 'dataset_1_mapping_absolute_value_bp.json')
     dataset1_mapping_by_database_and_entity = from_json(mapping_path_dataset_1)
 
     mapping_path_dataset_2 = os.path.join(data_path, 'dataset_2_mapping.json')
@@ -233,6 +234,40 @@ def evaluate(
 
     mapping_path_dataset_3 = os.path.join(data_path, 'dataset_3_mapping.json')
     dataset3_mapping_by_database_and_entity = from_json(mapping_path_dataset_3)
+
+    if comparison == LTOO:
+        dataset1_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset1_mapping_by_database_and_entity))
+        dataset2_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset2_mapping_by_database_and_entity))
+        dataset3_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset3_mapping_by_database_and_entity))
+
+        click.secho(f'{EMOJI} Evaluating by method... {EMOJI}')
+
+        metrics = defaultdict(lambda: defaultdict(lambda: list))
+
+        click.secho(f'{EMOJI} Running LeaveTwoOmicsOut validation for Dataset 1... {EMOJI}')
+        metrics['auroc']['Dataset 1'], metrics['auprc']['Dataset 1'] = ltoo_by_method(
+            dataset1_mapping_by_entity,
+            graph,
+            kernel,
+            k=iterations
+        )
+
+        click.secho(f'{EMOJI} Running LeaveTwoOmicsOut validation for Dataset 2... {EMOJI}')
+        metrics['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = ltoo_by_method(
+            dataset2_mapping_by_entity,
+            graph,
+            kernel,
+            k=iterations
+        )
+
+        click.secho(f'{EMOJI} Running LeaveTwoOmicsOut for Dataset 3... {EMOJI}')
+        metrics['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = ltoo_by_method(
+            dataset3_mapping_by_entity,
+            graph,
+            kernel,
+            k=iterations
+        )
+
 
     if comparison == BY_METHOD:
         dataset1_mapping_all_labels = reduce_dict_two_dimensional(dataset1_mapping_by_database_and_entity)
