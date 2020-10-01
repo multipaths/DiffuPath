@@ -4,23 +4,11 @@
 import itertools
 import math
 from collections import defaultdict
-from typing import Union, Tuple
 
-import numpy as np
 import pandas as pd
-from diffupy.diffuse_raw import diffuse_raw
-from diffupy.matrix import Matrix
-from diffupy.process_input import format_input_for_diffusion, process_input_data, \
-    _type_dict_label_scores_dict_data_struct_check, _type_dict_label_list_data_struct_check, map_labels_input
 from scipy import stats
 from scipy.stats import wilcoxon
-from sklearn import metrics
 from statsmodels.stats.multitest import fdrcorrection
-from tqdm import tqdm
-
-from .topological_analyses import generate_pagerank_baseline
-from .utils import split_random_two_subsets
-
 
 """Statistical tests"""
 
@@ -66,6 +54,7 @@ def get_normalized_p_values(p_values):
 
 
 """Wilcoxon test"""
+
 
 def get_wilcoxon_test(metrics, dataframe=False, title=""):
     """Get Wilcoxon test p_values."""
