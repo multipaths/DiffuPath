@@ -206,7 +206,7 @@ def evaluate(
         data_path: Optional[str] = os.path.join(ROOT_RESULTS_DIR, 'data', 'input_mappings'),
         graph: Optional[str] = GRAPH_PATH,
         kernel: Optional[str] = KERNEL_PATH,
-        output: Optional[str] = OUTPUT_DIR,
+        output: Optional[str] =os.path.join(OUTPUT_DIR, 'evaluation_metrics.json'),
         iterations: Optional[int] = 100,
 ):
     """Evaluate a kernel/network on one of the three presented datasets.

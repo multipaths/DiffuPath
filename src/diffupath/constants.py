@@ -40,6 +40,7 @@ BY_ENTITY_METHOD = 'by_entity_method'
 BY_ENTITY_DB = 'by_entity_db'
 
 EVALUATION_COMPARISONS = {
+    LTOO,
     BY_METHOD,
     BY_DB,
     BY_ENTITY,
