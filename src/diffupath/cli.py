@@ -9,9 +9,7 @@ from typing import Optional
 
 import click
 from bio2bel.constants import get_global_connection
-
 from diffupath.ltoo import ltoo_by_method
-
 from diffupy.constants import EMOJI, RAW, CSV, JSON
 from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.kernels import regularised_laplacian_kernel
@@ -206,7 +204,7 @@ def evaluate(
         data_path: Optional[str] = os.path.join(ROOT_RESULTS_DIR, 'data', 'input_mappings'),
         graph: Optional[str] = GRAPH_PATH,
         kernel: Optional[str] = KERNEL_PATH,
-        output: Optional[str] =os.path.join(OUTPUT_DIR, 'evaluation_metrics.json'),
+        output: Optional[str] = os.path.join(OUTPUT_DIR, 'evaluation_metrics.json'),
         iterations: Optional[int] = 100,
 ):
     """Evaluate a kernel/network on one of the three presented datasets.
@@ -219,12 +217,12 @@ def evaluate(
     :param iterations: Number of iterations of the Cross-Validation.
 
     """
-    click.secho(f'{EMOJI} Loading network for random cross-validation... {EMOJI}')
+    click.secho(f'{EMOJI} Loading network for validation... {EMOJI}')
 
     graph = process_graph_from_file(graph)
     kernel = process_kernel_from_file(kernel)
 
-    click.secho(f'{EMOJI} Loading data for cross-validation... {EMOJI}')
+    click.secho(f'{EMOJI} Loading data for validation... {EMOJI}')
 
     mapping_path_dataset_1 = os.path.join(data_path, 'dataset_1_mapping_absolute_value_bp.json')
     dataset1_mapping_by_database_and_entity = from_json(mapping_path_dataset_1)
@@ -268,7 +266,7 @@ def evaluate(
             k=iterations
         )
 
-    if comparison == BY_METHOD:
+    elif comparison == BY_METHOD:
         dataset1_mapping_all_labels = reduce_dict_two_dimensional(dataset1_mapping_by_database_and_entity)
         dataset2_mapping_all_labels = reduce_dict_two_dimensional(dataset2_mapping_by_database_and_entity)
         dataset3_mapping_all_labels = reduce_dict_two_dimensional(dataset3_mapping_by_database_and_entity)
@@ -282,21 +280,24 @@ def evaluate(
             dataset1_mapping_all_labels,
             graph,
             kernel,
-            k=iterations)
+            k=iterations
+        )
 
         click.secho(f'{EMOJI} Running cross_validation_by_method for Dataset 2... {EMOJI}')
         metrics['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = cross_validation_by_method(
             dataset2_mapping_all_labels,
             graph,
             kernel,
-            k=iterations)
+            k=iterations
+        )
 
         click.secho(f'{EMOJI} Running cross_validation_by_method for Dataset 3... {EMOJI}')
         metrics['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = cross_validation_by_method(
             dataset3_mapping_all_labels,
             graph,
             kernel,
-            k=iterations)
+            k=iterations
+        )
 
     elif comparison == BY_DB:
         dataset1_mapping_all_labels = reduce_dict_two_dimensional(dataset1_mapping_by_database_and_entity)
