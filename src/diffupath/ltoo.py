@@ -23,8 +23,8 @@ def ltoo_by_method(
         k=100
 ):
     """Cross validation by method."""
-    auroc_metrics = defaultdict(lambda: defaultdict(list))
-    auprc_metrics = defaultdict(lambda: defaultdict(list))
+    auroc_metrics = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+    auprc_metrics = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 
     for _ in tqdm(range(k)):
         for entity in mapping_input:
@@ -61,8 +61,8 @@ def ltoo_by_method(
                         auroc, auprc = (0, 0)
                         print(f'ROC AUC unable to calculate for {validation_set}')
 
-                    auroc_metrics[entity_label][method].append(auroc)
-                    auprc_metrics[entity_label][method].append(auprc)
+                    auroc_metrics[entity][entity_label][method].append(auroc)
+                    auprc_metrics[entity][entity_label][method].append(auprc)
 
     return auroc_metrics, auprc_metrics
 
