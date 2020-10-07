@@ -117,11 +117,11 @@ def _get_split_by_type_input_and_validation(
 
     stratified_validation_labels = {
         label: format_input_for_diffusion(
-            all_validation_labels,
+            enitites,
             background_mat,
             title='label_input for validation with hidden true positives'
         )
-        for label, v in input.items()
+        for label, enitites in input.items()
         if label != type_label
     }
 
