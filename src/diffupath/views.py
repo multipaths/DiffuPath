@@ -84,23 +84,22 @@ def preprocess_for_sb_ttest(data):
 
 
 def preprocess_for_sb_boxplot(data):
-    """Preprocess datainput for boxplot."""
-    metrics_by_method_to_df = defaultdict(lambda: list())
+    """Preprocess datainput for Seaborn boxplot."""
     metrics_by_method_df = {}
 
-    for dataset, v1 in data.items():
-        for background, v2 in v1.items():
-            for database, scores in v2.items():
+    for k1, v1 in data.items():
+        metrics_by_method_to_df = defaultdict(lambda: list())
+        for k2, v2 in v1.items():
+            for k3, scores in v2.items():
                 for score in scores:
-                    metrics_by_method_to_df['Database'].append(database)
-                    metrics_by_method_to_df['Background'].append(background)
+                    metrics_by_method_to_df['k2'].append(k2)
+                    metrics_by_method_to_df['k3'].append(k3)
 
-                    metrics_by_method_to_df['AUROC'].append(score)
+                    metrics_by_method_to_df['score'].append(score)
 
-        metrics_by_method_df[dataset] = pd.DataFrame(metrics_by_method_to_df)
+        metrics_by_method_df[k1] = pd.DataFrame(metrics_by_method_to_df)
 
     return metrics_by_method_df
-
 
 def show_sb_box_plot(
         data_dict,
@@ -125,10 +124,10 @@ def show_sb_box_plot(
     for i, (dataset_label, dataset) in enumerate(data_dict.items()):
         # rectangular box plot
 
-        _ = sns.boxplot(x="Database",
-                        y="AUROC",
+        _ = sns.boxplot(x="k3",
+                        y="score",
                         ax=axs[i],
-                        hue="Background",
+                        hue="k2",
                         data=dataset,
                         palette=color_palette
                         )
