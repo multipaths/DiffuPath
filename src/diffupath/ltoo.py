@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 
 """Leave two omics out validation utilities."""
+import os
 from collections import defaultdict
-from typing import Union, Tuple, Dict
+from typing import Union, Tuple, Dict, Optional
 
 import numpy as np
+from diffupath.constants import OUTPUT_DIR
 from diffupy.diffuse_raw import diffuse_raw
 from diffupy.matrix import Matrix
 from diffupy.process_input import format_input_for_diffusion
 from sklearn import metrics
 from tqdm import tqdm
+
+from diffupy.utils import to_json
 
 from .topological_analyses import generate_pagerank_baseline
 
@@ -20,11 +24,14 @@ def ltoo_by_method(
         mapping_input,
         graph,
         kernel,
-        k=100
+        k=100,
+        output: Optional[str] = os.path.join(OUTPUT_DIR, 'count_not_empty.csv')
 ):
     """Cross validation by method."""
     auroc_metrics = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     auprc_metrics = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+
+    count_not_empty = defaultdict(lambda: defaultdict(int))
 
     for _ in tqdm(range(k)):
         for entity in mapping_input:
@@ -53,6 +60,13 @@ def ltoo_by_method(
                                                                                                   scores_page_rank,
                                                                                                   kernel
                                                                                                   )
+                count_not_empty[entity][entity_label] = {
+                    method_label: (scores[0].len_not_null(), scores[1].len_not_null())
+                    for method_label, scores in method_validation_scores_by_type[entity_label].items()
+                }
+
+            to_json(count_not_empty, output)
+
             for entity_label, method_validation_scores in method_validation_scores_by_type.items():
                 for method, validation_set in method_validation_scores.items():
                     try:
