@@ -101,6 +101,7 @@ def preprocess_for_sb_boxplot(data):
 
     return metrics_by_method_df
 
+
 def show_sb_box_plot(
         data_dict,
         x_label='',

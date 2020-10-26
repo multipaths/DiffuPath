@@ -9,7 +9,6 @@ from typing import Optional
 
 import click
 from bio2bel.constants import get_global_connection
-from diffupath.ltoo import ltoo_by_method
 from diffupy.constants import EMOJI, RAW, CSV, JSON
 from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.kernels import regularised_laplacian_kernel
@@ -20,8 +19,13 @@ from pybel import get_subgraph_by_annotation_value
 from tqdm import tqdm
 
 from .constants import *
+from .ltoo import ltoo_by_method
 from .repeated_holdout import cross_validation_by_method, cross_validation_by_subgraph
-from .utils import reduce_dict_dimension, reduce_dict_two_dimensional, subvert_twodim_dict
+from .utils import (
+    reduce_dict_dimension,
+    reduce_dict_two_dimensional,
+    subvert_twodim_dict,
+)
 
 logger = logging.getLogger(__name__)
 

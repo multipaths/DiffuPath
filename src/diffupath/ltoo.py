@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
 """Leave two omics out validation utilities."""
+
 import os
 from collections import defaultdict
 from typing import Union, Tuple, Dict, Optional
 
 import numpy as np
-from diffupath.constants import OUTPUT_DIR
 from diffupy.diffuse_raw import diffuse_raw
 from diffupy.matrix import Matrix
 from diffupy.process_input import format_input_for_diffusion
 from sklearn import metrics
 from tqdm import tqdm
 
-from diffupy.utils import to_json
-
+from .constants import OUTPUT_DIR
+from .utils import to_json
 from .topological_analyses import generate_pagerank_baseline
 
 """Leave two omics out  validation datasets functions"""
