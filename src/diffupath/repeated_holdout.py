@@ -2,8 +2,9 @@
 
 """Cross-validation utilities."""
 from collections import defaultdict
-from typing import Union, Tuple
+from typing import Union, Tuple, List, Dict, Optional
 
+import networkx as nx
 import numpy as np
 from diffupy.diffuse_raw import diffuse_raw
 from diffupy.matrix import Matrix
@@ -18,12 +19,18 @@ from .utils import split_random_two_subsets
 """Random cross validation datasets functions"""
 
 
-def cross_validation_by_method(mapping_input,
-                               graph,
-                               kernel,
-                               k=100
-                               ):
-    """Cross validation by method."""
+def validation_by_method(mapping_input: Union[List, Dict[str, List]],
+                         graph: nx.Graph,
+                         kernel: Matrix,
+                         k: Optional[int] = 100
+                         ) -> Tuple[Dict[str, list], Dict[str, list]]:
+    """Repeated holdout validation by diffustion method.
+
+    :param mapping_input: List or value dictionary of labels {'label':value}.
+    :param graph: Network as a graph object.
+    :param kernel: Network as a kernel.
+    :param k: Iterations for the repeated_holdout validation.
+    """
     auroc_metrics = defaultdict(list)
     auprc_metrics = defaultdict(list)
 
@@ -67,14 +74,20 @@ def cross_validation_by_method(mapping_input,
     return auroc_metrics, auprc_metrics
 
 
-# noinspection PyArgumentList
-def cross_validation_by_subgraph(mapping_input,
-                                 kernels,
-                                 universe_kernel=None,
-                                 z_normalization=True,
-                                 k=100
-                                 ):
-    """Cross validation by subgraph."""
+def validation_by_subgraph(mapping_input,
+                           kernels: Dict[str, List[Matrix]],
+                           universe_kernel: Optional[Matrix] = None,
+                           z_normalization: Optional[bool] = True,
+                           k: Optional[int] = 100
+                           ) -> Tuple[Dict[str, Dict[str, List]], Dict[str, Dict[str, List]]]:
+    """Repeated holdout validation by subgraph.
+
+    :param mapping_input: List or value dictionary of labels {'label':value}.
+    :param kernels: Network stratified as a dictionary  {'kernel-tile':kernel}.
+    :param universe_kernel: Network as an integrated kernel.
+    :param z_normalization: Flag for the statistical normalization option.
+    :param k: Iterations for the repeated_holdout validation.
+    """
     auroc_metrics = defaultdict(lambda: defaultdict(lambda: list()))
     auprc_metrics = defaultdict(lambda: defaultdict(lambda: list()))
 
@@ -93,7 +106,7 @@ def cross_validation_by_subgraph(mapping_input,
 
             elif (_type_dict_label_list_data_struct_check(
                     mapping_input) or _type_dict_label_scores_dict_data_struct_check(
-                    mapping_input)) and type in mapping_input:
+                mapping_input)) and type in mapping_input:
                 data_input_i = mapping_input[type]
 
             else:
@@ -151,8 +164,15 @@ def cross_validation_by_subgraph(mapping_input,
 """Helper functions for random cross-validation"""
 
 
-def _generate_random_score_ranking(background_mat):
-    """Generate random scores."""
+def _generate_random_score_ranking(background_mat: Matrix) -> Matrix:
+    """Generate random scores.
+
+    :param mapping_input: List or value dictionary of labels {'label':value}.
+    :param kernels: Network stratified as a dictionary  {'kernel-tile':kernel}.
+    :param universe_kernel: Network as an integrated kernel.
+    :param z_normalization: Flag for the statistical normalization option.
+    :param k: Iterations for the repeated_holdout validation.
+    """
     return Matrix(
         mat=np.random.rand(len(background_mat.rows_labels)),
         rows_labels=background_mat.rows_labels,
@@ -163,7 +183,11 @@ def _generate_random_score_ranking(background_mat):
 def _get_random_cv_split_input_and_validation(input: Union[list, set],
                                               background_mat: Matrix
                                               ) -> Tuple[Matrix, Matrix]:
-    """Get random CV split."""
+    """Get random CV split.
+
+    :param input: Label set to split.
+    :param background_mat: Network as a kernel.
+    """
     input_labels, validation_labels = split_random_two_subsets(input)
 
     if isinstance(validation_labels, dict):
@@ -183,9 +207,17 @@ def _get_random_cv_split_input_and_validation(input: Union[list, set],
     )
 
 
-def _get_metrics(validation_labels,
-                 scores
+def _get_metrics(validation_labels: Union[Matrix, np.ndarray],
+                 scores: Union[Matrix, np.ndarray]
                  ):
-    """Return metrics."""
-    return metrics.roc_auc_score(validation_labels.mat, scores.mat), metrics.average_precision_score(
-        validation_labels.mat, scores.mat)
+    """Return metrics.
+
+    :param validation_labels: Validation scores set.
+    :param scores: Train-diffued scores set.
+    """
+    if isinstance(validation_labels, Matrix):
+        validation_labels = validation_labels.mat
+    if isinstance(scores, Matrix):
+        scores = scores.mat
+
+    return metrics.roc_auc_score(validation_labels, scores), metrics.average_precision_score(validation_labels, scores)
