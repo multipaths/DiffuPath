@@ -1,4 +1,4 @@
 Cross Validation
 ================
-.. automodule:: diffupath.cross_validation
+.. automodule:: diffupath.repeated_holdout
    :members:
