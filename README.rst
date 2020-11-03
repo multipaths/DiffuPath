@@ -4,7 +4,7 @@
 
 Introduction |build| |docs| |zenodo|
 ====================================
-DiffuPath is an analytic tool for biological networks that connects the generic label propagation algorithms from
+*DiffuPath* is an analytic tool for biological networks that connects the generic label propagation algorithms from
 `DiffuPy <https://github.com/multipaths/DiffuPy/>`_ to biological networks encoded in several formats such as
 Simple Interaction Format (SIF) or `Biological Expression Language (BEL) <https://biological-expression-language.github.io>`_. For example, in the application scenario
 presented in the paper, we use three pathway databases (i.e., KEGG, Reactome and WikiPathways) and their integrated
@@ -56,6 +56,76 @@ Requirements
     pathme
     diffupy
 
+Basic Usage
+===========
+The main required input to run diffusion using *DiffuPath* is:
+
+1) A **dataset of scores/ponderations**, which will be propagated over the integrated *PathMe* background network. (see Input Formatting below)
+
+.. image:: https://github.com/multipaths/diffupath/blob/master/docs/source/meta/DiffuPathScheme2.png
+  :width: 400
+  :alt: Alternative text
+
+For its usability, you can either:
+
+ - Use the **Command Line Interface (see down)**.
+ - Use *pythonicaly* the **functions** provided in *diffupath.cli*:
+
+.. code-block:: python3
+
+  from diffupath.cli import run
+
+  diffusion_scores = run(input_scores).to_dict()
+
+.. automodule:: diffupath.cli.run
+   :members:
+
+Customization
+-------------
+
+Network
+~~~~~~~
+You can customize the *PathMe* integrated background network:
+
+- Constructing it by selecting among the available `Biological Network Databases (see database) <https://github.com/multipaths/DiffuPath/blob/master/docs/source/database.rst>`_.
+- Filtering the default network either **by database** or **by omic**.
+
+.. code-block:: python3
+  from diffupath.cli import run
+
+  diffusion_scores = run(input_scores, filter_network_database = ['KEGG'], filter_network_omic = ['gene', 'mirna'])
+
+If you wish to use your own network, we recommend you to check the `supported network formats in DiffuPy <https://github.com/multipaths/DiffuPy/blob/master/docs/source/usage.rst>`_
+and directly use *DiffuPy*, since DiffuPath wraps it to offer diffusion with the PathMe environment networks.
+
+Methods
+~~~~~~~
+The diffusion method by default is *z*, which statistical normalization has previously shown outperformance over raw diffusion[1].
+Further parameters to adapt the propagation procedure can be provided, such as choosing among the available diffusion methods
+or providing a custom method function. See the `diffusion Methods and/or Method modularity <https://github.com/multipaths/DiffuPy/blob/master/docs/source/diffusion.rst>`_.
+
+.. code-block:: python3
+  from diffupath.cli import run
+
+  diffusion_scores_select_method = run(input_scores, method = 'raw')
+
+  from networkx import page_rank # Custom method function
+
+  diffusion_scores_custom_method = run(input_scores, method = page_rank)
+
+You can also provide your own kernel method or select among the provided in *kernels.py*, you can provide it as *kernel_method* argument.
+By default *regularised_laplacian_kernel* is used.
+
+.. code-block:: python3
+  from diffupath.cli import run
+
+  from diffupath.kernels import p_step_kernel # Custom kernel calculation function
+
+  diffusion_scores_custom_kernel_method = run(input_scores, method = 'raw', kernel_method = p_step_kernel)
+
+So *method* stands for the **diffusion process** method, and *kernel_method* for the **kernel calculation** method.
+
+
 Command Line Interface
 ----------------------
 The following commands can be used directly from your terminal:
@@ -90,6 +160,9 @@ The following command will run a diffusion method on a given network with the gi
 
 Input Data
 ----------
+
+The input is preprocessed and further mapped before the diffusion. See input mapping or or `see process_input docs <https://github.com/multipaths/DiffuPy/blob/master/docs/source/preprocessing.rst>`_ in *DiffuPy* for further details.
+Here are exposed the covered input formats for its preprocessing.
 
 You can submit your dataset in any of the following formats:
 
@@ -311,6 +384,62 @@ Custom-network example
 
 You can also take a look at our `sample networks <https://github.com/multipaths/DiffuPy/tree/master/examples/networks>`_
 folder for some examples.
+
+Input Mapping/Coverage
+----------------------
+Eventhough it is not relevant for the input user usage, it is relevant for the diffusion process assessment taking into account
+the input mapped entities over the background network, since the coverage of the input implies the actual entities-scores
+that are being diffused. In other words, only will be further processed for diffusion, the entities which label matches
+an entity in the network.
+
+The diffusion running will report the mapping as follows:
+
+.. code-block:: RST
+
+   Mapping descriptive statistics
+
+   wikipathways:
+   gene_nodes  (474, 0.1538961038961039)
+   mirna_nodes  (2, 0.046511627906976744)
+   metabolite_nodes  (12, 0.75)
+   bp_nodes  (1, 0.004464285714285714)
+   total  (489, 0.14540588760035683)
+
+   kegg:
+   gene_nodes  (1041, 0.337987012987013)
+   mirna_nodes  (3, 0.06976744186046512)
+   metabolite_nodes  (6, 0.375)
+   bp_nodes  (12, 0.05357142857142857)
+   total  (1062, 0.3157894736842105)
+
+   reactome:
+   gene_nodes  (709, 0.2301948051948052)
+   mirna_nodes  (1, 0.023255813953488372)
+   metabolite_nodes  (6, 0.375)
+   total  (716, 0.22809812042051608)
+
+   total:
+   gene_nodes  (1461, 0.4344335414808207)
+   mirna_nodes  (4, 0.0011894142134998512)
+   metabolite_nodes  (13, 0.003865596193874517)
+   bp_nodes  (13, 0.003865596193874517)
+   total  (1491, 0.4433541480820696)
+
+To graphically see the mapping coverage, you can also plot a `heatmap view of the mapping (see views) <https://github.com/multipaths/DiffuPath/blob/master/docs/source/views.rst>`_.
+To see how the mapping is performed over a input pipeline preprocessing, take a look at this `Jupyter Notebook <https://nbviewer.jupyter.org/github/multipaths/Results/blob/master/notebooks/processing_datasets/dataset_1.ipynb>`_
+or `see process_input docs <https://github.com/multipaths/DiffuPy/blob/master/docs/source/preprocessing.rst>`_ in *DiffuPy*.
+
+Output format
+-------------
+The returned format is a custom *Matrix* type, with node labels as rows and a column with the diffusion score, which can
+be exported into the following formats:
+
+.. code-block:: python3
+
+  diffusion_scores.to_dict()
+  diffusion_scores.to_df()
+  diffusion_scores.to_csv()
+  diffusion_scores.to_nx_graph()
 
 
 Disclaimer
