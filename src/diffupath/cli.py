@@ -5,14 +5,16 @@
 import json
 import logging
 from collections import defaultdict
-from typing import Optional
+from typing import Optional, Union, Callable, List
 
 import click
+import networkx as nx
 from bio2bel.constants import get_global_connection
 from diffupath.ltoo import ltoo_by_method
-from diffupy.constants import EMOJI, RAW, CSV, JSON
+from diffupy.constants import EMOJI, RAW, CSV, JSON, GRAPH_FORMATS
 from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.kernels import regularised_laplacian_kernel
+from diffupy.matrix import Matrix
 from diffupy.process_input import process_map_and_format_input_data_for_diff
 from diffupy.process_network import get_kernel_from_network_path, process_kernel_from_file, process_graph_from_file
 from diffupy.utils import from_json, to_json
@@ -20,7 +22,7 @@ from pybel import get_subgraph_by_annotation_value
 from tqdm import tqdm
 
 from .constants import *
-from .repeated_holdout import cross_validation_by_method, cross_validation_by_subgraph
+from .repeated_holdout import validation_by_method, validation_by_subgraph
 from .utils import reduce_dict_dimension, reduce_dict_two_dimensional, subvert_twodim_dict
 
 logger = logging.getLogger(__name__)
@@ -107,29 +109,46 @@ def run(
         input: str,
         network: Optional[str] = KERNEL_PATH,
         output: Optional[str] = os.path.join(OUTPUT_DIR, 'diffusion_scores_on_pathme.csv'),
-        method: Optional[str] = RAW,
+        method: Union[str, Callable] = RAW,
         binarize: Optional[bool] = False,
         threshold: Optional[float] = None,
         absolute_value: Optional[bool] = False,
         p_value: Optional[float] = 0.05,
-        format_output: Optional[str] = CSV
+        format_output: Optional[str] = CSV,
+        kernel_method: Optional[Callable] = regularised_laplacian_kernel,
+        filter_network_database: Optional[List[str]] = None,
+        filter_network_omic: Optional[List[str]] = None
 ):
     """Run a diffusion method for the provided input_scores over (by default) PathMeUniverse integrated network.
 
-    :param input: Path to a (miscellaneous format) data input to be processed/formatted.
-    :param network: Path to the network as a graph or as a kernel. By default 'KERNEL_PATH', pointing to PathMeUniverse kernel
+    :param input: Path or miscellaneous format data input to be processed/formatted.
+    :param network: Path to the network or the network Object, as a (NetworkX) graph or as a (diffuPy.Matrix) kernel. By default 'KERNEL_PATH', pointing to PathMeUniverse kernel
     :param output: Path (with file name) for the generated scores output file. By default '$OUTPUT/diffusion_scores.csv'
     :param method:  Elected method ["raw", "ml", "gm", "ber_s", "ber_p", "mc", "z"]. By default 'raw'
     :param binarize: If logFC provided in dataset, convert logFC to binary. By default False
     :param threshold: Codify node labels by applying a threshold to logFC in input. By default None
     :param absolute_value: Codify node labels by applying threshold to | logFC | in input. By default False
     :param p_value: Statistical significance. By default 0.05
-    :param format_output: Elected output format ["CSV", "JSON"]. By default "CSV"'
-
+    :param kernel_method: Callable method for kernel computation.
+    :param filter_network_database: List of selecte network databases to filter the network.
+    :param filter_network_omic: List of omic network databases to filter the network.
     """
     click.secho(f'{EMOJI} Loading graph from {network} {EMOJI}')
 
-    kernel = get_kernel_from_network_path(network)
+    if isinstance(network, str):
+        kernel = get_kernel_from_network_path(network, False,
+                                              filter_network_database,
+                                              filter_network_omic,
+                                              kernel_method)
+    elif isinstance(network, Matrix):
+        kernel = network
+    elif isinstance(network, nx.Graph):
+        kernel = kernel_method(network)
+    else:
+        raise IOError(
+            f'{EMOJI} The selected network format is not valid neither as a graph or as a kernel. Please ensure you use one of the following formats: '
+            f'{GRAPH_FORMATS}'
+        )
 
     click.secho(f'{EMOJI} Processing data input from {input}. {EMOJI}')
 
@@ -276,7 +295,7 @@ def evaluate(
         metrics = defaultdict(lambda: defaultdict(lambda: list))
 
         click.secho(f'{EMOJI} Running cross_validation_by_method for Dataset 1... {EMOJI}')
-        metrics['auroc']['Dataset 1'], metrics['auprc']['Dataset 1'] = cross_validation_by_method(
+        metrics['auroc']['Dataset 1'], metrics['auprc']['Dataset 1'] = validation_by_method(
             dataset1_mapping_all_labels,
             graph,
             kernel,
@@ -284,7 +303,7 @@ def evaluate(
         )
 
         click.secho(f'{EMOJI} Running cross_validation_by_method for Dataset 2... {EMOJI}')
-        metrics['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = cross_validation_by_method(
+        metrics['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = validation_by_method(
             dataset2_mapping_all_labels,
             graph,
             kernel,
@@ -292,7 +311,7 @@ def evaluate(
         )
 
         click.secho(f'{EMOJI} Running cross_validation_by_method for Dataset 3... {EMOJI}')
-        metrics['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = cross_validation_by_method(
+        metrics['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = validation_by_method(
             dataset3_mapping_all_labels,
             graph,
             kernel,
@@ -317,21 +336,21 @@ def evaluate(
         metrics = defaultdict(lambda: defaultdict(lambda: list))
 
         click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 1... {EMOJI}')
-        metrics['auroc']['Dataset 1'], metrics['auprc']['Dataset 1'] = cross_validation_by_subgraph(
+        metrics['auroc']['Dataset 1'], metrics['auprc']['Dataset 1'] = validation_by_subgraph(
             dataset1_mapping_all_labels,
             kernels,
             universe_kernel=kernel,
             k=iterations)
 
         click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 2... {EMOJI}')
-        metrics['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = cross_validation_by_subgraph(
+        metrics['auroc']['Dataset 2'], metrics['auprc']['Dataset 2'] = validation_by_subgraph(
             dataset2_mapping_all_labels,
             kernels,
             universe_kernel=kernel,
             k=iterations)
 
         click.secho(f'{EMOJI} Running cross_validation_by_database for Dataset 3... {EMOJI}')
-        metrics['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = cross_validation_by_subgraph(
+        metrics['auroc']['Dataset 3'], metrics['auprc']['Dataset 3'] = validation_by_subgraph(
             dataset3_mapping_all_labels,
             kernels,
             universe_kernel=kernel,
@@ -350,7 +369,7 @@ def evaluate(
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_method for {entity_type}... {EMOJI}')
                 metrics['auroc']['Dataset 1'][entity_type], metrics['auprc']['Dataset 1'][
-                    entity_type] = cross_validation_by_method(
+                    entity_type] = validation_by_method(
                     entity_set,
                     graph,
                     kernel,
@@ -363,7 +382,7 @@ def evaluate(
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_method for {entity_type}... {EMOJI}')
                 metrics['auroc']['Dataset 2'][entity_type], metrics['auprc']['Dataset 2'][
-                    entity_type] = cross_validation_by_method(
+                    entity_type] = validation_by_method(
                     entity_set,
                     graph,
                     kernel,
@@ -376,7 +395,7 @@ def evaluate(
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_method for {entity_type}... {EMOJI}')
                 metrics['auroc']['Dataset 3'][entity_type], metrics['auprc']['Dataset 3'][
-                    entity_type] = cross_validation_by_method(
+                    entity_type] = validation_by_method(
                     entity_set,
                     graph,
                     kernel,
@@ -405,7 +424,7 @@ def evaluate(
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_database for {entity_type}... {EMOJI}')
                 metrics[entity_type]['auroc']['Dataset 1'], metrics[entity_type]['auprc'][
-                    'Dataset 1'] = cross_validation_by_subgraph(
+                    'Dataset 1'] = validation_by_subgraph(
                     entity_set,
                     kernels,
                     universe_kernel=kernel,
@@ -417,7 +436,7 @@ def evaluate(
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_database for {entity_type}... {EMOJI}')
                 metrics[entity_type]['auroc']['Dataset 2'], metrics[entity_type]['auprc'][
-                    'Dataset 2'] = cross_validation_by_subgraph(
+                    'Dataset 2'] = validation_by_subgraph(
                     entity_set,
                     kernels,
                     universe_kernel=kernel,
@@ -429,7 +448,7 @@ def evaluate(
             if len(entity_set) > 2:
                 click.secho(f'{EMOJI} Running cross_validation_by_database for {entity_type}... {EMOJI}')
                 metrics[entity_type]['auroc']['Dataset 3'], metrics[entity_type]['auprc'][
-                    'Dataset 3'] = cross_validation_by_subgraph(
+                    'Dataset 3'] = validation_by_subgraph(
                     entity_set,
                     kernels,
                     universe_kernel=kernel,
