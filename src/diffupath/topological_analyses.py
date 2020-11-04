@@ -11,7 +11,8 @@ from diffupy.matrix import LaplacianMatrix, Matrix
 from diffupy.process_network import get_simple_graph_from_multigraph
 
 
-def generate_pagerank_baseline(graph: nx.Graph, background_mat: Matrix) -> Matrix:
+def generate_pagerank_baseline(graph: nx.Graph,
+                               background_mat: Matrix) -> Matrix:
     """Generate baseline results using page rank algorithm."""
     graph = get_simple_graph_from_multigraph(graph)
 
