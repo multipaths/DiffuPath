@@ -10,6 +10,7 @@ from typing import Optional, Union, Callable, List
 import click
 import networkx as nx
 from bio2bel.constants import get_global_connection
+
 from diffupath.ltoo import ltoo_by_method
 from diffupy.constants import EMOJI, RAW, CSV, JSON, GRAPH_FORMATS
 from diffupy.diffuse import diffuse as run_diffusion

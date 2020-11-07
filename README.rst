@@ -91,7 +91,6 @@ You can customize the *PathMe* integrated background network:
 - Filtering the default network either **by database** or **by omic**.
 
 .. code-block:: python3
-  from diffupath.cli import run
 
   diffusion_scores = run(input_scores, filter_network_database = ['KEGG'], filter_network_omic = ['gene', 'mirna'])
 
@@ -105,7 +104,6 @@ Further parameters to adapt the propagation procedure can be provided, such as c
 or providing a custom method function. See the `diffusion Methods and/or Method modularity <https://github.com/multipaths/DiffuPy/blob/master/docs/source/diffusion.rst>`_.
 
 .. code-block:: python3
-  from diffupath.cli import run
 
   diffusion_scores_select_method = run(input_scores, method = 'raw')
 
@@ -117,7 +115,6 @@ You can also provide your own kernel method or select among the provided in *ker
 By default *regularised_laplacian_kernel* is used.
 
 .. code-block:: python3
-  from diffupath.cli import run
 
   from diffupath.kernels import p_step_kernel # Custom kernel calculation function
 
