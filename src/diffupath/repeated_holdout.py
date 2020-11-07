@@ -105,8 +105,7 @@ def validation_by_subgraph(mapping_input,
                 data_input_i = tmp_mapping[type]
 
             elif (_type_dict_label_list_data_struct_check(
-                    mapping_input) or _type_dict_label_scores_dict_data_struct_check(
-                mapping_input)) and type in mapping_input:
+                    mapping_input) or _type_dict_label_scores_dict_data_struct_check(mapping_input)) and type in mapping_input:
                 data_input_i = mapping_input[type]
 
             else:
