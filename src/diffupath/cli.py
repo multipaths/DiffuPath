@@ -11,7 +11,7 @@ import click
 import networkx as nx
 from bio2bel.constants import get_global_connection
 
-from diffupath.ltoo import ltoo_by_method
+
 from diffupy.constants import EMOJI, RAW, CSV, JSON, GRAPH_FORMATS
 from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.kernels import regularised_laplacian_kernel
@@ -22,6 +22,7 @@ from diffupy.utils import from_json, to_json
 from pybel import get_subgraph_by_annotation_value
 from tqdm import tqdm
 
+from .ltoo import ltoo_by_method
 from .constants import *
 from .repeated_holdout import validation_by_method, validation_by_subgraph
 from .utils import reduce_dict_dimension, reduce_dict_two_dimensional, subvert_twodim_dict
