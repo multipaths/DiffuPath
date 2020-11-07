@@ -1,8 +1,9 @@
-# See: https://docs.readthedocs.io/en/latest/yaml-config.html
-build:
-    image: latest
+sphinx:
+  builder: html
+  configuration: docs/conf.py
+  fail_on_warning: false
 python:
-  version: 3.6
+  version: 3.7
   extra_requirements:
   - docs
 requirements_file: requirements-rtd.txt
