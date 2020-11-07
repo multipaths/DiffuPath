@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 
 """Leave two omics out validation utilities."""
+
 import os
 from collections import defaultdict
 from typing import Union, Tuple, Dict, Optional
 
 import numpy as np
-from diffupath.constants import OUTPUT_DIR
 from diffupy.diffuse_raw import diffuse_raw
 from diffupy.matrix import Matrix
 from diffupy.process_input import format_input_for_diffusion
 from sklearn import metrics
 from tqdm import tqdm
 
-from diffupy.utils import to_json
-
+from .constants import OUTPUT_DIR
 from .topological_analyses import generate_pagerank_baseline
 
 """Leave two omics out  validation datasets functions"""
@@ -64,8 +63,6 @@ def ltoo_by_method(
                     method_label: (scores[0].len_not_null(), scores[1].len_not_null())
                     for method_label, scores in method_validation_scores_by_type[entity_label].items()
                 }
-
-            to_json(count_not_empty, output)
 
             for entity_label, method_validation_scores in method_validation_scores_by_type.items():
                 for method, validation_set in method_validation_scores.items():
