@@ -326,7 +326,7 @@ def show_sb_box_plot(
     plt.show()
 
 
-def preprocess_for_sb_ttest(data: Dict[str:Dict[str:Dict[str:List[int]]]]):
+def preprocess_for_sb_ttest(data: Dict[str,Dict[str,Dict[str,List[int]]]]):
     """Preprocess TWO-dimensional stratified datainput for t-test data view, reducing one dimentionality.
 
     :param data: Stratified dataset of frequencies to be plotted.
@@ -341,7 +341,7 @@ def preprocess_for_sb_ttest(data: Dict[str:Dict[str:Dict[str:List[int]]]]):
     return metrics_by_method_df
 
 
-def preprocess_for_sb_boxplot(data: Dict[str:Dict[str:Dict[str:List[int]]]]):
+def preprocess_for_sb_boxplot(data: Dict[str,Dict[str,Dict[str,List[int]]]]):
     """Preprocess TWO-dimensional stratified datainput for Seaborn boxplot, converting a multiple-dimensional dictionary to a dataframe.
 
     :param data: Stratified dataset dictionary of frequencies to be plotted.
