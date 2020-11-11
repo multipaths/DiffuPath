@@ -17,7 +17,11 @@ For its usability, you can either:
 
   from diffupath.cli import run
 
-  diffusion_scores = run(input_scores).to_dict()
+  # DATA INPUT and GRAPH as PATHs -> returned as *Pandas DataFrame*
+  diffusion_scores = run('~/data/input_scores.csv', '~/data/network.csv').as_pd_dataframe()
+
+  # DATA INPUT and GRAPH as Python OBJECTS -> exported *as_csv*
+  diffusion_scores = run(input_scores, network).as_csv('~/output/diffusion_results.csv')
 
 .. automodule:: diffupath.cli.run
    :members:
@@ -309,8 +313,8 @@ be exported into the following formats:
 .. code-block:: python3
 
   diffusion_scores.to_dict()
-  diffusion_scores.to_df()
-  diffusion_scores.to_csv()
+  diffusion_scores.as_pd_dataframe()
+  diffusion_scores.as_csv()
   diffusion_scores.to_nx_graph()
 
 

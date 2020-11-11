@@ -11,7 +11,6 @@ import click
 import networkx as nx
 from bio2bel.constants import get_global_connection
 
-
 from diffupy.constants import EMOJI, RAW, CSV, JSON, GRAPH_FORMATS
 from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.kernels import regularised_laplacian_kernel
@@ -109,7 +108,7 @@ def diffusion():
 )
 def run(
         input: str,
-        network: Optional[str] = KERNEL_PATH,
+        network: Optional[str] = None,
         output: Optional[str] = os.path.join(OUTPUT_DIR, 'diffusion_scores_on_pathme.csv'),
         method: Union[str, Callable] = RAW,
         binarize: Optional[bool] = False,
@@ -136,6 +135,12 @@ def run(
     :param filter_network_omic: List of omic network databases to filter the network.
     """
     click.secho(f'{EMOJI} Loading graph from {network} {EMOJI}')
+
+    if not network:
+        if filter_network_database or filter_network_omic:
+            network = GRAPH_PATH
+        else:
+            network = KERNEL_PATH
 
     if isinstance(network, str):
         kernel = get_kernel_from_network_path(network, False,
@@ -172,7 +177,7 @@ def run(
     )
 
     if format_output == CSV:
-        results.to_csv(output)
+        results.as_csv(output)
 
     elif format_output == JSON:
         json.dump(results, output, indent=2)
