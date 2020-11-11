@@ -12,7 +12,7 @@ import networkx as nx
 from bio2bel.constants import get_global_connection
 
 
-from diffupy.constants import EMOJI, RAW, CSV, JSON, GRAPH_FORMATS
+from diffupy.constants import EMOJI, Z, CSV, JSON, GRAPH_FORMATS
 from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.kernels import regularised_laplacian_kernel
 from diffupy.matrix import Matrix
@@ -66,9 +66,9 @@ def diffusion():
 )
 @click.option(
     '-m', '--method',
-    help='Method to elect among ["raw", "ml", "gm", "ber_s", "ber_p", "mc", "z"]. By default "raw"',
+    help='Method to elect among ["raw", "ml", "gm", "ber_s", "ber_p", "mc", "z"]. By default "z"',
     type=click.Choice(METHODS),
-    default=RAW,
+    default=Z,
     show_default=True,
 )
 @click.option(
@@ -111,7 +111,7 @@ def run(
         input: str,
         network: Optional[str] = KERNEL_PATH,
         output: Optional[str] = os.path.join(OUTPUT_DIR, 'diffusion_scores_on_pathme.csv'),
-        method: Union[str, Callable] = RAW,
+        method: Union[str, Callable] = Z,
         binarize: Optional[bool] = False,
         threshold: Optional[float] = None,
         absolute_value: Optional[bool] = False,
@@ -126,7 +126,7 @@ def run(
     :param input: Path or miscellaneous format data input to be processed/formatted.
     :param network: Path to the network or the network Object, as a (NetworkX) graph or as a (diffuPy.Matrix) kernel. By default 'KERNEL_PATH', pointing to PathMeUniverse kernel
     :param output: Path (with file name) for the generated scores output file. By default '$OUTPUT/diffusion_scores.csv'
-    :param method:  Elected method ["raw", "ml", "gm", "ber_s", "ber_p", "mc", "z"]. By default 'raw'
+    :param method:  Elected method ["raw", "ml", "gm", "ber_s", "ber_p", "mc", "z"]. By default 'z'
     :param binarize: If logFC provided in dataset, convert logFC to binary. By default False
     :param threshold: Codify node labels by applying a threshold to logFC in input. By default None
     :param absolute_value: Codify node labels by applying threshold to | logFC | in input. By default False
