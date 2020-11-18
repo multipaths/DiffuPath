@@ -11,17 +11,17 @@ The main required input to run diffusion using *DiffuPath* is:
 For its usability, you can either:
 
  - Use the `Command Line Interface (see cli) <https://github.com/multipaths/DiffuPath/blob/master/docs/source/cli.rst>`_.
- - Use *pythonically* the **functions** provided in *diffupath.cli*:
+ - Use *pythonicaly* the **functions** provided in *diffupath.diffuse*:
 
 .. code-block:: python3
 
-  from diffupath.cli import run
+  from diffupath.diffuse import run_diffusion
 
   # DATA INPUT and GRAPH as PATHs -> returned as *Pandas DataFrame*
-  diffusion_scores = run('~/data/input_scores.csv', '~/data/network.csv').as_pd_dataframe()
+  diffusion_scores = run_diffusion('~/data/input_scores.csv', '~/data/network.csv').as_pd_dataframe()
 
   # DATA INPUT and GRAPH as Python OBJECTS -> exported *as_csv*
-  diffusion_scores = run(input_scores, network).as_csv('~/output/diffusion_results.csv')
+  diffusion_scores = run_diffusion(input_scores, network).as_csv('~/output/diffusion_results.csv')
 
 .. automodule:: diffupath.cli.run
    :members:

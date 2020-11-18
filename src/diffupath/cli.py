@@ -2,35 +2,33 @@
 
 """Command line interface."""
 
-import json
 import logging
 from collections import defaultdict
 from typing import Optional, Union, Callable, List
 
 import click
-import networkx as nx
 from bio2bel.constants import get_global_connection
+from diffupy.constants import EMOJI, RAW, CSV
 
-from diffupy.constants import EMOJI, Z, CSV, JSON, GRAPH_FORMATS
-from diffupy.diffuse import diffuse as run_diffusion
 from diffupy.kernels import regularised_laplacian_kernel
-from diffupy.matrix import Matrix
-from diffupy.process_input import process_map_and_format_input_data_for_diff
-from diffupy.process_network import get_kernel_from_network_path, process_kernel_from_file, process_graph_from_file
+from diffupy.process_network import process_kernel_from_file, process_graph_from_file
 from diffupy.utils import from_json, to_json
-from pybel import get_subgraph_by_annotation_value
+from pybel.struct.mutation.induction.annotations import get_subgraph_by_annotation_value
 from tqdm import tqdm
 
-from .ltoo import ltoo_by_method
 from .constants import *
+from .diffuse import run_diffusion
+from .ltoo import ltoo_by_method
 from .repeated_holdout import validation_by_method, validation_by_subgraph
 from .utils import reduce_dict_dimension, reduce_dict_two_dimensional, subvert_twodim_dict
 
 logger = logging.getLogger(__name__)
 
+GRAPHS_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'pickles', 'universe')
 GRAPH_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'pickles', 'universe',
                           'pathme_universe_non_flatten_collapsed_names_no_isolates_16_03_2020.pickle')
-KERNEL_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'kernel_regularized_pathme_universe.pickle')
+KERNELS_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels')
+KERNEL_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'Homo_sapiens_kernel_regularized_pathme_universe.pickle')
 
 
 @click.group(help='DiffuPath')
@@ -106,6 +104,28 @@ def diffusion():
     default=CSV,
     show_default=True,
 )
+@click.option(
+    '-km', '--kernel_method',
+    help='Kernel method.',
+    type=str,
+    default=regularised_laplacian_kernel,
+    show_default=True,
+)
+@click.option(
+    '-fn', '--filter_network_database',
+    help='Select among the network databases.',
+    type=str,
+)
+@click.option(
+    '-fo', '--filter_network_omic',
+    help='Select among the network omics.',
+    type=str,
+)
+@click.option(
+    '-s', '--specie',
+    help='Select among the species.',
+    type=str,
+)
 def run(
         input: str,
         network: Optional[str] = None,
@@ -116,9 +136,9 @@ def run(
         absolute_value: Optional[bool] = False,
         p_value: Optional[float] = 0.05,
         format_output: Optional[str] = CSV,
-        kernel_method: Optional[Callable] = regularised_laplacian_kernel,
         filter_network_database: Optional[List[str]] = None,
-        filter_network_omic: Optional[List[str]] = None
+        filter_network_omic: Optional[List[str]] = None,
+        specie=HSA
 ):
     """Run a diffusion method for the provided input_scores over (by default) PathMeUniverse integrated network.
 
@@ -130,59 +150,21 @@ def run(
     :param threshold: Codify node labels by applying a threshold to logFC in input. By default None
     :param absolute_value: Codify node labels by applying threshold to | logFC | in input. By default False
     :param p_value: Statistical significance. By default 0.05
-    :param kernel_method: Callable method for kernel computation.
     :param filter_network_database: List of selecte network databases to filter the network.
     :param filter_network_omic: List of omic network databases to filter the network.
     """
-    click.secho(f'{EMOJI} Loading graph from {network} {EMOJI}')
-
-    if not network:
-        if filter_network_database or filter_network_omic:
-            network = GRAPH_PATH
-        else:
-            network = KERNEL_PATH
-
-    if isinstance(network, str):
-        kernel = get_kernel_from_network_path(network, False,
-                                              filter_network_database,
-                                              filter_network_omic,
-                                              kernel_method)
-    elif isinstance(network, Matrix):
-        kernel = network
-    elif isinstance(network, nx.Graph):
-        kernel = kernel_method(network)
-    else:
-        raise IOError(
-            f'{EMOJI} The selected network format is not valid neither as a graph or as a kernel. Please ensure you use one of the following formats: '
-            f'{GRAPH_FORMATS}'
-        )
-
-    click.secho(f'{EMOJI} Processing data input from {input}. {EMOJI}')
-
-    input_scores_dict = process_map_and_format_input_data_for_diff(input,
-                                                                   kernel,
-                                                                   method,
-                                                                   binarize,
-                                                                   absolute_value,
-                                                                   p_value,
-                                                                   threshold,
-                                                                   )
-
-    click.secho(f'{EMOJI} Computing the diffusion algorithm. {EMOJI}')
-
-    results = run_diffusion(
-        input_scores_dict,
-        method,
-        k=kernel
-    )
-
-    if format_output == CSV:
-        results.as_csv(output)
-
-    elif format_output == JSON:
-        json.dump(results, output, indent=2)
-
-    click.secho(f'{EMOJI} Diffusion performed with success. Output located at {output} {EMOJI}\n')
+    run_diffusion(input,
+                  network,
+                  output,
+                  method,
+                  binarize,
+                  threshold,
+                  absolute_value,
+                  p_value,
+                  format_output,
+                  filter_network_database,
+                  filter_network_omic,
+                  specie)
 
 
 @diffusion.command()

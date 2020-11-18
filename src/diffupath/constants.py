@@ -20,6 +20,7 @@ ROOT_RESULTS_DIR = os.path.join(ROOT_RESULTS_DIR, 'Results')
 
 OUTPUT_DIR = os.path.join(ROOT_RESULTS_DIR, 'outputs')
 
+HSA = 'Homo_sapiens'
 
 def ensure_output_dirs():
     """Ensure that the output directories exists."""
