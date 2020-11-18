@@ -1,13 +1,14 @@
 BASIC USAGE
 ===========
 The main required input to run diffusion using *DiffuPath* is:
- 1) A **dataset of scores/ponderations**, which will be propagated over the integrated PathMe background network. (see Input Formatting below)
+ 1) A **network/graph**. (see Network-Input Formatting below)
+ 2) A **dataset of scores**. (see Scores-Input Formatting below)
 
 .. image:: meta/DiffuPyScheme2.png
   :width: 400
   :alt: Alternative text
 
-For its usability, you can either use the `Command Line Interface (see cli) <https://github.com/multipaths/DiffuPath/blob/master/docs/source/cli.rst>`_:
+For its usability, you can either:
 
  - Use the `Command Line Interface (see cli) <https://github.com/multipaths/DiffuPath/blob/master/docs/source/cli.rst>`_.
  - Use *pythonicaly* the **functions** provided in *diffupath.diffuse*:
@@ -44,9 +45,9 @@ and directly use DiffuPy, since *DiffuPath* wraps it to offer diffusion with the
 
 Methods
 -------
-The diffusion method by default is *z*, which statistical normalization has previously shown outperformance over raw diffusion[1].
-Further parameters to adapt the propagation procedure can be provided, such as choosing among the available diffusion methods
-or providing a custom method function. See the `diffusion Methods and/or Method modularity <https://github.com/multipaths/DiffuPy/blob/master/docs/source/diffusion.rst>`_.
+The diffusion method by default is *z*, which statistical normalization has previously shown outperformance over raw
+diffusion [1]. Further parameters to adapt the propagation procedure are also provided, such as choosing among the
+available diffusion methods or providing a custom method function. See the `diffusion Methods and/or Method modularity <https://github.com/multipaths/DiffuPy/blob/master/docs/source/diffusion.rst>`_.
 
 .. code-block:: python3
 
@@ -56,8 +57,8 @@ or providing a custom method function. See the `diffusion Methods and/or Method 
 
   diffusion_scores_custom_method = run(input_scores, method = page_rank)
 
-You can also provide your own kernel method or select among other provided in *kernels.py* function you can provide it as *kernel_method* argument.
-By default *regularised_laplacian_kernel* is used.
+You can also provide your own kernel method or select among the ones provided in *kernels.py* function which you can
+provide as a *kernel_method* argument. By default *regularised_laplacian_kernel* is used.
 
 .. code-block:: python3
 
@@ -66,118 +67,6 @@ By default *regularised_laplacian_kernel* is used.
   diffusion_scores_custom_kernel_method = run(input_scores, method = 'raw', kernel_method = p_step_kernel)
 
 So *method* stands for the **diffusion process** method, and *kernel_method* for the **kernel calculation** method.
-
-FORMATTING
-==========
-
-Before running diffusion using *DiffuPath*, take into account the **input data/scores formats**.
-You can find specified here samples of supported input scores.
-
-If you wish to use your own network, we recommend you to check the supported formats in `DiffuPy <https://github.com/multipaths/DiffuPy/blob/master/docs/source/usage.rst>`_
-and directly use DiffuPy, since *DiffuPath* wraps it to offer diffusion with the *PathMe* environment networks.
-
-Input format
-~~~~~~~~~~~~~
-Scores
---------
-You can submit your dataset in any of the following formats:
-
-- CSV (*.csv*)
-- TSV (*.tsv*)
-- *pandas.DataFrame*
-- *List*
-- *Dictionary*
-
-(check Input dataset examples)
-
-So you can **either** provide a **path** to a *.csv* or *.tsv* file:
-
-.. code-block:: python3
-
-  from diffupath.cli import run
-
-  diffusion_scores_from_file = run('~/data/diffusion_scores.csv')
-
-or **Pythonicaly** as a data structure as the *input_scores* parameter:
-
-.. code-block:: python3
-
-  data = {'Node':  ['A', 'B',...],
-        'Node Type': ['Metabolite', 'Gene',...],
-         ....
-        }
-  df = pd.DataFrame (data, columns = ['Node','Node Type',...])
-
-  diffusion_scores_from_dict = run(df)
-
-
-Please ensure that the dataset minimally has a column 'Node' containing node IDs. You can also optionally add the
-following columns to your dataset:
-
-- NodeType
-- LogFC [*]_
-- p-value
-
-.. [*] |Log| fold change
-
-.. |Log| replace:: Log\ :sub:`2`
-
-Input dataset examples
-~~~~~~~~~~~~~~~~~~~~~~
-
-BASIC USAGE
-===========
-The main required input to run diffusion using *DiffuPath* is:
-1) A **dataset of scores/ponderations**, which will be propagated over the integrated *PathMe* background network.
-
-.. image:: meta/DiffuPyScheme2.png
-  :width: 400
-  :alt: Alternative text
-
-For its usability, you can either use the `Command Line Interface (see cli) <https://github.com/multipaths/DiffuPath/blob/master/docs/source/cli.rst>`_
-or **pythonicaly** directly calling the **functions** provided in *diffupath.cli*:
-
-.. code-block:: python3
-
-  from diffupath.cli import run
-
-  diffusion_scores = run(input_scores).to_dict()
-
-.. automodule:: diffupath.cli.run
-   :members:
-
-Customization
-~~~~~~~~~~~~~
-
-Network
--------
-You can customize the *PathMe* background network:
-
-- Constructing it by selecting among the available `Biological Network Databases (see database) <https://github.com/multipaths/DiffuPath/blob/master/docs/source/database.rst>`_.
-- Filtering the default network either **by database** or **by omic**.
-
-.. code-block:: python3
-
-  diffusion_scores = run(input_scores, filter_network_database = ['KEGG'], filter_network_omic = ['gene', 'mirna'])
-
-If you wish to use your own network, we recommend you to check the supported formats in `DiffuPy <https://github.com/multipaths/DiffuPy/blob/master/docs/source/usage.rst>`_
-and directly use DiffuPy, since *DiffuPath* wraps it to offer diffusion with the *PathMe* environment networks.
-
-Methods
--------
-The diffusion method by default is *z*, which statistical normalization has previously shown outperformance over raw diffusion[1].
-Further parameters to adapt the propagation procedure can be provided, such as choosing among the available diffusion methods
-or providing a custom method function. See the `diffusion Methods and/or Method modularity <https://github.com/multipaths/DiffuPy/blob/master/docs/source/diffusion.rst>`_.
-
-.. code-block:: python3
-
-  diffusion_scores_select_method = run(input_scores, method = 'raw')
-
-  from networkx import page_rank # Custom method function
-
-  diffusion_scores_custom_method = run(input_scores, method = page_rank)
-
-
 
 FORMATTING
 ==========
@@ -214,7 +103,7 @@ So you can **either** provide a **path** to a *.csv* or *.tsv* file:
 
   diffusion_scores_from_file = run('~/data/diffusion_scores.csv')
 
-or **Pythonicaly** as a data structure as the *input_scores* parameter:
+or **Pythonically** as a data structure as the *input_scores* parameter:
 
 .. code-block:: python3
 
@@ -243,7 +132,7 @@ Input dataset examples
 
 DiffuPath accepts several input formats which can be codified in different ways. See the
 `diffusion scores <https://github.com/multipaths/DiffuPy/blob/master/docs/source/diffusion.rst>`_ summary for more
-details on how the labels input are treated accorging each available method.
+details on how the labels input are treated according to each available method.
 
 **1.** You can provide a dataset with a column 'Node' containing node IDs.
 
@@ -276,8 +165,8 @@ Also as a list of nodes:
   diffusion_scores = run(['A', 'B', 'C', 'D'])
 
 
-**2.** You can also provide a dataset with a column 'Node' containing node IDs as well as a column 'NodeType', indicating
-the entity type of the node to run diffusion by entity type.
+**2.** You can also provide a dataset with a column 'Node' containing node IDs as well as a column 'NodeType',
+indicating the entity type of the node to run diffusion by entity type.
 
 +------------+--------------+
 |     Node   |   NodeType   |
@@ -302,8 +191,8 @@ Also as a dictionary of type:list of nodes :
   diffusion_scores = run({'Genes': ['A', 'B', 'D'], 'Metabolites': ['C']}, network)
 
 
-**3.** You can also choose to provide a dataset with a column 'Node' containing node IDs as well as a column 'logFC' with
-their logFC. You may also add a 'NodeType' column to run diffusion by entity type.
+**3.** You can also choose to provide a dataset with a column 'Node' containing node IDs as well as a column 'logFC'
+with their logFC. You may also add a 'NodeType' column to run diffusion by entity type.
 
 +--------------+------------+
 | Node         |   LogFC    |
@@ -350,8 +239,8 @@ Also as a dictionary of type:node:score_value :
   diffusion_scores = run({Gene: {A:-1, B:-1, D:4}, Metabolite: {C:1.5}}, network)
 
 
-**4.** Finally, you can provide a dataset with a column 'Node' containing node IDs, a column 'logFC' with their logFC and a
-column 'p-value' with adjusted p-values. You may also add a 'NodeType' column to run diffusion by entity type.
+**4.** Finally, you can provide a dataset with a column 'Node' containing node IDs, a column 'logFC' with their logFC
+and a column 'p-value' with adjusted p-values. You may also add a 'NodeType' column to run diffusion by entity type.
 
 +--------------+------------+---------+
 | Node         |   LogFC    | p-value |
@@ -373,12 +262,12 @@ files.
 
 Input Mapping/Coverage
 ~~~~~~~~~~~~~~~~~~~~~~
-Eventhough it is not relevant for the input user usage, it is relevant for the diffusion process assessment taking into account
-the input mapped entities over the background network, since the coverage of the input implies the actual entities-scores
-that are being diffused. In other words, only will be further processed for diffusion, the entities which label matches
-an entity in the network.
+Even though it is not relevant for the input user usage, taking into account the input mapped entities over the
+background network is relevant for the diffusion process assessment, since the coverage of the input implies the actual
+entities-scores that are being diffused. In other words, only the entities whose labels match an entity in the network
+will be further processed for diffusion.
 
-The diffusion running will report the mapping as follows:
+Running diffusion will report the mapping as follows:
 
 .. code-block:: RST
 
@@ -413,7 +302,8 @@ The diffusion running will report the mapping as follows:
 
 To graphically see the mapping coverage, you can also plot a `heatmap view of the mapping (see views) <https://github.com/multipaths/DiffuPath/blob/master/docs/source/views.rst>`_.
 To see how the mapping is performed over a input pipeline preprocessing, take a look at this `Jupyter Notebook <https://nbviewer.jupyter.org/github/multipaths/Results/blob/master/notebooks/processing_datasets/dataset_1.ipynb>`_
-or `see process_input docs <https://github.com/multipaths/DiffuPy/blob/master/docs/source/preprocessing.rst>`_ in *DiffuPy*.
+or `see process_input docs <https://github.com/multipaths/DiffuPy/blob/master/docs/source/preprocessing.rst>`_ in
+*DiffuPy*.
 
 Output format
 ~~~~~~~~~~~~~
