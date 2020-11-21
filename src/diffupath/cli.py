@@ -8,7 +8,7 @@ from typing import Optional, Union, Callable, List
 
 import click
 from bio2bel.constants import get_global_connection
-from diffupy.constants import EMOJI, RAW, CSV
+from diffupy.constants import EMOJI, CSV, Z
 
 from diffupy.kernels import regularised_laplacian_kernel
 from diffupy.process_network import process_kernel_from_file, process_graph_from_file
@@ -136,9 +136,9 @@ def run(
         absolute_value: Optional[bool] = False,
         p_value: Optional[float] = 0.05,
         format_output: Optional[str] = CSV,
-        filter_network_database: Optional[List[str]] = None,
-        filter_network_omic: Optional[List[str]] = None,
-        specie=HSA
+        database: Optional[List] = None,
+        filter_network_omic: Optional[List] = None,
+        specie: Optional[str]=HSA
 ):
     """Run a diffusion method for the provided input_scores over (by default) PathMeUniverse integrated network.
 
@@ -162,7 +162,7 @@ def run(
                   absolute_value,
                   p_value,
                   format_output,
-                  filter_network_database,
+                  database,
                   filter_network_omic,
                   specie)
 
