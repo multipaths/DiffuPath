@@ -21,7 +21,8 @@ def show_heatmap(
     entity_count: List[List[int]],
     row_labels: List[int],
     col_labels: List[int],
-    title: str = "DiffuPath Mapping") -> None:
+    title: str = "DiffuPath Mapping"
+) -> None:
     """Render a heatmap from a numpy array and two lists of labels.
 
     :param entity_number: A 2D numpy array of shape (N,M).
@@ -50,7 +51,8 @@ def _generate_heatmap(
     cbar_kw: Optional[dict] = {},
     cbarlabel: Optional[str] = "",
     title: str = "",
-    **kwargs):
+    **kwargs
+):
     """Create a heatmap from a numpy array and two lists of labels.
 
     Optional parameters: ax: A matplotlib.axes.Axes instance to which the heatmap is plotted. If not provided, use
@@ -111,7 +113,8 @@ def _annotate_heatmap(
     textcolors=["black", "white"],
     entity_count=None,
     threshold=None,
-    **textkw):
+    **textkw
+):
     """Annotate a heatmap. Further parameters can be passed as textkw.
 
     :param im: The AxesImage to be labeled.
@@ -154,7 +157,8 @@ def _annotate_heatmap(
 
 def show_venn_diagram(
     intersections: Dict[str, Union[List, set]],
-    set_labels=None):
+    set_labels=None
+):
     """Render Venn Diagram to explore the intersection between different sets of labels.
 
     :param intersections: A dictionary, with set-title as keys and set-labels list as values.
@@ -174,7 +178,8 @@ def show_venn_diagram(
 def show_distribution(
     values_type_dict: Dict[str, Dict[str, int]],
     title="Input measures distribution",
-    subtitle="distribution"):
+    subtitle="distribution"
+):
     """Render a Heatmap from a numpy array and two lists of labels.
 
     :param values_type_dict: A 2D numpy array of shape (N,M)
@@ -199,7 +204,8 @@ def show_box_plot(
     x_label: str = '',
     y_label: str = '',
     y_lim: int = None,
-    color_palette: List = None):
+    color_palette: List = None
+):
     """Render a bloxpot, showing the fractioned distribution for a ONE-dimensional stratified data set of frequencies.
 
     :param data_dict: Stratified dataset of frequencies to be plotted.
@@ -262,7 +268,8 @@ def show_sb_box_plot(
     x_label: Optional[str] = '',
     y_label: Optional[str] = '',
     y_lim: Optional[Union[int, Tuple]] = None,
-    color_palette: Optional[List] = None):
+    color_palette: Optional[List] = None
+):
     """Render a (seaborn) bloxpot, showing the distribution for a TWO-dimensional stratified data set of frequencies.
 
     :param data_dict: Stratified dataset of frequencies to be plotted.
@@ -368,7 +375,8 @@ def fdr_barchart_three_plot(
     x_label: Optional[str] = '',
     y_label: Optional[str] = 'normalized FDR -log10(p-value)',
     k_limit: Optional[int] = 14,
-    legend: Optional[List[str]] = None):
+    legend: Optional[List[str]] = None
+):
     """Render FDR (Fasle Discovery Rate) barchart.
 
     :param data: Stratified dataset of frequencies to be plotted.
