@@ -23,8 +23,6 @@ For its usability, you can either:
   # DATA INPUT and GRAPH as Python OBJECTS -> exported *as_csv*
   diffusion_scores = run_diffusion(input_scores, network).as_csv('~/output/diffusion_results.csv')
 
-.. automodule:: diffupath.cli.run
-   :members:
 
 Customization
 ~~~~~~~~~~~~~
@@ -99,7 +97,7 @@ So you can **either** provide a **path** to a *.csv* or *.tsv* file:
 
 .. code-block:: python3
 
-  from diffupath.cli import run
+  from diffupath.diffuse import run_diffusion
 
   diffusion_scores_from_file = run('~/data/diffusion_scores.csv')
 
@@ -150,7 +148,7 @@ details on how the labels input are treated according to each available method.
 
 .. code-block:: python3
 
-  from diffupath.cli import run
+  from diffupath.diffuse import run_diffusion
 
   diffusion_scores = run(dataframe_nodes)
 
