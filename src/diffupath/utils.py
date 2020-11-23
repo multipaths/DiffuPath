@@ -38,6 +38,7 @@ def get_or_create_dir(path, basename=True):
     else:
         return get_files_list(path, basename)
 
+
 def get_dir_list(path, basename=False):
     """Get list of directories in path."""
     if basename:

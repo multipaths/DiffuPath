@@ -2,28 +2,26 @@
 
 """Visualization methods."""
 from collections import defaultdict
+from typing import List, Dict, Union, Optional, Tuple, Set, Callable
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-
-from .statistic_tests import get_normalized_p_values
-
 from matplotlib_venn import venn3
 
-from typing import List, Dict, Union, Optional, Tuple, Set, Callable
+from .statistic_tests import get_normalized_p_values
 
 """Process/mapping input data plots"""
 
 
 def show_heatmap(
-        entity_number: np.ndarray,
-        entity_count: List[List[int]],
-        row_labels: List[int],
-        col_labels: List[int],
-        title: str = "DiffuPath Mapping") -> None:
+    entity_number: np.ndarray,
+    entity_count: List[List[int]],
+    row_labels: List[int],
+    col_labels: List[int],
+    title: str = "DiffuPath Mapping") -> None:
     """Render a heatmap from a numpy array and two lists of labels.
 
     :param entity_number: A 2D numpy array of shape (N,M).
@@ -45,14 +43,14 @@ def show_heatmap(
 
 
 def _generate_heatmap(
-        data: np.ndarray,
-        row_labels: List[int],
-        col_labels: List[int],
-        ax=None,
-        cbar_kw: Optional[dict] = {},
-        cbarlabel: Optional[str] = "",
-        title: str = "",
-        **kwargs):
+    data: np.ndarray,
+    row_labels: List[int],
+    col_labels: List[int],
+    ax=None,
+    cbar_kw: Optional[dict] = {},
+    cbarlabel: Optional[str] = "",
+    title: str = "",
+    **kwargs):
     """Create a heatmap from a numpy array and two lists of labels.
 
     Optional parameters: ax: A matplotlib.axes.Axes instance to which the heatmap is plotted. If not provided, use
@@ -107,13 +105,13 @@ def _generate_heatmap(
 
 
 def _annotate_heatmap(
-        im,
-        data=None,
-        valfmt="{x:.2f}",
-        textcolors=["black", "white"],
-        entity_count=None,
-        threshold=None,
-        **textkw):
+    im,
+    data=None,
+    valfmt="{x:.2f}",
+    textcolors=["black", "white"],
+    entity_count=None,
+    threshold=None,
+    **textkw):
     """Annotate a heatmap. Further parameters can be passed as textkw.
 
     :param im: The AxesImage to be labeled.
@@ -155,8 +153,8 @@ def _annotate_heatmap(
 
 
 def show_venn_diagram(
-        intersections: Dict[str, Union[List, set]],
-        set_labels=None):
+    intersections: Dict[str, Union[List, set]],
+    set_labels=None):
     """Render Venn Diagram to explore the intersection between different sets of labels.
 
     :param intersections: A dictionary, with set-title as keys and set-labels list as values.
@@ -174,9 +172,9 @@ def show_venn_diagram(
 
 
 def show_distribution(
-        values_type_dict: Dict[str, Dict[str, int]],
-        title="Input measures distribution",
-        subtitle="distribution"):
+    values_type_dict: Dict[str, Dict[str, int]],
+    title="Input measures distribution",
+    subtitle="distribution"):
     """Render a Heatmap from a numpy array and two lists of labels.
 
     :param values_type_dict: A 2D numpy array of shape (N,M)
@@ -197,11 +195,11 @@ def show_distribution(
 
 
 def show_box_plot(
-        data_dict: Dict[str, Dict[str, List]],
-        x_label: str = '',
-        y_label: str = '',
-        y_lim: int = None,
-        color_palette: List = None):
+    data_dict: Dict[str, Dict[str, List]],
+    x_label: str = '',
+    y_label: str = '',
+    y_lim: int = None,
+    color_palette: List = None):
     """Render a bloxpot, showing the fractioned distribution for a ONE-dimensional stratified data set of frequencies.
 
     :param data_dict: Stratified dataset of frequencies to be plotted.
@@ -260,11 +258,11 @@ def show_box_plot(
 
 
 def show_sb_box_plot(
-        data_dict: Dict[str, Dict[str, Union[List, set]]],
-        x_label: Optional[str] = '',
-        y_label: Optional[str] = '',
-        y_lim: Optional[Union[int, Tuple]] = None,
-        color_palette: Optional[List] = None):
+    data_dict: Dict[str, Dict[str, Union[List, set]]],
+    x_label: Optional[str] = '',
+    y_label: Optional[str] = '',
+    y_lim: Optional[Union[int, Tuple]] = None,
+    color_palette: Optional[List] = None):
     """Render a (seaborn) bloxpot, showing the distribution for a TWO-dimensional stratified data set of frequencies.
 
     :param data_dict: Stratified dataset of frequencies to be plotted.
@@ -326,7 +324,7 @@ def show_sb_box_plot(
     plt.show()
 
 
-def preprocess_for_sb_ttest(data: Dict[str,Dict[str,Dict[str,List[int]]]]):
+def preprocess_for_sb_ttest(data: Dict[str, Dict[str, Dict[str, List[int]]]]):
     """Preprocess TWO-dimensional stratified datainput for t-test data view, reducing one dimentionality.
 
     :param data: Stratified dataset of frequencies to be plotted.
@@ -341,7 +339,7 @@ def preprocess_for_sb_ttest(data: Dict[str,Dict[str,Dict[str,List[int]]]]):
     return metrics_by_method_df
 
 
-def preprocess_for_sb_boxplot(data: Dict[str,Dict[str,Dict[str,List[int]]]]):
+def preprocess_for_sb_boxplot(data: Dict[str, Dict[str, Dict[str, List[int]]]]):
     """Preprocess TWO-dimensional stratified datainput for Seaborn boxplot, converting a multiple-dimensional dictionary to a dataframe.
 
     :param data: Stratified dataset dictionary of frequencies to be plotted.
@@ -364,13 +362,13 @@ def preprocess_for_sb_boxplot(data: Dict[str,Dict[str,Dict[str,List[int]]]]):
 
 
 def fdr_barchart_three_plot(
-        data: Union[Dict[str, Union[str, Union[List[int]]]], List[Union[List[int], Set[int]]]],
-        p_values_func: Callable,
-        title: Optional[str] = 'Statistic Test',
-        x_label: Optional[str] = '',
-        y_label: Optional[str] = 'normalized FDR -log10(p-value)',
-        k_limit: Optional[int] = 14,
-        legend: Optional[List[str]] = None):
+    data: Union[Dict[str, Union[str, Union[List[int]]]], List[Union[List[int], Set[int]]]],
+    p_values_func: Callable,
+    title: Optional[str] = 'Statistic Test',
+    x_label: Optional[str] = '',
+    y_label: Optional[str] = 'normalized FDR -log10(p-value)',
+    k_limit: Optional[int] = 14,
+    legend: Optional[List[str]] = None):
     """Render FDR (Fasle Discovery Rate) barchart.
 
     :param data: Stratified dataset of frequencies to be plotted.
