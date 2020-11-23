@@ -92,3 +92,30 @@ DATABASES = [
     DRUGBANK_NAME,
     GENE_ONTOLOGY_NAME,
 ]
+
+DATABASE_LINKS = {
+    'ddr': '1inyRVDGNM4XLD0ZxoAT0ekX4WfcBF29H',
+    'drugbank': '13E1mr0c-aKFaAqAW_8aQglSium0Ji0fp',
+    'gene_ontology': '1BzKSShbPMqZQpElVDd-WJGnei_fy94Qg',
+    'hsdn': '1KSP6lu76jk2B45ShGJEKId8ZkAQCtjHP',
+    'kegg': '1jiAWFeSxbu4PVApil4jBn7-IzSP5UeCr',
+    'mirtarbase': '1LNtung6mWp1azqBSx8KKKCzki7M4l--8',
+    'reactome': '19u1rlhGkN2UACNcMMf6sXyVOzjcVww2t',
+    'sider': '1izVj2MneOh5y8DHTEaUPGUNgyFdS7MQM',
+    'wikipathways': '1WUOWsA3dCgDgSsA-N3gXNF7Lb9U1LWdD',
+    'pathme': '1WUOWsA3dCgDgSsA-N3gXNF7Lb9U1LWdD',
+    'pathme_drugbank': '1jxTBRF3pzhssYpL_3D3Gw46szPnjdSiU',
+    'pathme_mirtarbase': '1qt_a0R_DpCEBGVXZMywKpr7sKEOShXB3',
+}
+
+
+
+PATHME_DRUGBANK=frozenset(['kegg', 'reactome', 'wikipathways'])
+PATHME_MIRTARBASE=frozenset(['kegg', 'reactome', 'wikipathways'])
+PATHME_DB=frozenset(['kegg', 'reactome', 'wikipathways'])
+
+PATHME_MAPPING = {
+    PATHME_DB: 'pathme',
+    PATHME_DRUGBANK:'pathme_drugbank',
+    PATHME_MIRTARBASE:'pathme_mirtarbase',
+}

@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 """Miscellaneous utils of the package."""
-
+import copy
 import itertools
 import logging
+import os
 import pickle
 import random
-import copy
 from collections import defaultdict
+from glob import glob
 from statistics import mean
 
 import numpy as np
@@ -28,6 +29,35 @@ def to_pickle(to_pickle, output):
     """Write pickle."""
     with open(output, 'wb') as file:
         pickle.dump(to_pickle, file)
+
+
+def get_or_create_dir(path, basename=True):
+    """If a folder in path exist retrieve list of files, else create folder."""
+    if not os.path.exists(path):
+        os.makedirs(path)
+    else:
+        return get_files_list(path, basename)
+
+def get_dir_list(path, basename=False):
+    """Get list of directories in path."""
+    if basename:
+        return [os.path.basename(os.path.normpath(f)) for f in glob(os.path.join(path, "*")) if os.path.isdir(f)]
+    else:
+        return [f for f in glob(os.path.join(path, "*")) if os.path.isdir(f)]
+
+
+def get_files_list(path, basename=False):
+    """Get list of files in path."""
+    if basename:
+        return [os.path.basename(os.path.normpath(f)) for f in glob(os.path.join(path, "*")) if os.path.isfile(f)]
+    else:
+        return [f for f in glob(os.path.join(path, "*")) if os.path.isfile(f)]
+
+
+def get_last_file(path):
+    """Get last file."""
+    list_of_files = glob(os.path.join(path, '*'))
+    return max(list_of_files, key=os.path.getctime)
 
 
 def print_dict_dimensions(entities_db, title='', message='Total number of '):
