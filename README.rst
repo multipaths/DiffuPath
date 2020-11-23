@@ -81,8 +81,6 @@ For its usability, you can either:
   # DATA INPUT and GRAPH as Python OBJECTS -> exported *as_csv*
   diffusion_scores = run_diffusion(input_scores, network).as_csv('~/output/diffusion_results.csv')
 
-.. automodule:: diffupath.diffuse
-   :members:
 
 Customization
 -------------
