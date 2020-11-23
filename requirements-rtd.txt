@@ -18,3 +18,4 @@ sphinx
 sphinx-rtd-theme
 sphinx-click
 sphinx-autodoc-typehints
+google_drive_downloader

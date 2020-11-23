@@ -13,10 +13,14 @@ from diffupy.diffuse import diffuse
 from diffupy.kernels import regularised_laplacian_kernel
 from diffupy.matrix import Matrix
 from diffupy.process_input import process_map_and_format_input_data_for_diff
-from diffupy.process_network import get_kernel_from_network_path
-from pathme.cli import generate_universe
+from diffupy.process_network import get_kernel_from_network_path, process_graph_from_file, get_kernel_from_graph, \
+    filter_graph
+from google_drive_downloader import GoogleDriveDownloader as gdd
+from pathme.cli import generate_universe, universe
+from pybel.struct import get_subgraph_by_annotation_value
 
 from .constants import *
+from .utils import get_or_create_dir, to_pickle, get_files_list
 
 logger = logging.getLogger(__name__)
 
@@ -59,36 +63,36 @@ def run_diffusion(
     :param specie: Specie id name to retrieve network and perform diffusion on.
     """
 
+    click.secho(f'{EMOJI} Loading network {EMOJI}')
+
     if not network:
         if specie != HSA:
-            click.secho(f'{EMOJI} Loading and processing specie {specie} network for KEGG, Reactome and WP. {EMOJI}')
-            for _, _, files in os.walk(os.path.abspath(KERNELS_PATH)):
-                kernel_file = '_'.join([specie, 'kernel_regularized_pathme_universe.pickle'])
-                if kernel_file in files:
-                    network = os.path.join(KERNELS_PATH, kernel_file)
-                else:
-                    for _, _, files in os.walk(os.path.abspath(GRAPHS_PATH)):
-                        graph_file = '_'.join([specie, 'pathme_universe.pickle'])
-                        if graph_file not in files:
-                            generate_universe(specie=specie)
-                        network = os.path.join(GRAPHS_PATH, graph_file)
-                        break
-                break
-        else:
-            if filter_network_database or filter_network_omic:
-                network = GRAPH_PATH
-            else:
-                network = KERNEL_PATH
+            if database and isinstance(database, str):
+                database = [database]
 
-    click.secho(f'{EMOJI} Loading network ')
+            if not database or len(set(database).intersection(PATHME_DB)) == len(database):
+                network = _process_network_specie(specie)
+            else:
+                raise ValueError('Species only covered within PathMe Database.')
+
+        elif database:
+            if isinstance(database, str):
+                network = _pipeline_network_single_database(database, kernel_method, filter_network_omic)
+            elif isinstance(database, list):
+                network = _pipeline_network_multiple_database(database, kernel_method, filter_network_omic)
+            else:
+                raise ValueError('Database selection only as a list or string within available Databases.')
+        else:
+            network = KERNEL_PATH
 
     if isinstance(network, str):
-        click.secho(f'from {network} {EMOJI}')
+        click.secho(f'{EMOJI}Loading from {network} {EMOJI}')
 
         kernel = get_kernel_from_network_path(network, False,
-                                              filter_network_database,
-                                              filter_network_omic,
-                                              kernel_method)
+                                              filter_network_database=database,
+                                              filter_network_omic=filter_network_omic,
+                                              kernel_method=kernel_method)
+
     elif isinstance(network, Matrix):
         kernel = network
     else:
@@ -132,4 +136,164 @@ def run_diffusion(
     elif format_output == JSON:
         json.dump(results, output, indent=2)
 
-    click.secho(f'{EMOJI} Diffusion performed with success. Output located at {output} {EMOJI}\n')
+    click.secho(f'{EMOJI} utput located at {output} {EMOJI}\n')
+
+
+"""Pipeline for process/generate network either by given specie, database or enntity-type/omic."""
+
+
+def _process_network_specie(specie: str) -> str:
+    """Process network by specie."""
+    click.secho(
+        f'{EMOJI} Loading and processing specie {specie} network for KEGG, Reactome and WP. {EMOJI}')
+    files = get_files_list(path=os.path.join(KERNELS_PATH, universe))
+
+    kernel_file = f'{specie}_kernel_regularized_pathme_universe.pickle'
+
+    if kernel_file in files:
+        network = os.path.join(KERNELS_PATH, kernel_file)
+    else:
+        files = get_files_list(path=GRAPHS_PATH)
+        graph_file = f'{specie}_pathme_universe.pickle'
+
+        if graph_file not in files:
+            generate_universe(specie=specie)
+
+        network = os.path.join(GRAPHS_PATH, graph_file)
+
+    return network
+
+
+def _pipeline_network_single_database(database: str, kernel_method: Callable,
+                                      filter_network_omic: Union[List, str]) -> Union[Matrix, str]:
+    """Process network for a single database."""
+    network = None
+
+    db_norm = database.lower().replace(' ', '_')
+
+    if db_norm in list(DATABASE_LINKS.keys()):
+        if db_norm in list(PATHME_MAPPING.values()):
+            folder = 'pathme'
+        else:
+            folder = 'by_db'
+
+        kernels_db_path = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', folder)
+        kernels_files_list = get_or_create_dir(kernels_db_path)
+
+        for kernel in kernels_files_list:
+            if db_norm in kernel or db_norm == kernel:
+                network = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', folder, f'{db_norm}.pickle')
+                break
+
+        if not network:
+            network = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', folder, f'{db_norm}.pickle')
+            gdd.download_file_from_google_drive(file_id=DATABASE_LINKS[db_norm],
+                                                dest_path=network,
+                                                unzip=True)
+
+    elif db_norm in PATHME_DB:
+        graph_db_path = os.path.join(DEFAULT_DIFFUPATH_DIR, 'graphs', 'by_db')
+        graphs_files_list = get_or_create_dir(graph_db_path)
+
+        if graphs_files_list:
+            for graph in graphs_files_list:
+                if db_norm in graph or db_norm == graph:
+                    network = os.path.join(DEFAULT_DIFFUPATH_DIR, 'graphs', 'by_db', f'{db_norm}.pickle')
+
+        if not network:
+            graph = process_graph_from_file(GRAPH_PATH)
+            network = get_subgraph_by_annotation_value(graph,
+                                                       'database',
+                                                       db_norm
+                                                       )
+            to_pickle(network, os.path.join(DEFAULT_DIFFUPATH_DIR, 'graphs', 'by_db', f'{db_norm}.pickle'))
+
+            if not filter_network_omic:
+                click.secho(f'{EMOJI}Generating kernel from {GRAPH_PATH} {EMOJI}')
+                network = get_kernel_from_graph(network, kernel_method)
+                click.secho(f'{EMOJI}Kernel generated {EMOJI}')
+
+                to_pickle(network,
+                          os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'by_db', f'{db_norm}.pickle'))
+
+    else:
+        raise ValueError(
+            f'Specified Database not found. Please check among the available databases: {list(DATABASE_LINKS.keys())}')
+
+    return network
+
+
+def _pipeline_network_multiple_database(database: List[str], kernel_method: Callable,
+                                        filter_network_omic: Union[List, str]) -> Union[Matrix, str]:
+    """Process network for a multiple database."""
+    network = None
+
+    db_norm = frozenset([db.lower().replace(' ', '_') for db in database])
+
+    if db_norm in list(PATHME_MAPPING.keys()):
+        db_norm = PATHME_MAPPING[db_norm]
+
+        kernels_db_path = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'pathme')
+        kernels_files_list = get_or_create_dir(kernels_db_path)
+
+        for kernel in kernels_files_list:
+            if db_norm in kernel or db_norm == kernel:
+                network = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'by_db', f'{db_norm}.pickle')
+                break
+
+        if not network:
+            network = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'by_db', f'{db_norm}.pickle')
+            gdd.download_file_from_google_drive(file_id=DATABASE_LINKS[db_norm],
+                                                dest_path=network,
+                                                unzip=True)
+    else:
+        intersecc_db = db_norm.intersection(PATHME_DB)
+        intersecc_db_str = ''
+
+        for db_name in intersecc_db:
+            intersecc_db_str += f'_{db_name}'
+
+        if intersecc_db:
+
+            kernels_db_path = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'by_db')
+            kernels_files_list = get_or_create_dir(kernels_db_path)
+
+            for kernel_file in kernels_files_list:
+                if intersecc_db_str == kernel_file:
+                    network = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'by_db',
+                                           f'{intersecc_db_str}.pickle')
+                    break
+
+            if not network:
+                graph_db_path = os.path.join(DEFAULT_DIFFUPATH_DIR, 'graphs', 'by_db')
+                graphs_files_list = get_or_create_dir(graph_db_path)
+
+                if graphs_files_list:
+                    for graph_file in graphs_files_list:
+                        if f'{intersecc_db_str}.pickle' == graph_file:
+                            network = os.path.join(DEFAULT_DIFFUPATH_DIR, 'graphs', 'by_db',
+                                                   f'{intersecc_db_str}.pickle')
+                            break
+
+                if not network:
+                    graph = process_graph_from_file(GRAPH_PATH)
+                    network = get_subgraph_by_annotation_value(graph,
+                                                               'database',
+                                                               intersecc_db
+                                                               )
+                    to_pickle(network, os.path.join(DEFAULT_DIFFUPATH_DIR, 'graphs', 'by_db',
+                                                    f'{intersecc_db_str}.pickle'))
+
+                    if not filter_network_omic:
+                        click.secho(f'{EMOJI}Generating kernel from {GRAPH_PATH} {EMOJI}')
+                        network = get_kernel_from_graph(network, kernel_method)
+                        click.secho(f'{EMOJI}Kernel generated {EMOJI}')
+
+                        to_pickle(network, os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'by_db',
+                                                        f'{db_norm}.pickle'))
+
+        else:
+            raise ValueError(
+                'Subgraph filtering by database only supported for PathMe network (KEGG, Reactome and Wikipathways).')
+
+    return network
