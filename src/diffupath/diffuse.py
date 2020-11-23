@@ -15,7 +15,7 @@ from diffupy.matrix import Matrix
 from diffupy.process_input import process_map_and_format_input_data_for_diff
 from diffupy.process_network import get_kernel_from_network_path, process_graph_from_file, get_kernel_from_graph, \
     filter_graph
-from google_drive_downloader import GoogleDriveDownloader as gdd
+from google_drive_downloader import GoogleDriveDownloader
 from pathme.cli import generate_universe, universe
 from pybel.struct import get_subgraph_by_annotation_value
 
@@ -33,19 +33,19 @@ KERNEL_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'Homo_sapiens_kerne
 
 
 def run_diffusion(
-        input: str,
-        network: Optional[str] = None,
-        output: Optional[str] = None,
-        method: Union[str, Callable] = RAW,
-        binarize: Optional[bool] = False,
-        threshold: Optional[float] = None,
-        absolute_value: Optional[bool] = False,
-        p_value: Optional[float] = 0.05,
-        format_output: Optional[str] = None,
-        kernel_method: Optional[Callable] = regularised_laplacian_kernel,
-        database: Optional[Union[List[str], str]] = None,
-        filter_network_omic: Optional[List[str]] = None,
-        specie: Optional[str] = HSA
+    input: str,
+    network: Optional[str] = None,
+    output: Optional[str] = None,
+    method: Union[str, Callable] = RAW,
+    binarize: Optional[bool] = False,
+    threshold: Optional[float] = None,
+    absolute_value: Optional[bool] = False,
+    p_value: Optional[float] = 0.05,
+    format_output: Optional[str] = None,
+    kernel_method: Optional[Callable] = regularised_laplacian_kernel,
+    database: Optional[Union[List[str], str]] = None,
+    filter_network_omic: Optional[List[str]] = None,
+    specie: Optional[str] = HSA
 ):
     """Run a diffusion method for the provided input_scores over (by default) PathMeUniverse integrated network.
 
@@ -62,7 +62,6 @@ def run_diffusion(
     :param filter_network_omic: List of omic network databases to filter the network.
     :param specie: Specie id name to retrieve network and perform diffusion on.
     """
-
     click.secho(f'{EMOJI} Loading network {EMOJI}')
 
     if not network:
@@ -187,9 +186,9 @@ def _pipeline_network_single_database(database: str, kernel_method: Callable,
 
         if not network:
             network = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', folder, f'{db_norm}.pickle')
-            gdd.download_file_from_google_drive(file_id=DATABASE_LINKS[db_norm],
-                                                dest_path=network,
-                                                unzip=True)
+            GoogleDriveDownloader.download_file_from_google_drive(file_id=DATABASE_LINKS[db_norm],
+                                                                  dest_path=network,
+                                                                  unzip=True)
 
     elif db_norm in PATHME_DB:
         graph_db_path = os.path.join(DEFAULT_DIFFUPATH_DIR, 'graphs', 'by_db')

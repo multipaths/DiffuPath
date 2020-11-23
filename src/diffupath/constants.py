@@ -2,7 +2,6 @@
 
 import os
 
-
 from diffupy.constants import METHODS
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -21,6 +20,7 @@ ROOT_RESULTS_DIR = os.path.join(ROOT_RESULTS_DIR, 'Results')
 OUTPUT_DIR = os.path.join(ROOT_RESULTS_DIR, 'outputs')
 
 HSA = 'Homo_sapiens'
+
 
 def ensure_output_dirs():
     """Ensure that the output directories exists."""
@@ -108,14 +108,12 @@ DATABASE_LINKS = {
     'pathme_mirtarbase': '1qt_a0R_DpCEBGVXZMywKpr7sKEOShXB3',
 }
 
-
-
-PATHME_DRUGBANK=frozenset(['kegg', 'reactome', 'wikipathways'])
-PATHME_MIRTARBASE=frozenset(['kegg', 'reactome', 'wikipathways'])
-PATHME_DB=frozenset(['kegg', 'reactome', 'wikipathways'])
+PATHME_DRUGBANK = frozenset(['kegg', 'reactome', 'wikipathways'])
+PATHME_MIRTARBASE = frozenset(['kegg', 'reactome', 'wikipathways'])
+PATHME_DB = frozenset(['kegg', 'reactome', 'wikipathways'])
 
 PATHME_MAPPING = {
     PATHME_DB: 'pathme',
-    PATHME_DRUGBANK:'pathme_drugbank',
-    PATHME_MIRTARBASE:'pathme_mirtarbase',
+    PATHME_DRUGBANK: 'pathme_drugbank',
+    PATHME_MIRTARBASE: 'pathme_mirtarbase',
 }
