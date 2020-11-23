@@ -9,7 +9,6 @@ from typing import Optional, Union, Callable, List
 import click
 from bio2bel.constants import get_global_connection
 from diffupy.constants import EMOJI, CSV, Z
-
 from diffupy.kernels import regularised_laplacian_kernel
 from diffupy.process_network import process_kernel_from_file, process_graph_from_file
 from diffupy.utils import from_json, to_json
@@ -127,18 +126,18 @@ def diffusion():
     type=str,
 )
 def run(
-        input: str,
-        network: Optional[str] = None,
-        output: Optional[str] = os.path.join(OUTPUT_DIR, 'diffusion_scores_on_pathme.csv'),
-        method: Union[str, Callable] = Z,
-        binarize: Optional[bool] = False,
-        threshold: Optional[float] = None,
-        absolute_value: Optional[bool] = False,
-        p_value: Optional[float] = 0.05,
-        format_output: Optional[str] = CSV,
-        database: Optional[List] = None,
-        filter_network_omic: Optional[List] = None,
-        specie: Optional[str]=HSA
+    input: str,
+    network: Optional[str] = None,
+    output: Optional[str] = os.path.join(OUTPUT_DIR, 'diffusion_scores_on_pathme.csv'),
+    method: Union[str, Callable] = Z,
+    binarize: Optional[bool] = False,
+    threshold: Optional[float] = None,
+    absolute_value: Optional[bool] = False,
+    p_value: Optional[float] = 0.05,
+    format_output: Optional[str] = CSV,
+    database: Optional[List] = None,
+    filter_network_omic: Optional[List] = None,
+    specie: Optional[str] = HSA
 ):
     """Run a diffusion method for the provided input_scores over (by default) PathMeUniverse integrated network.
 
@@ -208,12 +207,12 @@ def run(
     type=int,
 )
 def evaluate(
-        comparison: Optional[str] = BY_METHOD,
-        data_path: Optional[str] = os.path.join(ROOT_RESULTS_DIR, 'data', 'input_mappings'),
-        graph: Optional[str] = GRAPH_PATH,
-        kernel: Optional[str] = KERNEL_PATH,
-        output: Optional[str] = os.path.join(OUTPUT_DIR, 'evaluation_metrics.json'),
-        iterations: Optional[int] = 100,
+    comparison: Optional[str] = BY_METHOD,
+    data_path: Optional[str] = os.path.join(ROOT_RESULTS_DIR, 'data', 'input_mappings'),
+    graph: Optional[str] = GRAPH_PATH,
+    kernel: Optional[str] = KERNEL_PATH,
+    output: Optional[str] = os.path.join(OUTPUT_DIR, 'evaluation_metrics.json'),
+    iterations: Optional[int] = 100,
 ):
     """Evaluate a kernel/network on one of the three presented datasets.
 
