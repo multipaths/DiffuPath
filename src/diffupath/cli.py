@@ -19,7 +19,7 @@ from .constants import *
 from .diffuse import run_diffusion
 from .ltoo import ltoo_by_method
 from .repeated_holdout import validation_by_method, validation_by_subgraph
-from .utils import reduce_dict_dimension, reduce_dict_two_dimensional, subvert_twodim_dict
+from .utils import reduce_dict_dimension, reduce_dict_two_dimensional, revert_twodim_dict
 
 logger = logging.getLogger(__name__)
 
@@ -241,9 +241,9 @@ def evaluate(
     dataset3_mapping_by_database_and_entity = from_json(mapping_path_dataset_3)
 
     if comparison == LTOO:
-        dataset1_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset1_mapping_by_database_and_entity))
-        dataset2_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset2_mapping_by_database_and_entity))
-        dataset3_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset3_mapping_by_database_and_entity))
+        dataset1_mapping_by_entity = reduce_dict_dimension(revert_twodim_dict(dataset1_mapping_by_database_and_entity))
+        dataset2_mapping_by_entity = reduce_dict_dimension(revert_twodim_dict(dataset2_mapping_by_database_and_entity))
+        dataset3_mapping_by_entity = reduce_dict_dimension(revert_twodim_dict(dataset3_mapping_by_database_and_entity))
 
         click.secho(f'{EMOJI} Evaluating by method... {EMOJI}')
 
@@ -345,9 +345,9 @@ def evaluate(
             k=iterations)
 
     elif comparison == BY_ENTITY_METHOD:
-        dataset1_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset1_mapping_by_database_and_entity))
-        dataset2_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset2_mapping_by_database_and_entity))
-        dataset3_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset3_mapping_by_database_and_entity))
+        dataset1_mapping_by_entity = reduce_dict_dimension(revert_twodim_dict(dataset1_mapping_by_database_and_entity))
+        dataset2_mapping_by_entity = reduce_dict_dimension(revert_twodim_dict(dataset2_mapping_by_database_and_entity))
+        dataset3_mapping_by_entity = reduce_dict_dimension(revert_twodim_dict(dataset3_mapping_by_database_and_entity))
 
         metrics = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: list)))
 
@@ -391,9 +391,9 @@ def evaluate(
                 )
 
     elif comparison == BY_ENTITY_DB:
-        dataset1_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset1_mapping_by_database_and_entity))
-        dataset2_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset2_mapping_by_database_and_entity))
-        dataset3_mapping_by_entity = reduce_dict_dimension(subvert_twodim_dict(dataset3_mapping_by_database_and_entity))
+        dataset1_mapping_by_entity = reduce_dict_dimension(revert_twodim_dict(dataset1_mapping_by_database_and_entity))
+        dataset2_mapping_by_entity = reduce_dict_dimension(revert_twodim_dict(dataset2_mapping_by_database_and_entity))
+        dataset3_mapping_by_entity = reduce_dict_dimension(revert_twodim_dict(dataset3_mapping_by_database_and_entity))
 
         # Pre-process kernel for subgraphs
         kernels = {parameter: regularised_laplacian_kernel(get_subgraph_by_annotation_value(graph,

@@ -7,6 +7,8 @@ import logging
 import os
 import pickle
 import random
+
+from typing import List
 from collections import defaultdict
 from glob import glob
 from statistics import mean
@@ -31,10 +33,11 @@ def to_pickle(to_pickle, output):
         pickle.dump(to_pickle, file)
 
 
-def get_or_create_dir(path, basename=True):
+def get_or_create_dir(path, basename=True)->List[str]:
     """If a folder in path exist retrieve list of files, else create folder."""
     if not os.path.exists(path):
         os.makedirs(path)
+        return []
     else:
         return get_files_list(path, basename)
 
@@ -96,7 +99,7 @@ def get_labels_set_from_dict(entities):
         return set(itertools.chain.from_iterable(entities.values()))
 
 
-def subvert_twodim_dict(input_d: dict):
+def revert_twodim_dict(input_d: dict):
     """Reduce dictionary dimension."""
     dict1 = copy.deepcopy(input_d)
 
