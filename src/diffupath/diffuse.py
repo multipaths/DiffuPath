@@ -243,8 +243,8 @@ def _pipeline_network_multiple_database(database: List[str], kernel_method: Call
         if not network:
             network = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'by_db', f'{db_norm}.pickle')
             GoogleDriveDownloader.download_file_from_google_drive(file_id=DATABASE_LINKS[db_norm],
-                                                dest_path=network,
-                                                unzip=True)
+                                                                  dest_path=network,
+                                                                  unzip=True)
     else:
         intersecc_db = db_norm.intersection(PATHME_DB)
         intersecc_db_str = ''
