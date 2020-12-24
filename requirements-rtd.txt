@@ -13,9 +13,9 @@ chart_studio==1.0.0
 matplotlib_venn==0.11.5
 bio2bel==0.2.1
 pathme
-diffupy
+diffupy>=0.0.5
 sphinx
 sphinx-rtd-theme
 sphinx-click
 sphinx-autodoc-typehints
-google_drive_downloader
+google-drive-downloader
