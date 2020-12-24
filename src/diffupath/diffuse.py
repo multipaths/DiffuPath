@@ -13,14 +13,13 @@ from diffupy.diffuse import diffuse
 from diffupy.kernels import regularised_laplacian_kernel
 from diffupy.matrix import Matrix
 from diffupy.process_input import process_map_and_format_input_data_for_diff
-from diffupy.process_network import get_kernel_from_network_path, process_graph_from_file, get_kernel_from_graph, \
-    filter_graph
+from diffupy.process_network import get_kernel_from_network_path, process_graph_from_file, filter_graph
 from google_drive_downloader import GoogleDriveDownloader
 from pathme.cli import generate_universe, universe
 from pybel.struct import get_subgraph_by_annotation_value
 
 from .constants import *
-from .utils import get_or_create_dir, to_pickle, get_files_list
+from .utils import get_or_create_dir, to_pickle, get_files_list, get_kernel_from_graph
 
 logger = logging.getLogger(__name__)
 
@@ -242,9 +241,9 @@ def _pipeline_network_multiple_database(database: List[str], kernel_method: Call
 
         if not network:
             network = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'by_db', f'{db_norm}.pickle')
-            gdd.download_file_from_google_drive(file_id=DATABASE_LINKS[db_norm],
-                                                dest_path=network,
-                                                unzip=True)
+            GoogleDriveDownloader.download_file_from_google_drive(file_id=DATABASE_LINKS[db_norm],
+                                                                  dest_path=network,
+                                                                  unzip=True)
     else:
         intersecc_db = db_norm.intersection(PATHME_DB)
         intersecc_db_str = ''

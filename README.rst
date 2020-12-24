@@ -60,7 +60,8 @@ Basic Usage
 ===========
 The main required input to run diffusion using *DiffuPath* is:
 
-1) A **dataset of scores/ponderations**, which will be propagated over the integrated *PathMe* background network. (see Input Formatting below)
+1) A **dataset of scores/ponderations**, which will be propagated over the integrated *PathMe* background network.
+(see Input Formatting below)
 
 .. image:: https://github.com/multipaths/diffupath/blob/master/docs/source/meta/DiffuPathScheme2.png
   :width: 400
@@ -102,8 +103,9 @@ and directly use *DiffuPy*, since DiffuPath wraps it to offer diffusion with the
 Methods
 ~~~~~~~
 The diffusion method by default is *z*, which statistical normalization has previously shown outperformance over raw diffusion[1].
-Further parameters to adapt the propagation procedure can be provided, such as choosing among the available diffusion methods
-or providing a custom method function. See the `diffusion Methods and/or Method modularity <https://github.com/multipaths/DiffuPy/blob/master/docs/source/diffusion.rst>`_.
+Further parameters to adapt the propagation procedure can be provided, such as choosing among the available diffusion
+methods or providing a custom method function. See the `diffusion Methods and/or
+Method modularity <https://github.com/multipaths/DiffuPy/blob/master/docs/source/diffusion.rst>`_.
 
 .. code-block:: python3
 
@@ -113,7 +115,8 @@ or providing a custom method function. See the `diffusion Methods and/or Method 
 
   diffusion_scores_custom_method = run(input_scores, method = page_rank)
 
-You can also provide your own kernel method or select among the provided in *kernels.py*, you can provide it as *kernel_method* argument.
+You can also provide your own kernel method or select among the provided in *kernels.py*, you can provide it as
+*kernel_method* argument.
 By default *regularised_laplacian_kernel* is used.
 
 .. code-block:: python3
@@ -386,10 +389,10 @@ folder for some examples.
 
 Input Mapping/Coverage
 ----------------------
-Eventhough it is not relevant for the input user usage, it is relevant for the diffusion process assessment taking into account
-the input mapped entities over the background network, since the coverage of the input implies the actual entities-scores
-that are being diffused. In other words, only will be further processed for diffusion, the entities which label matches
-an entity in the network.
+Eventhough it is not relevant for the input user usage, it is relevant for the diffusion process assessment taking into
+account the input mapped entities over the background network, since the coverage of the input implies the actual
+entities-scores that are being diffused. In other words, only will be further processed for diffusion, the entities
+which label matches an entity in the network.
 
 The diffusion running will report the mapping as follows:
 
@@ -425,7 +428,7 @@ The diffusion running will report the mapping as follows:
    total  (1491 mapped entities, 44.34% input coverage)
 
 To graphically see the mapping coverage, you can also plot a `heatmap view of the mapping (see views) <https://github.com/multipaths/DiffuPath/blob/master/docs/source/views.rst>`_.
-To see how the mapping is performed over a input pipeline preprocessing, take a look at this `Jupyter Notebook <https://nbviewer.jupyter.org/github/multipaths/Results/blob/master/notebooks/processing_datasets/dataset_1.ipynb>`_
+To see how the mapping is performed over a input pipeline preprocessing, take a look at this `JupyterNotebook <https://nbviewer.jupyter.org/github/multipaths/Results/blob/master/notebooks/processing_datasets/dataset_1.ipynb>`_
 or `see process_input docs <https://github.com/multipaths/DiffuPy/blob/master/docs/source/preprocessing.rst>`_ in *DiffuPy*.
 
 Output format
