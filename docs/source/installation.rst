@@ -12,6 +12,12 @@ The most recent code can be installed from the source on `GitHub <https://github
 
    $ python3 -m pip install git+https://github.com/multipaths/diffupath.git
 
+*Required to install the latest PathMe version* directly from GitHub:
+
+.. code-block:: sh
+
+   $ python3 -m pip install git+https://github.com/PathwayMerger/PathMe.git
+
 For developers, the repository can be cloned from `GitHub <https://github.com/multipaths/diffupath>`_ and installed in
 editable mode with:
 
