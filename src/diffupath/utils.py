@@ -2,6 +2,7 @@
 
 """Miscellaneous utils of the package."""
 import copy
+import inspect
 import itertools
 import logging
 import os
@@ -61,6 +62,14 @@ def get_last_file(path):
     """Get last file."""
     list_of_files = glob(os.path.join(path, '*'))
     return max(list_of_files, key=os.path.getctime)
+
+
+def get_kernel_from_graph(graph, kernel_method, normalized=False):
+    """Get kernel from graph given a kernel method."""
+    if 'normalized' in inspect.getfullargspec(kernel_method).args:
+        return kernel_method(graph, normalized=normalized)
+    else:
+        return kernel_method(graph)
 
 
 def print_dict_dimensions(entities_db, title='', message='Total number of '):

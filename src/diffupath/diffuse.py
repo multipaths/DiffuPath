@@ -13,14 +13,13 @@ from diffupy.diffuse import diffuse
 from diffupy.kernels import regularised_laplacian_kernel
 from diffupy.matrix import Matrix
 from diffupy.process_input import process_map_and_format_input_data_for_diff
-from diffupy.process_network import get_kernel_from_network_path, process_graph_from_file, get_kernel_from_graph, \
-    filter_graph
+from diffupy.process_network import get_kernel_from_network_path, process_graph_from_file, filter_graph
 from google_drive_downloader import GoogleDriveDownloader
 from pathme.cli import generate_universe, universe
 from pybel.struct import get_subgraph_by_annotation_value
 
 from .constants import *
-from .utils import get_or_create_dir, to_pickle, get_files_list
+from .utils import get_or_create_dir, to_pickle, get_files_list, get_kernel_from_graph
 
 logger = logging.getLogger(__name__)
 
