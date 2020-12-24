@@ -7,11 +7,10 @@ import logging
 import os
 import pickle
 import random
-
-from typing import List
 from collections import defaultdict
 from glob import glob
 from statistics import mean
+from typing import List
 
 import numpy as np
 
@@ -33,7 +32,7 @@ def to_pickle(to_pickle, output):
         pickle.dump(to_pickle, file)
 
 
-def get_or_create_dir(path, basename=True)->List[str]:
+def get_or_create_dir(path, basename=True) -> List[str]:
     """If a folder in path exist retrieve list of files, else create folder."""
     if not os.path.exists(path):
         os.makedirs(path)
