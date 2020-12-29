@@ -11,6 +11,12 @@ presented in the paper, we use three pathway databases (i.e., KEGG, Reactome and
 network retrieved from `PathMe <https://github.com/PathwayMerger/PathMe/>`_ [1]_ to analyze three multi-omics datasets.
 However, other biological networks can be imported from the Bio2BEL ecosystem [2]_.
 
+Citation
+--------
+If you use DiffuPy in your work, please consider citing:
+
+Marín-Llaó, J., *et al.* (2020). `MultiPaths: a python framework for analyzing multi-layer biological networks using
+diffusion algorithms <https://doi.org/10.1093/bioinformatics/btaa1069>`_. *Bioinformatics*, btaa1069.
 
 Installation |pypi_version| |python_versions| |pypi_license|
 ------------------------------------------------------------
