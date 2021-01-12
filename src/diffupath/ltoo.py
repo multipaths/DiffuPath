@@ -71,6 +71,7 @@ def ltoo_by_method(
                     except ValueError:
                         auroc, auprc = (0, 0)
                         print(f'ROC AUC unable to calculate for {validation_set}')
+                        print(*validation_set)
 
                     auroc_metrics[entity][entity_label][method].append(auroc)
                     auprc_metrics[entity][entity_label][method].append(auprc)
