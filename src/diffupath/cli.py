@@ -23,8 +23,8 @@ from .utils import reduce_dict_dimension, reduce_dict_two_dimensional, revert_tw
 
 logger = logging.getLogger(__name__)
 
-GRAPHS_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'pickles', 'universe')
-GRAPH_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'pickles', 'universe',
+GRAPHS_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'graphs', 'universe')
+GRAPH_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'graphs', 'universe',
                           'pathme_universe_non_flatten_collapsed_names_no_isolates_16_03_2020.pickle')
 KERNELS_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels')
 KERNEL_PATH = os.path.join(DEFAULT_DIFFUPATH_DIR, 'kernels', 'Homo_sapiens_kernel_regularized_pathme_universe.pickle')
