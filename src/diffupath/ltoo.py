@@ -71,7 +71,6 @@ def ltoo_by_method(
                     except ValueError:
                         auroc, auprc = (0, 0)
                         print(f'ROC AUC unable to calculate for {validation_set}')
-                        print(*validation_set)
 
                     auroc_metrics[entity][entity_label][method].append(auroc)
                     auprc_metrics[entity][entity_label][method].append(auprc)
@@ -112,7 +111,7 @@ def get_by_method_metrics_input_dict(
 def _generate_random_score_ranking(background_mat):
     """Generate random scores."""
     return Matrix(
-        mat=np.random.rand(len(background_mat.rows_labels)),
+        mat=np.array([np.random.rand(len(background_mat.rows_labels))]).T,
         rows_labels=background_mat.rows_labels,
         cols_labels=['Radom_Baseline'],
     )
