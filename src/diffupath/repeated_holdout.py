@@ -173,7 +173,7 @@ def _generate_random_score_ranking(background_mat: Matrix) -> Matrix:
     :param k: Iterations for the repeated_holdout validation.
     """
     return Matrix(
-        mat=np.random.rand(len(background_mat.rows_labels)),
+        mat=np.array([np.random.rand(len(background_mat.rows_labels))]).T,
         rows_labels=background_mat.rows_labels,
         cols_labels=['Radom_Baseline'],
     )
