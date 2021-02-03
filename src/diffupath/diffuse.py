@@ -16,7 +16,6 @@ from diffupy.process_input import process_map_and_format_input_data_for_diff
 from diffupy.process_network import get_kernel_from_network_path, process_graph_from_file, filter_graph
 from google_drive_downloader import GoogleDriveDownloader
 from pathme.export_utils import generate_universe
-
 from pybel.struct import get_subgraph_by_annotation_value
 
 from .constants import *
