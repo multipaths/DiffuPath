@@ -301,7 +301,7 @@ def show_sb_box_plot(
                         palette=color_palette
                         )
 
-        if i == 2:
+        if i == 0:
             axs[i].legend(prop={'size': 16, 'weight': 'bold'})
         else:
             axs[i].get_legend().remove()

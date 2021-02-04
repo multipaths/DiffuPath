@@ -3,6 +3,7 @@
 """Leave two omics out validation utilities."""
 
 import os
+import random
 from collections import defaultdict
 from typing import Union, Tuple, Dict, Optional
 
@@ -64,6 +65,7 @@ def ltoo_by_method(
                     for method_label, scores in method_validation_scores_by_type[entity_label].items()
                 }
 
+            print(entity)
             print(count_not_empty)
 
             for entity_label, method_validation_scores in method_validation_scores_by_type.items():
@@ -122,11 +124,17 @@ def _generate_random_score_ranking(background_mat):
 def _get_split_by_type_input_and_validation(
         input: Dict[str, Union[list, set]],
         background_mat: Matrix,
-        type_label: str) -> Tuple[Matrix, Matrix, Dict[str, Matrix]]:
+        type_label: str,
+        splited_selection_for_variance = True
+    ) -> Tuple[Matrix, Matrix, Dict[str, Matrix]]:
     """Get LTOO split (One-out as diffuse input and Leave-One-Out as validation)."""
-    input_labels = list(set(input[type_label]))
+    ltoo_input_labels = list(set(input[type_label]))
 
-    all_validation_labels = list(set().union(*[v for label, v in input.items() if label != type_label]))
+    if splited_selection_for_variance and len(ltoo_input_labels) > 1:
+        n_selection = int(len(ltoo_input_labels)/2)
+        ltoo_input_labels = len(random.sample(ltoo_input_labels, n_selection))
+
+    loo_all_validation_labels = list(set().union(*[v for label, v in input.items() if label != type_label]))
 
     stratified_validation_labels = {
         label: format_input_for_diffusion(
@@ -140,12 +148,12 @@ def _get_split_by_type_input_and_validation(
 
     return (
         format_input_for_diffusion(
-            input_labels,
+            ltoo_input_labels,
             background_mat,
             title='label_input for diffusion with hidden true positives'
         ),
         format_input_for_diffusion(
-            all_validation_labels,
+            loo_all_validation_labels,
             background_mat,
             title='label_input for validation with hidden true positives'
         ),

@@ -107,8 +107,8 @@ def get_labels_set_from_dict(entities):
         return set(itertools.chain.from_iterable(entities.values()))
 
 
-def revert_twodim_dict(input_d: dict):
-    """Reduce dictionary dimension."""
+def reverse_twodim_dict(input_d: dict):
+    """Revert key-value dictionary."""
     dict1 = copy.deepcopy(input_d)
 
     d = defaultdict(lambda: defaultdict(lambda: list))
