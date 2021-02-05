@@ -268,7 +268,8 @@ def show_sb_box_plot(
     x_label: Optional[str] = '',
     y_label: Optional[str] = '',
     y_lim: Optional[Union[int, Tuple]] = None,
-    color_palette: Optional[List] = None
+    color_palette: Optional[List] = None,
+    title = "Seaborn plot"
 ):
     """Render a (seaborn) bloxpot, showing the distribution for a TWO-dimensional stratified data set of frequencies.
 
@@ -281,11 +282,13 @@ def show_sb_box_plot(
     if y_lim is None:
         y_lim = [0, 1]
     if color_palette is None:
-        color_palette = ['royalblue', 'forestgreen', 'khaki', 'lightcoral', 'yellow', 'green']
+        color_palette = sns.color_palette()
 
     plt.rcParams.update({'font.size': 15, 'font.weight': 'normal', 'ytick.labelsize': 'x-small'})
 
     fig, (axs) = plt.subplots(1, len(data_dict), figsize=(17, 6))
+
+    fig.suptitle(title, fontsize=20, fontweight='bold', y=1.098)
 
     if not isinstance(axs, np.ndarray):
         axs = [axs]
@@ -298,16 +301,21 @@ def show_sb_box_plot(
                         ax=axs[i],
                         hue="k2",
                         data=dataset,
-                        palette=color_palette
+                        palette=color_palette,
                         )
+        sns.swarmplot(x="k3", y="score",ax=axs[i], hue="k2", data=dataset, palette=color_palette, color='.25', split=True)
 
-        if i == 0:
+
+        if i == len(axs)-1:
             axs[i].legend(prop={'size': 16, 'weight': 'bold'})
+            axs[i].legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+
         else:
             axs[i].get_legend().remove()
 
         if i != 0:
             axs[i].set_ylabel('')
+
 
         fig.subplots_adjust(top=0.93)
 

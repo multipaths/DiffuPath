@@ -132,7 +132,7 @@ def _get_split_by_type_input_and_validation(
 
     if splited_selection_for_variance and len(ltoo_input_labels) > 1:
         n_selection = int(len(ltoo_input_labels)/2)
-        ltoo_input_labels = len(random.sample(ltoo_input_labels, n_selection))
+        ltoo_input_labels = random.sample(ltoo_input_labels, n_selection)
 
     loo_all_validation_labels = list(set().union(*[v for label, v in input.items() if label != type_label]))
 
